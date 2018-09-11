@@ -1,0 +1,24 @@
+{
+  "name": "roking-a11y",
+  "version": "0.0.2",
+  "description": "Accessibility evaluation tools",
+  "author": "H Robert King <hrobertking@cathmhaol.com>",
+  "main": "src/index.js",
+  "license": "GPL",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hrobertking/roking-validate.git"
+  },
+  "scripts": {
+    "init": "npm install",
+    "lint": "eslint --ignore-path .gitignore --ext js,jsx .",
+    "review": "eslint --config=.eslintrc.warn --ignore-path .gitignore --ext js,jsx .",
+    "test": "mocha"
+  },
+  "devDependencies": {
+    "babel-eslint": "^7.2.3",
+    "eslint": "^4.0.0",
+    "eslint-plugin-import": "^2.3.0",
+    "mocha": "^3.4.2"
+  }
+}
