@@ -14,7 +14,7 @@ new Readability([**_string|string[]|HTMLElement_ sample**][, **_number_ wlen**])
 - sample: content to evaluate
 - wlen: length of a longword, defaults to 6 characters
 
-### Internal Objects
+### Internal Data Types
 - **_ScoredItem_**: A scored phrase
   - **_number_ longwords**: The number of words with a length greater-than or equal-to `wlong`.
   - **_string_ phrase**: The phrase that has been evaluated.
