@@ -99,9 +99,10 @@ exports.default = function Readability(sample, wlen) {
           return si.score;
         });
       const sum = scores.reduce(function accumulate(ttl, score) {
-          Number(score || 0) + Number(ttl || 0);
+          return ttl + score;
         });
-      return sum/self.parsed.length;
+
+      return Math.round(sum/self.parsed.length);
     }
   }
 
@@ -165,7 +166,7 @@ exports.default = function Readability(sample, wlen) {
     const bites = phrase.split(' ');
     const words = bites.length;
     const longWords = bites.filter(function countlong(word) { return word.length >= self.wlong; }).length;
-    const sentences = phrase.split(/[:.]/g).length;
+    const sentences = phrase.split(/[:.]/g).filter(function noblank(el) { return !!el; }).length;
     const score = !words || !sentences ? 0 : Math.round(words/sentences + (longWords*100)/words);
 
     return {
