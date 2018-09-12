@@ -198,6 +198,47 @@ exports.default = function Readability(sample, wlen) {
     // TODO: override self.wlong default value based on specified language
   }
 
+  /**
+   * @private
+   * @member wlongSizes
+   * @type {object}
+   * @description The average number of characters in one word, by ISO 639-2 language code.
+   * @see {@link https://diuna.biz/length-of-words-average-number-of-characters-in-a-word/}
+   */
+  const wlongSizes = {
+    ar: 6.03,
+    cs: 6.02,
+    da: 5.48,
+    de: 6.03,
+    el: 6.47,
+    en: 6.08,
+    es: 5.71,
+    et: 7.3,
+    eu: 6.51,
+    fi: 7.55,
+    fr: 5.39,
+    hr: 5.58,
+    hu: 6.48,
+    is: 5.97,
+    it: 5.95,
+    lt: 6.85,
+    lv: 7.14,
+    nb: 5.37,
+    nl: 6.48,
+    nn: 5.37,
+    no: 5.37,
+    pl: 7.21,
+    pt: 5.66,
+    ro: 6.49,
+    ru: 6.06,
+    sk: 6.35,
+    sq: 6.35,
+    sv: 5.97,
+    tr: 7.22,
+    uk: 7.52,
+    vi: 4.5,
+  };
+	
   const self = this;
 
   // constructor
