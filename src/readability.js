@@ -165,7 +165,7 @@ exports.default = function Readability(sample, wlen) {
   function parse(phrase) {
     const bites = phrase.split(' ');
     const words = bites.length;
-    const longWords = bites.filter(function countlong(word) { return word.length >= self.wlong; }).length;
+    const longWords = bites.filter(function countlong(word) { return word.length > self.wlong; }).length;
     const sentences = phrase.split(/[:.]/g).filter(function noblank(el) { return !!el; }).length;
     const score = !words || !sentences ? 0 : Math.round(words/sentences + (longWords*100)/words);
 
@@ -191,53 +191,67 @@ exports.default = function Readability(sample, wlen) {
 
   /**
    * @private
-   * @description Sets the wlong property based on the specified language 
+   * @description Sets the wlong property based on the specified language. 
    * @returns {undefined}
    */
   function setLang(bcp47) {
-    // TODO: override self.wlong default value based on specified language
-  }
+    /**
+     * @description The BCP-47 langtag pattern with a language subtag and a region subtag.
+     * @see {@link https://tools.ietf.org/html/bcp47}
+     */
+    const ISO_PATTERN = /^([a-z]{2})(-[a-z]{2})?$/i;
 
-  /**
-   * @private
-   * @member wlongSizes
-   * @type {object}
-   * @description The average number of characters in one word, by ISO 639-2 language code.
-   * @see {@link https://diuna.biz/length-of-words-average-number-of-characters-in-a-word/}
-   */
-  const wlongSizes = {
-    ar: 6.03,
-    cs: 6.02,
-    da: 5.48,
-    de: 6.03,
-    el: 6.47,
-    en: 6.08,
-    es: 5.71,
-    et: 7.3,
-    eu: 6.51,
-    fi: 7.55,
-    fr: 5.39,
-    hr: 5.58,
-    hu: 6.48,
-    is: 5.97,
-    it: 5.95,
-    lt: 6.85,
-    lv: 7.14,
-    nb: 5.37,
-    nl: 6.48,
-    nn: 5.37,
-    no: 5.37,
-    pl: 7.21,
-    pt: 5.66,
-    ro: 6.49,
-    ru: 6.06,
-    sk: 6.35,
-    sq: 6.35,
-    sv: 5.97,
-    tr: 7.22,
-    uk: 7.52,
-    vi: 4.5,
-  };
+    /**
+     * @description The average number of characters in one word, by ISO 639-2 language code.
+     * Data is based on research performed by Diuna and Kamila Marzęcka from SWPS University,
+     * and closely matches the number suggested by Carl-Hugo Björnsson.
+     * @see {@link https://en.wikipedia.org/wiki/Lix_(readability_test)}
+     * @see {@link https://diuna.biz/length-of-words-average-number-of-characters-in-a-word/}
+     */
+    const SIZES = {
+      ar: 6.03,
+      cs: 6.02,
+      da: 5.48,
+      de: 6.03,
+      el: 6.47,
+      en: 6.08,
+      es: 5.71,
+      et: 7.3,
+      eu: 6.51,
+      fi: 7.55,
+      fr: 5.39,
+      hr: 5.58,
+      hu: 6.48,
+      is: 5.97,
+      it: 5.95,
+      lt: 6.85,
+      lv: 7.14,
+      nb: 5.37,
+      nl: 6.48,
+      nn: 5.37,
+      no: 5.37,
+      pl: 7.21,
+      pt: 5.66,
+      ro: 6.49,
+      ru: 6.06,
+      sk: 6.35,
+      sq: 6.35,
+      sv: 5.97,
+      tr: 7.22,
+      uk: 7.52,
+      vi: 4.5,
+    };
+
+    /* get the language subtag */
+    const langSubtag = (bcp47 || '').replace(ISO_PATTERN, function(match, lang, region) {
+      return lang;
+    });
+    
+    /* we can only set a new value if we have the language */
+    if (Object.prototype.hasOwnProperty.call(SIZES, langSubtag)) {
+      self.wlong = Math.round(SIZES[langSubtag]);
+    }
+  }
 	
   const self = this;
 

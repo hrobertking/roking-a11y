@@ -29,5 +29,15 @@ describe('utilities - readability', function () {
     const evaluator = new Readability(content);
     assert.equal(evaluator.avg, 50);
   });
+  it('sets a new word length for a supported language', function () {
+    const evaluator = new Readability();
+    evaluator.lang = 'pl';
+    assert.equal(evaluator.wlong, 7);
+  });
+  it('does not set a new word length for an unsupported language', function () {
+    const evaluator = new Readability();
+    evaluator.lang = 'zh';
+    assert.equal(evaluator.wlong, 6);
+  });
 });
 
