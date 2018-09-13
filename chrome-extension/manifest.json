@@ -1,0 +1,17 @@
+{
+  "name": "Readability",
+  "version": "1.0",
+  "description": "Readability analyzer",
+  "manifest_version": 2,
+  "incognito": "split",
+  "chrome_url_overrides": {
+    "newtag": "index.html"
+  },
+  "permissions": [
+    "activeTab"
+  ],
+  "icons": {
+    "128": "icon.png"
+  }
+}
+
