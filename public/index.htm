@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <title>Roking Color Tuner</title>
+    <style type="text/css">
+      body {
+        margin: auto;
+        user-select: none;
+        width: 80%;
+      }
+      button {
+        border-radius: 0.25rem;
+        font-size: 1.5rem;
+        margin: 0.2rem
+      }
+      button:not([disabled]) {
+        background-color: rgb(75, 150, 75);
+        border: 1px solid rgb(60, 120, 60);
+        color: rgb(0, 0, 0);
+      }
+      input,
+      label {
+        display: block;
+        width: 100%;
+      }
+      input[aria-invalid="true"] {
+        border-color: rgb(225, 0, 0);
+      }
+      input[aria-invalid="true"] ~ .error {
+        display: block;
+      }
+      input:not([aria-invalid]),
+      input[aria-invalid="false"] {
+        border-color: initial;
+      }
+      input:not([aria-invalid]) ~ .error,
+      input[aria-invalid="false"] ~ .error {
+        display: none;
+      }
+      label {
+        font-size: 0.8rem;
+        font-style: italic;
+      }
+      table {
+        border: 1px solid rgb(60, 120, 20);
+        border-collapse: collapse;
+        width: 100%;
+      }
+      td,
+      th {
+        padding: 0.5rem;
+      }
+      td {
+        height: 5rem;
+        min-width: 8rem;
+        vertical-align: top;
+      }
+      td:nth-of-type(3) {
+        width: 100%;
+      }
+      input[type="text"],
+      td.number {
+        font-family: monospace;
+        text-align: center;
+      }
+      td.sample {
+        padding: 0.25rem;
+        text-align: center;
+      }
+      thead {
+        background-color: rgb(240, 240, 240);
+      }
+      thead > tr:last-of-type > th {
+        border-bottom: 0.1rem solid rgb(60, 120, 20);
+      }
+      th[scope="col"]:last-of-type {
+        white-space: nowrap;
+      }
+      th[scope="row"] {
+        text-align: right;
+        vertical-align: top;
+      }
+      tr:not(:last-of-type) {
+        border-bottom: 0.1rem solid rgb(255, 255, 255);
+      }
+      .checkbox > input {
+        clip: rect(0, 0, 0, 0);
+        clip-path: polygon(0 0, 0 0, 0 0, 0 0);
+        position: absolute;
+      }
+      .checkbox > label {
+        margin-top: 0.25rem;
+        padding: 0.25rem 0.125rem 0.25rem 0;
+      }
+      :not(button):focus,
+      .checkbox > input:focus ~ label {
+        border: none;
+        border-radius: 0.1rem;
+        box-shadow: 0 0 0.1rem 0.2rem rgba(84, 167, 240, 0.9);
+        outline: none;
+      }
+      td > div,
+      .checkbox > label {
+        align-items: center;
+        display: flex;
+      }
+      td > div:not(.error)::before,
+      .checkbox > label::before {
+        border: 0.05rem solid black;
+        border-radius: 0.2rem;
+        box-shadow: 0 0 0.1rem;
+        content: '';
+        display: block;
+        font-size: 1rem;
+        line-height: 1.2rem;
+        height: 1.2rem;
+        margin: 0 0.2rem 0;
+        text-align: center;
+        width: 1.2rem;
+      }
+      .checkbox > input:checked + label:before {
+        content: '✓';
+      }
+      td > div.fail:before {
+        border-color: rgb(225, 0, 0);
+        color: rgb(225, 0, 0);
+        content: '⚠';
+      }
+      td > div.pass:before {
+        border-color: rgb(0, 130, 0);
+        color: rgb(0, 130, 0);
+        content: '✓';
+      }
+      .error {
+        position: absolute;
+      }
+
+      .warning {
+        border-color: rgb(225, 0, 0);
+        color: rgb(225, 0, 0);
+      }
+      noscript.warning::before,
+      p.warning::before {
+        content: '⚠';
+      }
+
+      @media screen and (min-width: 960px) {
+        .small-viewport {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Color selector with luminance contrast testing.</h1>
+    <noscript class="warning">
+      This utility relies on JavaScript to perform the calculations for luminance and contrast. The page will not
+      function without it.
+    </noscript>
+    <p class="small-viewport warning">
+      The device you are using does not have enough horizontal landscape to prevent scrolling. It is recommended
+      that you switch to a device that is at least 960 pixels wide.
+    </p>
+    <p>
+      This tool allows you to select an accessible foreground and background color by performing luminance contrast
+      calculations in real time and adjusting the foreground and background color to meet the specified guideline.
+    </p>
+    <p>
+      The default setting uses the WCAG luminance contrast threshold for normal text at the <em>AA</em>
+      compliance level. If you wish to use the higher, <em>AAA</em>, threshold, check the
+      <strong>Use stricter AAA compliance level</strong> box.
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Action</th>
+          <th scope="col">Foreground</th>
+          <th scope="col">Background</th>
+          <th scope="col">Sample</th>
+          <th scope="col">
+            Contrast (n:1)
+            <div class="checkbox">
+              <input id="compliance" type="checkbox" value="7.1" />
+              <label for="compliance">Use stricter AAA compliance level</label>
+            </div>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr id="as-is">
+          <th scope="row">As is</td>
+          <td class="input">
+            <label for="foreground">Foreground color</label>
+            <input id="foreground" type="text" />
+            <div class="error" role="alert">Value provided for foreground is not a valid hexadecimal color</div>
+          </td>
+          <td class="input">
+            <label for="background">Background color</label>
+            <input id="background" type="text" />
+            <div class="error" role="alert">Value provided for background is not a valid hexadecimal color</div>
+          </td>
+          <td class="sample">This is sample text.</td>
+          <td class="contrast"></td>
+        </tr>
+        <tr id="foreground-only">
+          <th scope="row">Foreground adjusted</td>
+          <td class="number"></td>
+          <td class="number"></td>
+          <td class="sample">This is sample text.</td>
+          <td class="contrast"></td>
+        </tr>
+        <tr id="background-only">
+          <th scope="row">Background adjusted</td>
+          <td class="number"></td>
+          <td class="number"></td>
+          <td class="sample">This is sample text.</td>
+          <td class="contrast"></td>
+        </tr>
+        <tr id="both-adjusted">
+          <th scope="row">Foreground and background adjusted</td>
+          <td class="number"></td>
+          <td class="number"></td>
+          <td class="sample">This is sample text.</td>
+          <td class="contrast"></td>
+        </tr>
+      </tbody>
+    </table>
+    <div role="group">
+      <button id="btnToggleInput" disabled>Input color values</button>
+      <button id="btnCalculate" disabled>Calculate</button>
+    </div>
+
+    <script>
+      function usecolor() {
+        var type = (inputFg.type || inputBg.type) === 'color' ? 'text' : 'color';
+
+console.log('type: '+type);
+        btnToggleInput.innerHTML = (type === 'color') ? 'Input color values' : 'Use color selectors';
+        inputBg.type = type;
+        inputFg.type = type;
+      }
+    </script>
+    <script>
+      /**
+       * @var MIN_CONTRAST
+       * @description The minimum contrast ratio. Default is 4.5
+       * @type {number}
+       */
+      var MIN_CONTRAST, AA = 4.5;
+
+      /**
+       * @func calculate
+       * @description Performs the calculations and displays results.
+       * @returns {undefined}
+       */
+      function calculate() {
+        var fg = colorize(inputFg.value),
+          bg = colorize(inputBg.value),
+          aa = !document.getElementById('compliance').checked;
+
+        MIN_CONTRAST = !aa ? document.getElementById('compliance').value : AA;
+
+        /* jump out if we don't have values to calculate */
+        if (!fg || !bg) {
+          return;
+        }
+
+        var asIsRatio = ratio({bg, fg});
+        results['as-is'].sample.setAttribute('style', `background-color: ${bg}; color: ${fg};`);
+        results['as-is'].contrast.innerHTML = `<div class="${asIsRatio >= MIN_CONTRAST ? 'pass' : 'fail'}">${asIsRatio.toFixed(2)}</div>`;
+
+        // calulate the results with foreground only adjusted
+        var fgOnly = contrast(bg, fg, 1);
+        results['foreground-only'].fg.innerHTML = fgOnly.fg;
+        results['foreground-only'].bg.innerHTML = fgOnly.bg;
+        results['foreground-only'].sample.setAttribute('style', `background-color: ${fgOnly.bg}; color: ${fgOnly.fg};`);
+        results['foreground-only'].contrast.innerHTML = `<div class="${fgOnly.contrast >= MIN_CONTRAST ? 'pass' : 'fail'}">${fgOnly.contrast.toFixed(2)}</div>`;
+
+        var bgOnly = contrast(bg, fg, 0);
+        results['background-only'].fg.innerHTML = bgOnly.fg;
+        results['background-only'].bg.innerHTML = bgOnly.bg;
+        results['background-only'].sample.setAttribute('style', `background-color: ${bgOnly.bg}; color: ${bgOnly.fg};`);
+        results['background-only'].contrast.innerHTML = `<div class="${bgOnly.contrast >= MIN_CONTRAST ? 'pass' : 'fail'}">${bgOnly.contrast.toFixed(2)}</div>`;
+
+        var both = contrast(bg, fg);
+        results['both-adjusted'].fg.innerHTML = both.fg;
+        results['both-adjusted'].bg.innerHTML = both.bg;
+        results['both-adjusted'].sample.setAttribute('style', `background-color: ${both.bg}; color: ${both.fg};`);
+        results['both-adjusted'].contrast.innerHTML = `<div class="${both.contrast >= MIN_CONTRAST ? 'pass' : 'fail'}">${both.contrast.toFixed(2)}</div>`;
+      }
+
+      /**
+       * @func colorize
+       * @description Turns a number to a color.
+       * @returns {string}
+       * @param {string} color
+       */
+      function colorize(color) {
+        if (color) {
+          var rgb = color.length < 6 ?
+            /^#?([0-9a-f]{1})([0-9a-f]{1})([0-9a-f]{1})$/i.exec(color) :
+            /^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(color),
+            r = rgb ? (rgb[1] + rgb[1]).substr(-2) : '',
+            g = rgb ? (rgb[2] + rgb[2]).substr(-2) : '',
+            b = rgb ? (rgb[3] + rgb[3]).substr(-2) : '';
+
+          return `#${r}${g}${b}`;
+        }
+      }
+
+      /**
+       * @func contrast
+       * @description Calculates new values for the background and foreground colors, adjusting either foreground or background or both.
+       * @returns {object}
+       * @param {string} bg - background color
+       * @param {string} fg - foregrond color
+       * @param {number} - adjust
+       */
+      function contrast(bg, fg, adjust) {
+        var colors = {
+            bg,
+            fg,
+          },
+          darkBg = luminance(bg) < 50,
+          darkFg = luminance(fg) < 50;
+
+        function done(adjusted) {
+          var maxed = adjusted ?
+            luminance(adjusted) === 0 || luminance(adjusted) === 100 :
+            false;
+
+          return ratio(colors) >= MIN_CONTRAST || maxed;
+        }
+
+        if (ratio(colors) < MIN_CONTRAST) {
+          switch (adjust) {
+            case 0:
+              var r = ratio(colors),
+                mod = r > ratio({ fg: colors.fg, bg: darken(colors.bg, 1) }) ? lighten : darken;
+
+              do {
+                // adjust background only
+                var lfg = luminance(colors.fg), lbg = luminance(colors.bg);
+
+                if (lfg === lbg) {
+                  colors.bg = mod(colors.bg, 1);
+                } else if (lfg > lbg) {
+                  colors.bg = darken(colors.bg, 1);
+                } else {
+                  colors.bg = lighten(colors.bg, 1);
+                }
+              } while (!done(colors.bg));
+              break;
+            case 1:
+              var r = ratio(colors),
+                mod = r > ratio({ bg: colors.bg, fg: darken(colors.fg, 1) }) ? lighten : darken;
+
+              do {
+                // adjust foreground only
+                var lfg = luminance(colors.fg), lbg = luminance(colors.bg);
+
+                if (lfg === lbg) {
+                  colors.fg = mod(colors.fg, 1);
+                } else if (lfg > lbg) {
+                  colors.fg = lighten(colors.fg, 1);
+                } else {
+                  colors.fg = darken(colors.fg, 1);
+                }
+              } while (!done(colors.fg));
+              break;
+            default:
+              do {
+                // adjust both
+                colors.fg = luminance(colors.bg) >= luminance(colors.fg) ?
+                  darken(colors.fg, 1) :
+                  lighten(colors.fg, 1);
+                colors.bg = luminance(colors.fg) > luminance(colors.bg) ?
+                  darken(colors.bg, 1) :
+                  lighten(colors.bg, 1);
+              } while (!done());
+              break;
+          }
+        }
+
+        colors.contrast = ratio(colors);
+
+        return colors;
+      }
+
+      /**
+       * @func darken
+       * @description Return the hexadecimal value of a darker color.
+       * @returns {string}
+       * @param {string} color - original hexadecimal value
+       * @param {number} degree - how much darker the new value should be
+       */
+      function darken(color, degree) {
+        var n = color ? parseInt(color.replace(/^#/, ''), 16) : 0,
+          r = Math.max(0, Math.min((n >> 16) - degree, 255)),
+          g = Math.max(0, Math.min((n & 0x0000FF) - degree, 255)),
+          b = Math.max(0, Math.min(((n >> 8) & 0x00FF) - degree, 255)),
+          h = `000000${(g | (b << 8) | (r << 16)).toString(16)}`.substr(-6);
+
+        return `#${h}`;
+      }
+
+      /**
+       * @func lighten
+       * @description Return the hexadecimal value of a lighter color.
+       * @returns {string}
+       * @param {string} color - original hexadecimal value
+       * @param {number} degree - how much lighter the new value should be
+       */
+      function lighten(color, degree) {
+        var n = color ? parseInt(color.replace(/^#/, ''), 16) : 0,
+          r = Math.max(0, Math.min((n >> 16) + degree, 255)),
+          g = Math.max(0, Math.min((n & 0x0000FF) + degree, 255)),
+          b = Math.max(0, Math.min(((n >> 8) & 0x00FF) + degree, 255)),
+          h = `000000${(g | (b << 8) | (r << 16)).toString(16)}`.substr(-6);
+
+        return `#${h}`;
+      }
+
+      /**
+       * @func luminance
+       * @description Returns a number between 0 and 100 (inclusive) representing the luminance of a color.
+       * @returns {number}
+       * @param {string} color - 3-digit or 6-digit hex value
+       * @see {@link https://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef}
+       * @see {@link https://www.w3.org/TR/WCAG20-TECHS/G17.html#G17-tests}
+       */
+      function luminance(color) {
+        var rgb = color.length < 6 ?
+          /^#?([0-9a-f]{1})([0-9a-f]{1})([0-9a-f]{1})$/i.exec(color) :
+          /^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(color);
+
+        function normalize(val) {
+          var n = parseInt((val+val).substr(-2), 16);
+          n = Number.isNaN(n) ? 0 : n;
+
+          n /= 255;
+
+          return n < 0.03928 ? n / 12.92 : Math.pow((n + 0.055) / 1.055, 2.4);
+        }
+
+        if (rgb) {
+          return (0.2126 * normalize(rgb[1]) +
+            0.7152 * normalize(rgb[2]) +
+            0.0722 * normalize(rgb[3])) * 100;
+        }
+      }
+
+      /**
+       * @func luminance
+       * @description Returns the luminance contrast
+       * @returns {number}
+       * @param {object} colors
+       * @see {@link http://www.w3.org/TR/2008/REC-WCAG20-20081211/#contrast-ratiodef}
+       */
+      function ratio(colors) {
+        var vals = [(luminance(colors.fg) + 5), (luminance(colors.bg) + 5)];
+
+        return vals[0] < vals[1] ? 1 / (vals[0]/vals[1]) : vals[0]/vals[1];
+      }
+
+      /**
+       * @func resultsRow
+       * @description Returns a results row object for the table row.
+       * @returns {object}
+       * @param {HTMLElement} tr
+       */
+      function resultsRow(tr) {
+        return {
+          action: tr.cells[0],
+          fg: tr.cells[1],
+          bg: tr.cells[2],
+          sample: tr.cells[3],
+          contrast: tr.cells[4],
+        };
+      }
+
+      /**
+       * @func validate
+       * @description Validates the input.
+       * @returns {undefined}
+       * @param {HTMLElement} input
+       */
+      function validate(input) {
+        var ok = /^#?([\w\W]{0}|[0-9a-f]{3}|[0-9a-f]{6})$/i.test(input.value);
+        input.setAttribute('aria-invalid', !ok);
+        if (!ok) {
+          input.focus();
+        }
+      }
+
+      /**
+       * @func onKeyDown
+       * @description An event handler for inputs.
+       * @returns {undefined}
+       * @param {event} e
+       */
+      function onKeyDown(e) {
+        if (e.key === 'Enter' && e.target.type === 'text') {
+          e.preventDefault();
+          calculate();
+        }
+      }
+
+      // initialize the buttons and results
+      var btnToggleInput = document.getElementById('btnToggleInput'),
+        btnCalculate = document.getElementById('btnCalculate'),
+        inputBg = document.getElementById('background'),
+        inputFg = document.getElementById('foreground'),
+        ndx,
+        results = {
+          'as-is': resultsRow(document.getElementById('as-is')),
+          'foreground-only': resultsRow(document.getElementById('foreground-only')),
+          'background-only': resultsRow(document.getElementById('background-only')),
+          'both-adjusted': resultsRow(document.getElementById('both-adjusted')),
+        };
+
+      btnToggleInput.disabled = false;
+      btnToggleInput.addEventListener('click', usecolor);
+      btnCalculate.disabled = false;
+      btnCalculate.addEventListener('click', calculate);
+      inputBg.addEventListener('keydown', onKeyDown);
+      inputFg.addEventListener('keydown', onKeyDown);
+    </script>
+  </body>
+</html>
+
