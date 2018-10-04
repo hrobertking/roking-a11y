@@ -2,16 +2,24 @@
   "name": "Readability",
   "version": "1.0",
   "description": "Readability analyzer",
-  "manifest_version": 2,
-  "incognito": "split",
-  "chrome_url_overrides": {
-    "newtag": "index.html"
+  "permissions": ["activeTab", "storage", "webNavigation"],
+  "background": {
+    "scripts": ["readability.js", "background.js"],
+    "persistant": false
   },
-  "permissions": [
-    "activeTab"
-  ],
+  "content_scripts": [{
+      "matches": ["*://*/*"],
+      "js": ["index.js"]
+    }],
+  "page_action": {
+    "default_popup": "index.htm",
+    "default_icon": {
+      "128": "icon.png"
+    }
+  },
   "icons": {
     "128": "icon.png"
-  }
+  },
+  "manifest_version": 2
 }
 
