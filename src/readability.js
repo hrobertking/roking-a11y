@@ -14,7 +14,7 @@
  * @property {number} words
  *
  */
-exports.default = function Readability(sample, wlen) {
+module.exports.default = function Readability(sample, wlen) {
   /**
    * @property avg
    * @type {number}
