@@ -153,87 +153,89 @@
     </style>
   </head>
   <body>
-    <h1>Color selector with luminance contrast testing.</h1>
-    <noscript class="warning">
-      This utility relies on JavaScript to perform the calculations for luminance and contrast. The page will not
-      function without it.
-    </noscript>
-    <p class="small-viewport warning">
-      The device you are using does not have enough horizontal landscape to prevent scrolling. It is recommended
-      that you switch to a device that is at least 960 pixels wide.
-    </p>
-    <p>
-      This tool allows you to select an accessible foreground and background color by performing luminance contrast
-      calculations in real time and adjusting the foreground and background color to meet the specified guideline.
-      To tune your colors, simply enter the foreground and background colors in the input boxes below and
-      <strong><em>Calculate</em></strong>. The tuner will calculate the luminance contrast and, if it does
-      not meet the selected guideline level, will adjust the foreground, the background, and both values
-      to give you the closest possible matches that are compliant.
-    </p>
-    <p>
-      The default setting uses the WCAG luminance contrast threshold for normal text at the <em>AA</em>
-      compliance level. If you wish to use the higher, <em>AAA</em>, threshold, check the
-      <strong>Use stricter AAA compliance level</strong> box.
-    </p>
-    <table>
-      <thead>
-        <tr>
-          <th scope="col">Action</th>
-          <th scope="col">Foreground</th>
-          <th scope="col">Background</th>
-          <th scope="col">Sample</th>
-          <th scope="col">
-            Contrast (<span aria-label="n to 1">n:1</span>)
-            <div class="checkbox">
-              <input id="compliance" type="checkbox" value="7.1" />
-              <label for="compliance">Use stricter AAA compliance level</label>
-            </div>
-          </th>
-        </tr>
-      </thead>
-      <tbody aria-atomic="true" aria-live="polite">
-        <tr id="as-is">
-          <th scope="row">As is</td>
-          <td class="input">
-            <label for="foreground">Foreground color</label>
-            <input id="foreground" type="text" />
-            <div class="error" role="alert">Value provided for foreground is not a valid hexadecimal color</div>
-          </td>
-          <td class="input">
-            <label for="background">Background color</label>
-            <input id="background" type="text" />
-            <div class="error" role="alert">Value provided for background is not a valid hexadecimal color</div>
-          </td>
-          <td class="sample">This is sample text.</td>
-          <td class="contrast"></td>
-        </tr>
-        <tr id="foreground-only">
-          <th scope="row">Foreground adjusted</td>
-          <td class="number"></td>
-          <td class="number"></td>
-          <td class="sample">This is sample text.</td>
-          <td class="contrast"></td>
-        </tr>
-        <tr id="background-only">
-          <th scope="row">Background adjusted</td>
-          <td class="number"></td>
-          <td class="number"></td>
-          <td class="sample">This is sample text.</td>
-          <td class="contrast"></td>
-        </tr>
-        <tr id="both-adjusted">
-          <th scope="row">Foreground and background adjusted</td>
-          <td class="number"></td>
-          <td class="number"></td>
-          <td class="sample">This is sample text.</td>
-          <td class="contrast"></td>
-        </tr>
-      </tbody>
-    </table>
-    <div role="group">
-      <button id="btnToggleInput" disabled>Input color values</button>
-      <button id="btnCalculate" disabled>Calculate</button>
-    </div>
+    <main>
+      <h1>Color selector with luminance contrast testing.</h1>
+      <noscript class="warning">
+        This utility relies on JavaScript to perform the calculations for luminance and contrast. The page will not
+        function without it.
+      </noscript>
+      <p class="small-viewport warning">
+        The device you are using does not have enough horizontal landscape to prevent scrolling. It is recommended
+        that you switch to a device that is at least 960 pixels wide.
+      </p>
+      <p>
+        This tool allows you to select an accessible foreground and background color by performing luminance contrast
+        calculations in real time and adjusting the foreground and background color to meet the specified guideline.
+        To tune your colors, simply enter the foreground and background colors in the input boxes below and
+        <strong><em>Calculate</em></strong>. The tuner will calculate the luminance contrast and, if it does
+        not meet the selected guideline level, will adjust the foreground, the background, and both values
+        to give you the closest possible matches that are compliant.
+      </p>
+      <p>
+        The default setting uses the WCAG luminance contrast threshold for normal text at the <em>AA</em>
+        compliance level. If you wish to use the higher, <em>AAA</em>, threshold, check the
+        <strong>Use stricter AAA compliance level</strong> box.
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Action</th>
+            <th scope="col">Foreground</th>
+            <th scope="col">Background</th>
+            <th scope="col">Sample</th>
+            <th scope="col">
+              Contrast (<span aria-label="n to 1">n:1</span>)
+              <div class="checkbox">
+                <input id="compliance" type="checkbox" value="7.1" />
+                <label for="compliance">Use stricter AAA compliance level</label>
+              </div>
+            </th>
+          </tr>
+        </thead>
+        <tbody aria-atomic="true" aria-live="polite">
+          <tr id="as-is">
+            <th scope="row">As is</td>
+            <td class="input">
+              <label for="foreground">Foreground color</label>
+              <input id="foreground" type="text" />
+              <div class="error" role="alert">Value provided for foreground is not a valid hexadecimal color</div>
+            </td>
+            <td class="input">
+              <label for="background">Background color</label>
+              <input id="background" type="text" />
+              <div class="error" role="alert">Value provided for background is not a valid hexadecimal color</div>
+            </td>
+            <td class="sample">This is sample text.</td>
+            <td class="contrast"></td>
+          </tr>
+          <tr id="foreground-only">
+            <th scope="row">Foreground adjusted</td>
+            <td class="number"></td>
+            <td class="number"></td>
+            <td class="sample">This is sample text.</td>
+            <td class="contrast"></td>
+          </tr>
+          <tr id="background-only">
+            <th scope="row">Background adjusted</td>
+            <td class="number"></td>
+            <td class="number"></td>
+            <td class="sample">This is sample text.</td>
+            <td class="contrast"></td>
+          </tr>
+          <tr id="both-adjusted">
+            <th scope="row">Foreground and background adjusted</td>
+            <td class="number"></td>
+            <td class="number"></td>
+            <td class="sample">This is sample text.</td>
+            <td class="contrast"></td>
+          </tr>
+        </tbody>
+      </table>
+      <div role="group">
+        <button id="btnToggleInput" disabled>Input color values</button>
+        <button id="btnCalculate" disabled>Calculate</button>
+      </div>
+    </main>
 
     <script>
       function usecolor() {

@@ -46,119 +46,121 @@
     </style>
   </head>
   <body>
-    <h1>Accessibility tools</h1>
+    <main>
+      <h1>Accessibility tools</h1>
 
-    <h2>Color Tuner</h2>
-    <p>
-      The Color Tuner is a design tool that allows you to see, and select, accessible foreground
-      and background colors by calculating and displaying the contrast ratio for colors as well
-      as modifying foreground and background colors to meet accessibilityguidelines for luminance
-      contrast (WCAG 2.1, Guideline 1.4, Success Criterion 1.4.3 and Success Criterion 1.4.6).
-    </p>
-    <p>
-      <a href="color-tuner.htm">Color Tuner</a>
-    </p>
+      <h2>Color Tuner</h2>
+      <p>
+        The Color Tuner is a design tool that allows you to see, and select, accessible foreground
+        and background colors by calculating and displaying the contrast ratio for colors as well
+        as modifying foreground and background colors to meet accessibilityguidelines for luminance
+        contrast (WCAG 2.1, Guideline 1.4, Success Criterion 1.4.3 and Success Criterion 1.4.6).
+      </p>
+      <p>
+        <a href="color-tuner.htm">Color Tuner</a>
+      </p>
 
-    <h2>Readability</h2>
-    <p>
-      The Readability utility calculates the Läsbarhetsindex for content.
-    </p>
+      <h2>Readability</h2>
+      <p>
+        The Readability utility calculates the Läsbarhetsindex for content.
+      </p>
 
-    <blockquote>
-      The current version of the `Readability` object does not account for phrases that are not
-      complete sentences, so some measure of caution should be used. For example, the phrase
-      "Last Name" would have a Läsbarhetsindex score of 2, but the the phrase "Surname" would have
-      a Läsbarhetsindex score of 101, even though its complexity would not _ordinarily_ be consider
-      that much greater. I am currently working to determine how best to accommodate this.
-    </blockquote>
+      <blockquote>
+        The current version of the `Readability` object does not account for phrases that are not
+        complete sentences, so some measure of caution should be used. For example, the phrase
+        "Last Name" would have a Läsbarhetsindex score of 2, but the the phrase "Surname" would have
+        a Läsbarhetsindex score of 101, even though its complexity would not _ordinarily_ be consider
+        that much greater. I am currently working to determine how best to accommodate this.
+      </blockquote>
 
-    <h3>Constructor</h3>
-    <section class="code">
-      new Readability([**_string|string[&nbsp;]|HTMLElement_ sample**][, **_number_ wlen**])
-    </section>
-
-    <dl>
-      <dt>sample</dt><dd>content to evaluate</dd>
-      <dt>wlen</dt><dd>length of a longword, defaults to 6 characters</dd>
-    </dl>
-
-    <h3>Internal Data Types</h3>
-    <section>
-      <h4>ScoredItem</h4>
-      <p>A scored phrase</p>
+      <h3>Constructor</h3>
+      <section class="code">
+        new Readability([**_string|string[&nbsp;]|HTMLElement_ sample**][, **_number_ wlen**])
+      </section>
 
       <dl>
-        <dt>
-        <ul class="datatype"><li>number</li></ul> longwords
-        </dt>
-        <dd>The number of words with a length greater-than or equal-to `wlong`.</dd>
-
-        <dt>
-        <ul class="datatype"><li>string</li></ul> phrase
-        </dt>
-        <dd>The phrase that has been evaluated.</dd>
-
-        <dt>
-        <ul class="datatype"><li>number</li></ul> score
-        </dt>
-        <dd>The Läsbarhetsindex score for the phrase.</dd>
-
-        <dt>
-        <ul class="datatype"><li>number</li></ul> sentences
-        </dt>
-        <dd>The number of sentences in the phrase.</dd>
-
-        <dt>
-        <ul class="datatype"><li>number</li></ul> words
-        </dt>
-        <dd>The number of words in the phrase.</dd>
+        <dt>sample</dt><dd>content to evaluate</dd>
+        <dt>wlen</dt><dd>length of a longword, defaults to 6 characters</dd>
       </dl>
-    </section>
 
-    <h3>Properties</h3>
-    <section class="properties">
-      <dl>
-        <dt>
-          <ul class="datatype"><li>number</li></ul> avg
-        </dt>
-        <dd>The average Läsbarhetsindex for all parsed content. READ-ONLY</dd>
+      <h3>Internal Data Types</h3>
+      <section>
+        <h4>ScoredItem</h4>
+        <p>A scored phrase</p>
 
-        <dt>
-        <ul class="datatype"><li>string</li><li>string[&nbsp;]</li><li>HTMLElement</li></ul> content
-        </dt>
-        <dd>Raw content to be evaluated.</dd>
+        <dl>
+          <dt>
+          <ul class="datatype"><li>number</li></ul> longwords
+          </dt>
+          <dd>The number of words with a length greater-than or equal-to `wlong`.</dd>
 
-        <dt>
-        <ul class="datatype"><li>string</li></ul> lang
-        </dt>
-        <dd>BCP-47 langtag for content.</dd>
+          <dt>
+          <ul class="datatype"><li>string</li></ul> phrase
+          </dt>
+          <dd>The phrase that has been evaluated.</dd>
 
-        <dt>
-        <ul class="datatype"><li>ScoredItem[&nbsp;]</li></ul> parsed
-        </dt>
-        <dd>Phrases parsed into scored items, set by setting content or passing content to the `score` method. READ-ONLY</dd>
+          <dt>
+          <ul class="datatype"><li>number</li></ul> score
+          </dt>
+          <dd>The Läsbarhetsindex score for the phrase.</dd>
 
-        <dt>
-        <ul class="datatype"><li>number</li></ul> wlong
-        </dt>
-        <dd>The length, in characters, a word must be to be a long word. Defaults to 6 characters.</dd>
-      </dl>
-    </section>
+          <dt>
+          <ul class="datatype"><li>number</li></ul> sentences
+          </dt>
+          <dd>The number of sentences in the phrase.</dd>
 
-    <h3>Methods</h3>
-    <section class="methods">
-      <dl>
-        <dt>
-        <ul class="datatype"><li>ScoredItem</li></ul> item(<ul class="datatype"><li>number</li></ul> index)
-        </dt>
-        <dd>Returns a scored item from the `parsed` collection.</dd>
+          <dt>
+          <ul class="datatype"><li>number</li></ul> words
+          </dt>
+          <dd>The number of words in the phrase.</dd>
+        </dl>
+      </section>
 
-        <dt>
-        <ul class="datatype"><li>number</li></ul> score([<ul class="datatype"><li>string</li><li>string[&nbsp;]</li><li>HTMLElement</li></ul> content])
-        </dt>
-        <dd>Calculates and returns the Läsbarhetsindex for the specified content.</dd>
-      </dl>
-    </section
+      <h3>Properties</h3>
+      <section class="properties">
+        <dl>
+          <dt>
+            <ul class="datatype"><li>number</li></ul> avg
+          </dt>
+          <dd>The average Läsbarhetsindex for all parsed content. READ-ONLY</dd>
+
+          <dt>
+          <ul class="datatype"><li>string</li><li>string[&nbsp;]</li><li>HTMLElement</li></ul> content
+          </dt>
+          <dd>Raw content to be evaluated.</dd>
+
+          <dt>
+          <ul class="datatype"><li>string</li></ul> lang
+          </dt>
+          <dd>BCP-47 langtag for content.</dd>
+
+          <dt>
+          <ul class="datatype"><li>ScoredItem[&nbsp;]</li></ul> parsed
+          </dt>
+          <dd>Phrases parsed into scored items, set by setting content or passing content to the `score` method. READ-ONLY</dd>
+
+          <dt>
+          <ul class="datatype"><li>number</li></ul> wlong
+          </dt>
+          <dd>The length, in characters, a word must be to be a long word. Defaults to 6 characters.</dd>
+        </dl>
+      </section>
+
+      <h3>Methods</h3>
+      <section class="methods">
+        <dl>
+          <dt>
+          <ul class="datatype"><li>ScoredItem</li></ul> item(<ul class="datatype"><li>number</li></ul> index)
+          </dt>
+          <dd>Returns a scored item from the `parsed` collection.</dd>
+
+          <dt>
+          <ul class="datatype"><li>number</li></ul> score([<ul class="datatype"><li>string</li><li>string[&nbsp;]</li><li>HTMLElement</li></ul> content])
+          </dt>
+          <dd>Calculates and returns the Läsbarhetsindex for the specified content.</dd>
+        </dl>
+      </section>
+    </main>
   </body>
 </html>
 
