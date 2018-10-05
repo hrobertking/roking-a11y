@@ -8,7 +8,7 @@ The Color Tuner is a design tool that allows you to see, and select, accessible 
 [Color Tuner Source](docs/color-tuner.htm)
 
 ### Example
-[Color Tuner](https://cdn.rawgit.com/hrobertking/roking-a11y/docs/color-tuner.htm)
+[Color Tuner](https://hrobertking.github.io/roking-a11y/color-tuner.htm)
 
 ## Readability
 The Readability utility calculates the Läsbarhetsindex for content.
