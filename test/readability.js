@@ -39,5 +39,42 @@ describe('utilities - readability', function () {
     evaluator.lang = 'zh';
     assert.equal(evaluator.wlong, 6);
   });
+  it('returns an array of languages supported', function() {
+    const evaluator = new Readability();
+    const languages = [
+      { code: 'ar', name: 'Arabic' },
+      { code: 'cs', name: 'Czech' },
+      { code: 'da', name: 'Danish' },
+      { code: 'de', name: 'German' },
+      { code: 'el', name: 'Greek' },
+      { code: 'en', name: 'English' },
+      { code: 'es', name: 'Spanish' },
+      { code: 'et', name: 'Estonian' },
+      { code: 'eu', name: 'Basque' },
+      { code: 'fi', name: 'Finnish' },
+      { code: 'fr', name: 'French' },
+      { code: 'hr', name: 'Croatian' },
+      { code: 'hu', name: 'Hungarian' },
+      { code: 'is', name: 'Icelandic' },
+      { code: 'it', name: 'Italian' },
+      { code: 'lt', name: 'Lithuanian' },
+      { code: 'lv', name: 'Latvian' },
+      { code: 'nb', name: 'Norwegian Bokmål' },
+      { code: 'nl', name: 'Dutch' },
+      { code: 'nn', name: 'Norwegian Nynorsk' },
+      { code: 'no', name: 'Norwegian' },
+      { code: 'pl', name: 'Polish' },
+      { code: 'pt', name: 'Portuguese' },
+      { code: 'ro', name: 'Romanian' },
+      { code: 'ru', name: 'Russian' },
+      { code: 'sk', name: 'Slovak' },
+      { code: 'sq', name: 'Albanian' },
+      { code: 'sv', name: 'Swedish' },
+      { code: 'tr', name: 'Turkish' },
+      { code: 'uk', name: 'Ukrainian' },
+      { code: 'vi', name: 'Vietnamese' },
+    ];
+    assert.equal(JSON.stringify(evaluator.languages), JSON.stringify(languages));
+  });
 });
 

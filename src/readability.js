@@ -49,6 +49,17 @@ module.exports.default = function Readability(sample, wlen) {
   });
 
   /**
+   * @property languages
+   * @type {object[]}
+   * @description The `code` and `name` of languages supported
+   */
+  Object.defineProperty(this, 'languages', {
+    get: getLangs,
+    enumerable: true,
+    writeable: false,
+  });
+
+  /**
    * @property parsed
    * @type {ScoredItem[]}
    * @description Phrases parsed into scored items. Set by setting content or passing content
@@ -104,6 +115,24 @@ module.exports.default = function Readability(sample, wlen) {
 
       return Math.round(sum/self.parsed.length);
     }
+  }
+
+  /**
+   * @private
+   * @description Gets the `code` and `name` of languages supported.
+   * @returns {object[]}
+   */
+  function getLangs() {
+    const langs = [];
+    const keys = Object.keys(SIZES).sort();
+    let i = keys.length - 1;
+    while (i > -1) {
+      const code = keys[i];
+      const { name } = SIZES[code];
+      langs.unshift({ code, name });
+      i -= 1;
+    }
+    return langs;
   }
 
   /**
@@ -201,47 +230,6 @@ module.exports.default = function Readability(sample, wlen) {
      */
     const ISO_PATTERN = /^([a-z]{2})(-[a-z]{2})?$/i;
 
-    /**
-     * @description The average number of characters in one word, by ISO 639-2 language code.
-     * Data is based on research performed by Diuna and Kamila Marzęcka from SWPS University,
-     * and closely matches the number suggested by Carl-Hugo Björnsson.
-     * @see {@link https://en.wikipedia.org/wiki/Lix_(readability_test)}
-     * @see {@link https://diuna.biz/length-of-words-average-number-of-characters-in-a-word/}
-     */
-    const SIZES = {
-      ar: 6.03,
-      cs: 6.02,
-      da: 5.48,
-      de: 6.03,
-      el: 6.47,
-      en: 6.08,
-      es: 5.71,
-      et: 7.3,
-      eu: 6.51,
-      fi: 7.55,
-      fr: 5.39,
-      hr: 5.58,
-      hu: 6.48,
-      is: 5.97,
-      it: 5.95,
-      lt: 6.85,
-      lv: 7.14,
-      nb: 5.37,
-      nl: 6.48,
-      nn: 5.37,
-      no: 5.37,
-      pl: 7.21,
-      pt: 5.66,
-      ro: 6.49,
-      ru: 6.06,
-      sk: 6.35,
-      sq: 6.35,
-      sv: 5.97,
-      tr: 7.22,
-      uk: 7.52,
-      vi: 4.5,
-    };
-
     /* get the language subtag */
     const langSubtag = (bcp47 || '').replace(ISO_PATTERN, function(match, lang, region) {
       return lang;
@@ -249,11 +237,52 @@ module.exports.default = function Readability(sample, wlen) {
     
     /* we can only set a new value if we have the language */
     if (Object.prototype.hasOwnProperty.call(SIZES, langSubtag)) {
-      self.wlong = Math.round(SIZES[langSubtag]);
+      self.wlong = Math.round(SIZES[langSubtag].value);
     }
   }
 	
   const self = this;
+
+  /**
+   * @description The average number of characters in one word, by ISO 639-2 language code.
+   * Data is based on research performed by Diuna and Kamila Marzęcka from SWPS University,
+   * and closely matches the number suggested by Carl-Hugo Björnsson.
+   * @see {@link https://en.wikipedia.org/wiki/Lix_(readability_test)}
+   * @see {@link https://diuna.biz/length-of-words-average-number-of-characters-in-a-word/}
+   */
+  const SIZES = {
+    ar: { name: 'Arabic', l10n: 'العربية', value: 6.03 },
+    cs: { name: 'Czech', l10n: 'Český', value: 6.02 },
+    da: { name: 'Danish', l10n: 'Dansk', value: 5.48 },
+    de: { name: 'German', l10n: 'Deutsch', value: 6.03 },
+    el: { name: 'Greek', l10n: 'Ελληνικά', value: 6.47 },
+    en: { name: 'English', l10n: 'English', value: 6.08 },
+    es: { name: 'Spanish', l10n: 'Español', value: 5.71 },
+    et: { name: 'Estonian', l10n: 'Eesti', value: 7.3 },
+    eu: { name: 'Basque', l10n: 'Euskara', value: 6.51 },
+    fi: { name: 'Finnish', l10n: 'Suomi', value: 7.55 },
+    fr: { name: 'French', l10n: 'Français', value: 5.39 },
+    hr: { name: 'Croatian', l10n: 'Hrvatski Jezik', value: 5.58 },
+    hu: { name: 'Hungarian', l10n: 'Magyar', value: 6.48 },
+    is: { name: 'Icelandic', l10n: 'Íslenska', value: 5.97 },
+    it: { name: 'Italian', l10n: 'Italiano', value: 5.95 },
+    lt: { name: 'Lithuanian', l10n: 'Lietuvių Kalba', value: 6.85 },
+    lv: { name: 'Latvian', l10n: 'Latviešu Valoda', value: 7.14 },
+    nb: { name: 'Norwegian Bokmål', l10n: 'Norsk Bokmål', value: 5.37 },
+    nl: { name: 'Dutch', l10n: 'Nederlands', value: 6.48 },
+    nn: { name: 'Norwegian Nynorsk', l10n:'Norsk Nynorsk', value: 5.37 },
+    no: { name: 'Norwegian', l10n: 'Norsk', value: 5.37 },
+    pl: { name: 'Polish', l10n: 'Język Polski', value: 7.21 },
+    pt: { name: 'Portuguese', l10n: 'Português', value: 5.66 },
+    ro: { name: 'Romanian', l10n: 'Română', value: 6.49 },
+    ru: { name: 'Russian', l10n: 'Русский', value: 6.06 },
+    sk: { name: 'Slovak', l10n: 'Slovenčina', value: 6.35 },
+    sq: { name: 'Albanian', l10n: 'Shqip', value: 6.35 },
+    sv: { name: 'Swedish', l10n: 'Svenska', value: 5.97 },
+    tr: { name: 'Turkish', l10n: 'Türkçe', value: 7.22 },
+    uk: { name: 'Ukrainian', l10n: 'Українська', value: 7.52 },
+    vi: { name: 'Vietnamese', l10n: 'Tiếng Việt', value: 4.5 },
+  };
 
   // constructor
   this.content = sample;
