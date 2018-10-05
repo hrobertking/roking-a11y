@@ -5,10 +5,10 @@ Accessibility tools
 The Color Tuner is a design tool that allows you to see, and select, accessible foreground and background colors by calculating and displaying the contrast ratio for colors as well as modifying foreground and background colors to meet accessibilityguidelines for luminance contrast (WCAG 2.1, Guideline 1.4, Success Criterion 1.4.3 and Success Criterion 1.4.6).
 
 ### Source
-[Color Tuner Source](public/index.htm)
+[Color Tuner Source](docs/color-tuner.htm)
 
 ### Example
-[Color Tuner](https://cdn.rawgit.com/hrobertking/roking-a11y/color-tuner/public/index.htm)
+[Color Tuner](https://cdn.rawgit.com/hrobertking/roking-a11y/docs/color-tuner.htm)
 
 ## Readability
 The Readability utility calculates the Läsbarhetsindex for content.
