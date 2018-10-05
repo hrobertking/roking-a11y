@@ -165,6 +165,10 @@
     <p>
       This tool allows you to select an accessible foreground and background color by performing luminance contrast
       calculations in real time and adjusting the foreground and background color to meet the specified guideline.
+      To tune your colors, simply enter the foreground and background colors in the input boxes below and
+      <strong><em>Calculate</em></strong>. The tuner will calculate the luminance contrast and, if it does
+      not meet the selected guideline level, will adjust the foreground, the background, and both values
+      to give you the closest possible matches that are compliant.
     </p>
     <p>
       The default setting uses the WCAG luminance contrast threshold for normal text at the <em>AA</em>
@@ -179,7 +183,7 @@
           <th scope="col">Background</th>
           <th scope="col">Sample</th>
           <th scope="col">
-            Contrast (n:1)
+            Contrast (<span aria-label="n to 1">n:1</span>)
             <div class="checkbox">
               <input id="compliance" type="checkbox" value="7.1" />
               <label for="compliance">Use stricter AAA compliance level</label>
@@ -187,7 +191,7 @@
           </th>
         </tr>
       </thead>
-      <tbody>
+      <tbody aria-atomic="true" aria-live="polite">
         <tr id="as-is">
           <th scope="row">As is</td>
           <td class="input">
