@@ -2,8 +2,9 @@
  * @module roking-a11y
  * @author H Robert King <hrobertking@cathmhaol.com>
  * @description The Readability utility calculates the Läsbarhetsindex for content.
- * @param {string|string[]|HTMLElement} sample - content to evaluate
- * @param {number} wlen - length of a longword, defaults to 6 characters
+ * @param {string|string[]|HTMLElement} [sample] - content to evaluate
+ * @param {number} [wlen] - length of a longword, defaults to 6 characters
+ * @param {string} [langtag] - the BCP-47 langtag or language subtag for the content
  *
  * @typedef {Object} ScoredItem
  * @description A scored phrase
@@ -14,7 +15,7 @@
  * @property {number} words
  *
  */
-module.exports.default = function Readability(sample, wlen) {
+module.exports.default = function Readability(sample, wlen, langtag) {
   /**
    * @property avg
    * @type {number}
@@ -43,6 +44,7 @@ module.exports.default = function Readability(sample, wlen) {
    * @description BCP-47 langtag for content.
    */
   Object.defineProperty(this, 'lang', {
+    get: getLang,
     set: setLang,
     enumerable: true,
     writeable: true,
@@ -72,7 +74,14 @@ module.exports.default = function Readability(sample, wlen) {
    * @description The length, in characters, a word must be to be a long word.
    * @default 6
    */
-  this.wlong = wlen || 6;
+  //*
+  Object.defineProperty(this, 'wlong', {
+    get: getLong,
+    set: setLong,
+    enumerable: true,
+    writeable: true,
+  });
+  // */
 
   /**
    * @method item
@@ -116,6 +125,15 @@ module.exports.default = function Readability(sample, wlen) {
 
   /**
    * @private
+   * @description Gets the language code.
+   * @returns {string}
+   */
+  function getLang() {
+    return localLang;
+  }
+
+  /**
+   * @private
    * @description Gets the `code` and `name` of languages supported.
    * @returns {object[]}
    */
@@ -130,6 +148,15 @@ module.exports.default = function Readability(sample, wlen) {
       i -= 1;
     }
     return langs;
+  }
+
+  /**
+   * @private
+   * @description Gets the longword size
+   * @returns {number}
+   */
+  function getLong() {
+    return localSize;
   }
 
   /**
@@ -224,7 +251,20 @@ module.exports.default = function Readability(sample, wlen) {
 
     /* we can only set a new value if we have the language */
     if (Object.prototype.hasOwnProperty.call(SIZES, langSubtag)) {
+      localLang = langSubtag;
       self.wlong = Math.round(SIZES[langSubtag].value);
+    }
+  }
+
+  /**
+   * @private
+   * @description Sets the longword size
+   * @returns {undefined}
+   * @param {number|string} n
+   */
+  function setLong(n) {
+    if (n && !Number.isNaN(n)) {
+      localSize = n;
     }
   }
 
@@ -271,7 +311,13 @@ module.exports.default = function Readability(sample, wlen) {
     vi: { name: 'Vietnamese', l10n: 'Tiếng Việt', value: 4.5 },
   };
 
+  // private variables
+  let localLang;
+  let localSize = 6;
+
   // constructor
+  this.wlong = wlen;
+  this.lang = langtag;
   this.content = sample;
 };
 
