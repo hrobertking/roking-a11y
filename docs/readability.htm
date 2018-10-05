@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <title>Readability</title>
+    <style type="text/css">
+      body {
+        margin: auto;
+        width: 80%;
+      }
+
+      blockquote {
+        border-left: 0.25rem solid rgb(240, 240, 240);
+        display: flex;
+        margin: 0;
+        padding: 1rem;
+      }
+      blockquote::before {
+        background: rgb(255, 255, 255);
+        color: rgb(255, 0, 0);
+        content: "⚠";
+        font-size: 2rem;
+        margin: -0.5rem 0.5rem 0 0;
+      }
+
+      button {
+        border-radius: 0.25rem;
+        font-size: 1.5rem;
+        margin: 0.2rem;
+      }
+      button:not([disabled]) {
+        background-color: rgb(75, 150, 75);
+        border: 1px solid rgb(60, 120, 60);
+        color: rgb(0, 0, 0);
+      }
+
+      label {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+      }
+
+      label,
+      textarea {
+        display: block;
+        line-height: 1.2rem;
+        width: 100%;
+      }
+
+      textarea {
+        border: 1px solid rgb(170, 170, 170);
+        font-size: 1rem;
+        height: 24rem;
+      }
+
+      .score {
+        background: rgb(240, 240, 240);
+        border: 1px solid rgb(170, 170, 170);
+        border-top: none;
+        color: rgb(0, 0, 0);
+        display: block;
+        margin-bottom: 1rem;
+        padding: 0.25rem 0.15rem;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Readability</h1>
+      <p>
+        The Readability utility calculates the Läsbarhetsindex for content.
+      </p>
+      <blockquote>
+        The current version of the `Readability` object does not account for phrases that
+        are not complete sentences, so some measure of caution should be used. For example,
+        the phrase "Last Name" would have a Läsbarhetsindex score of 2, but the the phrase
+        "Surname" would have a Läsbarhetsindex score of 101, even though its complexity would
+        not _ordinarily_ be consider that much greater. I am currently working to determine
+        how best to accommodate this.
+      </blockquote>
+      <p>
+        Enter or paste the text to evaluate in the form below.
+      </p>
+      <p>
+        <label for="textin">Text to evaluate</label>
+        <textarea id="textin"></textarea>
+        <span class="score">
+          <span id="score-label">Score</span>: 
+          <span aria-labelledby="score-label" id="score" role="status"></span>
+        </span>
+        <button type="button" onclick="calc();">Evaluate</button>
+      </p>
+    </main>
+    <script>
+      function Readability(sample, wlen) {Object.defineProperty(this, 'avg', { 	get: getAvg, 	enumerable: true, 	}); Object.defineProperty(this, 'content', { set: setContent, enumerable: true, writeable: true, }); Object.defineProperty(this, 'lang', { set: setLang, enumerable: true, writeable: true, }); this.wlong = wlen || 6; this.item = function getItem(index) { return self.parsed ? self.parsed[index] : null; }; this.score = function calculate(content) { if (content) { self.content = content; } return self; }; function getAvg() { if (self.parsed && self.parsed.length) { const scores = self.parsed.map(function mapScoredItem(si) { return si.score; }); const sum = scores.reduce(function accumulate(ttl, score) { return ttl + score; }); return Math.round(sum/self.parsed.length); } } function isPrimitive(value) { return /^(boolean|number|string)$/.test(typeof value); } function isElement(value) { return value && value.hasChildNodes; } function isDocument(value) { return value && value.body; } function normalize(phrase) { const els = []; const tags = isElement(phrase) ? (phrase.body || phrase).getElementsByTagName('*') : null; if (isPrimitive(phrase)) { els.push(phrase + ''); } else if (tags) { for (let c = tags.length - 1; c > -1; c -= 1) { els.unshift(tags.item(c).textContent.replace(/\s+/, ' ')); } } return els; } function parse(phrase) { const bites = phrase.split(' '); const words = bites.length; const longWords = bites.filter(function countlong(word) { return word.length > self.wlong; }).length; const sentences = phrase.split(/[:.]/g).filter(function noblank(el) { return !!el; }).length; const score = !words || !sentences ? 0 : Math.round(words/sentences + (longWords*100)/words); return { longWords, phrase, score, sentences, words, }; } function setContent(data) { self.parsed = Array.isArray(data) ? data.map(el => parse(el)) : normalize(data).map(el => parse(el)); } function setLang(bcp47) { const ISO_PATTERN = /^([a-z]{2})(-[a-z]{2})?$/i; const SIZES = { ar: 6.03, cs: 6.02, da: 5.48, de: 6.03, el: 6.47, en: 6.08, es: 5.71, et: 7.3, eu: 6.51, fi: 7.55, fr: 5.39, hr: 5.58, hu: 6.48, is: 5.97, it: 5.95, lt: 6.85, lv: 7.14, nb: 5.37, nl: 6.48, nn: 5.37, no: 5.37, pl: 7.21, pt: 5.66, ro: 6.49, ru: 6.06, sk: 6.35, sq: 6.35, sv: 5.97, tr: 7.22, uk: 7.52, vi: 4.5, }; const langSubtag = (bcp47 || '').replace(ISO_PATTERN, function(match, lang, region) { return lang; }); if (Object.prototype.hasOwnProperty.call(SIZES, langSubtag)) { self.wlong = Math.round(SIZES[langSubtag]); } } const self = this; this.content = sample; }
+    </script>
+    <script>
+      function calc () {
+        var content = document.getElementById('textin').value,
+          evaluator = new Readability(content),
+          score = document.getElementById('score');
+
+        if (evaluator) {
+          score.innerHTML = evaluator.avg;
+        }
+      }
+    </script>
+  </body>
+</html>
+
