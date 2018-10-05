@@ -4,6 +4,7 @@
  * @description Accessibility evaluation tools
  */
 
-var readability = require('./readability.js');
+const readability = require('./readability.js');
+
 exports.readability = readability.default;
 

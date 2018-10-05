@@ -1,6 +1,7 @@
 /* eslint func-names: 0, prefer-arrow-callback: 0, one-var: 0 */
 const assert = require('assert');
 const utilities = require('../src/index.js');
+
 const Readability = utilities.readability;
 
 describe('utilities - readability', function () {
@@ -13,7 +14,7 @@ describe('utilities - readability', function () {
     const content = [
       'Tomar este medicina.',
       'Drink this medicine.',
-      'Now is the time for all good men to come to the aid of their country.'
+      'Now is the time for all good men to come to the aid of their country.',
     ];
     const evaluator = new Readability(content);
     assert.equal(evaluator.avg, 31);
@@ -39,7 +40,7 @@ describe('utilities - readability', function () {
     evaluator.lang = 'zh';
     assert.equal(evaluator.wlong, 6);
   });
-  it('returns an array of languages supported', function() {
+  it('returns an array of languages supported', function () {
     const evaluator = new Readability();
     const languages = [
       { code: 'ar', name: 'Arabic' },

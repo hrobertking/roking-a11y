@@ -21,10 +21,10 @@ module.exports.default = function Readability(sample, wlen) {
    * @description The average Läsbarhetsindex for parsed content.
    * @read-only
    */
-	Object.defineProperty(this, 'avg', {
-  	get: getAvg,
-  	enumerable: true,
-	});
+  Object.defineProperty(this, 'avg', {
+    get: getAvg,
+    enumerable: true,
+  });
 
   /**
    * @property content
@@ -97,7 +97,7 @@ module.exports.default = function Readability(sample, wlen) {
     }
 
     return self;
-  }
+  };
 
   /**
    * @private
@@ -106,15 +106,12 @@ module.exports.default = function Readability(sample, wlen) {
    */
   function getAvg() {
     if (self.parsed && self.parsed.length) {
-      const scores = self.parsed.map(function mapScoredItem(si) {
-          return si.score;
-        });
-      const sum = scores.reduce(function accumulate(ttl, score) {
-          return ttl + score;
-        });
+      const scores = self.parsed.map(si => si.score);
+      const sum = scores.reduce((ttl, score) => ttl + score);
 
-      return Math.round(sum/self.parsed.length);
+      return Math.round(sum / self.parsed.length);
     }
+    return 0;
   }
 
   /**
@@ -157,16 +154,6 @@ module.exports.default = function Readability(sample, wlen) {
 
   /**
    * @private
-   * @description Returns true if the type has a body
-   * @returns {boolean}
-   * @param {*} value
-   */
-  function isDocument(value) {
-    return value && value.body;
-  }
-
-  /**
-   * @private
    * @description Returns a string array given a primitive value or htmlelement
    * @returns {string[]}
    * @param {*} phrase
@@ -176,7 +163,7 @@ module.exports.default = function Readability(sample, wlen) {
     const tags = isElement(phrase) ? (phrase.body || phrase).getElementsByTagName('*') : null;
 
     if (isPrimitive(phrase)) {
-      els.push(phrase + '');
+      els.push(`${phrase}`);
     } else if (tags) {
       for (let c = tags.length - 1; c > -1; c -= 1) {
         els.unshift(tags.item(c).textContent.replace(/\s+/, ' '));
@@ -194,9 +181,11 @@ module.exports.default = function Readability(sample, wlen) {
   function parse(phrase) {
     const bites = phrase.split(' ');
     const words = bites.length;
-    const longWords = bites.filter(function countlong(word) { return word.length > self.wlong; }).length;
-    const sentences = phrase.split(/[:.]/g).filter(function noblank(el) { return !!el; }).length;
-    const score = !words || !sentences ? 0 : Math.round(words/sentences + (longWords*100)/words);
+    const longWords = bites.filter(word => word.length > self.wlong).length;
+    const sentences = phrase.split(/[:.]/g).filter(el => !!el).length;
+    const pcwords = words / (sentences || 1);
+    const pclwords = (longWords * 100) / (words || 1);
+    const score = !words || !sentences ? 0 : Math.round(pcwords + pclwords);
 
     return {
       longWords,
@@ -220,7 +209,7 @@ module.exports.default = function Readability(sample, wlen) {
 
   /**
    * @private
-   * @description Sets the wlong property based on the specified language. 
+   * @description Sets the wlong property based on the specified language.
    * @returns {undefined}
    */
   function setLang(bcp47) {
@@ -231,16 +220,14 @@ module.exports.default = function Readability(sample, wlen) {
     const ISO_PATTERN = /^([a-z]{2})(-[a-z]{2})?$/i;
 
     /* get the language subtag */
-    const langSubtag = (bcp47 || '').replace(ISO_PATTERN, function(match, lang, region) {
-      return lang;
-    });
-    
+    const langSubtag = (bcp47 || '').replace(ISO_PATTERN, (match, lang) => lang);
+
     /* we can only set a new value if we have the language */
     if (Object.prototype.hasOwnProperty.call(SIZES, langSubtag)) {
       self.wlong = Math.round(SIZES[langSubtag].value);
     }
   }
-	
+
   const self = this;
 
   /**
@@ -270,7 +257,7 @@ module.exports.default = function Readability(sample, wlen) {
     lv: { name: 'Latvian', l10n: 'Latviešu Valoda', value: 7.14 },
     nb: { name: 'Norwegian Bokmål', l10n: 'Norsk Bokmål', value: 5.37 },
     nl: { name: 'Dutch', l10n: 'Nederlands', value: 6.48 },
-    nn: { name: 'Norwegian Nynorsk', l10n:'Norsk Nynorsk', value: 5.37 },
+    nn: { name: 'Norwegian Nynorsk', l10n: 'Norsk Nynorsk', value: 5.37 },
     no: { name: 'Norwegian', l10n: 'Norsk', value: 5.37 },
     pl: { name: 'Polish', l10n: 'Język Polski', value: 7.21 },
     pt: { name: 'Portuguese', l10n: 'Português', value: 5.66 },
@@ -286,4 +273,5 @@ module.exports.default = function Readability(sample, wlen) {
 
   // constructor
   this.content = sample;
-}
+};
+
