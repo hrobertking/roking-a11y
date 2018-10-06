@@ -17,13 +17,19 @@ The Readability utility calculates the Läsbarhetsindex for content.
 
 ### Constructor
 ```
-new Readability([**_string|string[]|HTMLElement_ sample**][, **_number_ wlen**])
+new Readability([**_string|string[]|HTMLElement|ConfigObject_ text**][, **_number_ size**][, **_string_** lang])
 ```
 
-- sample: content to evaluate
-- wlen: length of a longword, defaults to 6 characters
+- text: content to evaluate
+- size: length of a longword, defaults to 6 characters
+- lang: a BCP-47 langtag or an ISO 639-1 language code.
 
 ### Internal Data Types
+- **_ConfigObject_**: A configuration object
+  - **_string_ lang**: A BCP-47 langtag or a ISO 639-1 language code.
+  - **_number_ size**: The character length of a longword.
+  - **_string|string[]|HTMLElement_ text**: The content to be parsed.
+
 - **_ScoredItem_**: A scored phrase
   - **_number_ longwords**: The number of words with a length greater-than or equal-to `wlong`.
   - **_string_ phrase**: The phrase that has been evaluated.
@@ -34,7 +40,7 @@ new Readability([**_string|string[]|HTMLElement_ sample**][, **_number_ wlen**])
 ### Properties
 - **_number_ avg**: The average Läsbarhetsindex for all parsed content. READ-ONLY
 - **_string|string[]|HTMLElement_ content**: Raw content to be evaluated.
-- **_string_ lang**: BCP-47 langtag for content.
+- **_string_ lang**: BCP-47 langtag or an ISO 639-1 language code for content.
 - **_ScoredItem[]_ parsed**: Phrases parsed into scored items, set by setting content or passing content to the `score` method. READ-ONLY
 - **number_ wlong**: The length, in characters, a word must be to be a long word. Defaults to 6 characters.
 

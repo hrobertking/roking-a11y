@@ -2,9 +2,15 @@
  * @module roking-a11y
  * @author H Robert King <hrobertking@cathmhaol.com>
  * @description The Readability utility calculates the Läsbarhetsindex for content.
- * @param {string|string[]|HTMLElement} [sample] - content to evaluate
- * @param {number} [wlen] - length of a longword, defaults to 6 characters
- * @param {string} [langtag] - the BCP-47 langtag or language subtag for the content
+ * @param {string|string[]|HTMLElement|ConfigObject} [text] - content to evaluate or a ConfigObject
+ * @param {number} [size] - length of a longword, defaults to 6 characters
+ * @param {string} [lang] - the BCP-47 langtag or language subtag for the content
+ *
+ * @typedef {Object} ConfigObject
+ * @description A configuration object
+ * @property {string} lang
+ * @proprety {number} size
+ * @property {string|string[]|HTMLElement} text
  *
  * @typedef {Object} ScoredItem
  * @description A scored phrase
@@ -14,8 +20,13 @@
  * @property {number} sentences
  * @property {number} words
  *
+ * @example
+ * const r = new Readability({ text: 'Drink this medicine', lang: 'en' });
+ * const r = new Readability('Tomar este medicina', 'es');
+ * const r = new Readability('Drink this medicine', 4);
+ * const r = new Readability('Drink this medicine');
  */
-module.exports.default = function Readability(sample, wlen, langtag) {
+module.exports.default = function Readability() {
   /**
    * @property avg
    * @type {number}
@@ -90,7 +101,7 @@ module.exports.default = function Readability(sample, wlen, langtag) {
    * @param {number} index
    */
   this.item = function getItem(index) {
-    return self.parsed ? self.parsed[index] : null;
+    return SELF.parsed ? SELF.parsed[index] : null;
   };
 
   /**
@@ -102,10 +113,10 @@ module.exports.default = function Readability(sample, wlen, langtag) {
   this.score = function calculate(content) {
     /* parse the content if it's passed in */
     if (content) {
-      self.content = content;
+      SELF.content = content;
     }
 
-    return self;
+    return SELF;
   };
 
   /**
@@ -114,11 +125,11 @@ module.exports.default = function Readability(sample, wlen, langtag) {
    * @returns {number}
    */
   function getAvg() {
-    if (self.parsed && self.parsed.length) {
-      const scores = self.parsed.map(si => si.score);
+    if (SELF.parsed && SELF.parsed.length) {
+      const scores = SELF.parsed.map(si => si.score);
       const sum = scores.reduce((ttl, score) => ttl + score);
 
-      return Math.round(sum / self.parsed.length);
+      return Math.round(sum / SELF.parsed.length);
     }
     return 0;
   }
@@ -208,7 +219,7 @@ module.exports.default = function Readability(sample, wlen, langtag) {
   function parse(phrase) {
     const bites = phrase.split(' ');
     const words = bites.length;
-    const longWords = bites.filter(word => word.length > self.wlong).length;
+    const longWords = bites.filter(word => word.length > SELF.wlong).length;
     const sentences = phrase.split(/[:.]/g).filter(el => !!el).length;
     const pcwords = words / (sentences || 1);
     const pclwords = (longWords * 100) / (words || 1);
@@ -229,7 +240,7 @@ module.exports.default = function Readability(sample, wlen, langtag) {
    * @returns {undefined}
    */
   function setContent(data) {
-    self.parsed = Array.isArray(data) ?
+    SELF.parsed = Array.isArray(data) ?
       data.map(el => parse(el)) :
       normalize(data).map(el => parse(el));
   }
@@ -240,19 +251,13 @@ module.exports.default = function Readability(sample, wlen, langtag) {
    * @returns {undefined}
    */
   function setLang(bcp47) {
-    /**
-     * @description The BCP-47 langtag pattern with a language subtag and a region subtag.
-     * @see {@link https://tools.ietf.org/html/bcp47}
-     */
-    const ISO_PATTERN = /^([a-z]{2})(-[a-z]{2})?$/i;
-
     /* get the language subtag */
-    const langSubtag = (bcp47 || '').replace(ISO_PATTERN, (match, lang) => lang);
+    const langSubtag = (bcp47 || '').replace(ISO639_1, (match, lang) => lang);
 
     /* we can only set a new value if we have the language */
     if (Object.prototype.hasOwnProperty.call(SIZES, langSubtag)) {
       localLang = langSubtag;
-      self.wlong = Math.round(SIZES[langSubtag].value);
+      SELF.wlong = Math.round(SIZES[langSubtag].value);
     }
   }
 
@@ -268,7 +273,14 @@ module.exports.default = function Readability(sample, wlen, langtag) {
     }
   }
 
-  const self = this;
+
+  /**
+   * @description The BCP-47 langtag pattern with a language subtag and a region subtag.
+   * @see {@link https://tools.ietf.org/html/bcp47}
+   */
+  const ISO639_1 = /^([a-z]{2})(-[a-z]{2})?$/i;
+
+  const SELF = this;
 
   /**
    * @description The average number of characters in one word, by ISO 639-2 language code.
@@ -316,8 +328,14 @@ module.exports.default = function Readability(sample, wlen, langtag) {
   let localSize = 6;
 
   // constructor
-  this.wlong = wlen;
-  this.lang = langtag;
-  this.content = sample;
+  const {
+    lang = (ISO639_1.test(arguments[1]) ? arguments[1] : arguments[2]),
+    size = (arguments[1] && !ISO639_1.test(arguments[1]) ? arguments[1] : null),
+    text = arguments[0],
+  } = (arguments[0] || {});
+
+  this.wlong = size || 6;
+  this.lang = lang;
+  this.content = text;
 };
 

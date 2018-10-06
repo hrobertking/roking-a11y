@@ -77,5 +77,24 @@ describe('utilities - readability', function () {
     ];
     assert.equal(JSON.stringify(evaluator.languages), JSON.stringify(languages));
   });
+  it('changes the word length when provided a langtag', function () {
+    const evaluator = new Readability(null, null, 'vi');
+    assert.equal(evaluator.wlong, 5);
+  });
+  it('changes the language when provided a langtag', function () {
+    const evaluator = new Readability(null, null, 'vi');
+    assert.equal(evaluator.lang, 'vi');
+  });
+  it('sets values correctly when given a config object', function () {
+    const lang = 'es';
+    const size = 4;
+    const text = 'Drink this medicine now';
+
+    assert.equal((new Readability({ lang, size, text })).lang, lang);
+    assert.equal((new Readability({ lang, size })).lang, lang);
+    assert.equal((new Readability({ lang, text })).lang, lang);
+    assert.equal((new Readability({ size, text })).wlong, size);
+    assert.equal((new Readability({ size, text })).avg, 54);
+  });
 });
 
