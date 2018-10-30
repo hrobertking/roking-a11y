@@ -133,6 +133,11 @@
         color: rgb(0, 130, 0);
         content: '✓';
       }
+
+      .large {
+        font-size: 1.5rem;
+      }
+
       .error {
         position: absolute;
       }
@@ -173,9 +178,21 @@
         to give you the closest possible matches that are compliant.
       </p>
       <p>
+        If you wish to use a color picker instead of entering the hexadecimal color values, click the
+        <strong><em>Input Color Values</em></strong> button below.
+      </p>
+      <p>
         The default setting uses the WCAG luminance contrast threshold for normal text at the <em>AA</em>
-        compliance level. If you wish to use the higher, <em>AAA</em>, threshold, check the
-        <strong>Use stricter AAA compliance level</strong> box.
+        compliance level. Test results are also shown for <em>large</em> text, which is defined as
+        <span id="large-def">either (a) 120 percent the normal size <em>and</em> bold weight or (b) 150 percent
+        the normal size</span>. If you wish to use the higher, <em>AAA</em>, threshold, check the
+        <strong><em>Use stricter AAA compliance level</em></strong> box.
+      </p>
+      <p>
+        Although sufficient contrast is calculated for both normal and large size fonts separately, it is
+        recommended that the values for <em>normal size</em> be used as the contrast ratio will be sufficient
+        for <em>large size</em> automatically; however, sufficient contrast at <em>large size</em> may not be
+        sufficient at <em>normal size</em>.
       </p>
       <table>
         <thead>
@@ -187,7 +204,7 @@
             <th scope="col">
               Contrast (<span aria-label="n to 1">n:1</span>)
               <div class="checkbox">
-                <input id="compliance" type="checkbox" value="7.1" />
+                <input id="compliance" type="checkbox" />
                 <label for="compliance">Use stricter AAA compliance level</label>
               </div>
             </th>
@@ -206,34 +223,58 @@
               <input id="background" type="text" />
               <div class="error" role="alert">Value provided for background is not a valid hexadecimal color</div>
             </td>
-            <td class="sample">This is sample text.</td>
+            <td class="sample">
+              <span style="display: block;">This is normal text.</span>
+              <span style="display: block;">This is large text.</span>
+            </td>
             <td class="contrast"></td>
           </tr>
-          <tr id="foreground-only">
+          <tr class="foreground-only" data-type="normal" id="fons">
             <th scope="row">Foreground adjusted</td>
             <td class="number"></td>
             <td class="number"></td>
             <td class="sample">This is sample text.</td>
             <td class="contrast"></td>
           </tr>
-          <tr id="background-only">
-            <th scope="row">Background adjusted</td>
+          <tr class="foreground-only" data-type="large" id="fols">
+            <th scope="row">Foreground adjusted for large text</td>
+            <td class="number"></td>
+            <td class="number"></td>
+            <td class="sample large">This is sample text.</td>
+            <td class="contrast"></td>
+          </tr>
+          <tr class="background-only" data-type="normal" id="bons">
+            <th scope="row">Background adjusted for normal text</td>
             <td class="number"></td>
             <td class="number"></td>
             <td class="sample">This is sample text.</td>
             <td class="contrast"></td>
           </tr>
-          <tr id="both-adjusted">
-            <th scope="row">Foreground and background adjusted</td>
+          <tr class="background-only" data-type="large" id="bols">
+            <th scope="row">Background adjusted for large text</td>
+            <td class="number"></td>
+            <td class="number"></td>
+            <td class="sample large">This is sample text.</td>
+            <td class="contrast"></td>
+          </tr>
+          <tr class="both-adjusted" data-type="normal" id="bans">
+            <th scope="row">Foreground and background adjusted for normal text</td>
             <td class="number"></td>
             <td class="number"></td>
             <td class="sample">This is sample text.</td>
+            <td class="contrast"></td>
+          </tr>
+          <tr class="both-adjusted" data-type="large" id="bals">
+            <th scope="row">Foreground and background adjusted for large text</td>
+            <td class="number"></td>
+            <td class="number"></td>
+            <td class="sample large">This is sample text.</td>
             <td class="contrast"></td>
           </tr>
         </tbody>
       </table>
       <div role="group">
-        <button id="btnToggleInput" disabled>Input color values</button>
+        <button id="btnToggleInput" disabled>Input Color Values</button>
         <button id="btnCalculate" disabled>Calculate</button>
       </div>
     </main>
@@ -242,19 +283,22 @@
       function usecolor() {
         var type = (inputFg.type || inputBg.type) === 'color' ? 'text' : 'color';
 
-console.log('type: '+type);
         btnToggleInput.innerHTML = (type === 'color') ? 'Input color values' : 'Use color selectors';
         inputBg.type = type;
         inputFg.type = type;
       }
     </script>
     <script>
-      /**
-       * @var MIN_CONTRAST
-       * @description The minimum contrast ratio. Default is 4.5
-       * @type {number}
-       */
-      var MIN_CONTRAST, AA = 4.5;
+      var RATIOS = {
+          AA: {
+            normal: 4.5,
+            large: 3,
+          },
+          AAA: {
+            normal: 7.1,
+            large: 4.5,
+          }
+        };
 
       /**
        * @func calculate
@@ -264,37 +308,34 @@ console.log('type: '+type);
       function calculate() {
         var fg = colorize(inputFg.value),
           bg = colorize(inputBg.value),
-          aa = !document.getElementById('compliance').checked;
-
-        MIN_CONTRAST = !aa ? document.getElementById('compliance').value : AA;
+          CONTRAST = document.getElementById('compliance').checked ? RATIOS.AAA : RATIOS.AA;
 
         /* jump out if we don't have values to calculate */
         if (!fg || !bg) {
           return;
         }
 
-        var asIsRatio = ratio({bg, fg});
+        function show(row, config) {
+          var size = row.sample.className.replace(/\s*sample\s*/, '') || 'normal';
+          row.fg.innerHTML = config.fg;
+          row.bg.innerHTML = config.bg;
+          row.sample.setAttribute('style', `background-color: ${config.bg}; color: ${config.fg};`);
+          row.contrast.innerHTML = `<div class="${config.contrast >= CONTRAST[size] ? 'pass' : 'fail'}">${config.contrast.toFixed(2)}</div>`;
+        }
+
+        var asIsRatio = ratio({bg, fg}),
+          asIsNormal = asIsRatio >= CONTRAST.normal ? 'pass' : 'fail',
+          asIsLarge = asIsRatio >= CONTRAST.large ? 'pass' : 'fail';
         results['as-is'].sample.setAttribute('style', `background-color: ${bg}; color: ${fg};`);
-        results['as-is'].contrast.innerHTML = `<div class="${asIsRatio >= MIN_CONTRAST ? 'pass' : 'fail'}">${asIsRatio.toFixed(2)}</div>`;
+        results['as-is'].contrast.innerHTML = `<div class="${asIsNormal}">Normal text will ${asIsNormal} at ${asIsRatio.toFixed(2)}</div><div class="${asIsLarge}">Large text will ${asIsLarge} at ${asIsRatio.toFixed(2)}</div>`;
 
         // calulate the results with foreground only adjusted
-        var fgOnly = contrast(bg, fg, 1);
-        results['foreground-only'].fg.innerHTML = fgOnly.fg;
-        results['foreground-only'].bg.innerHTML = fgOnly.bg;
-        results['foreground-only'].sample.setAttribute('style', `background-color: ${fgOnly.bg}; color: ${fgOnly.fg};`);
-        results['foreground-only'].contrast.innerHTML = `<div class="${fgOnly.contrast >= MIN_CONTRAST ? 'pass' : 'fail'}">${fgOnly.contrast.toFixed(2)}</div>`;
-
-        var bgOnly = contrast(bg, fg, 0);
-        results['background-only'].fg.innerHTML = bgOnly.fg;
-        results['background-only'].bg.innerHTML = bgOnly.bg;
-        results['background-only'].sample.setAttribute('style', `background-color: ${bgOnly.bg}; color: ${bgOnly.fg};`);
-        results['background-only'].contrast.innerHTML = `<div class="${bgOnly.contrast >= MIN_CONTRAST ? 'pass' : 'fail'}">${bgOnly.contrast.toFixed(2)}</div>`;
-
-        var both = contrast(bg, fg);
-        results['both-adjusted'].fg.innerHTML = both.fg;
-        results['both-adjusted'].bg.innerHTML = both.bg;
-        results['both-adjusted'].sample.setAttribute('style', `background-color: ${both.bg}; color: ${both.fg};`);
-        results['both-adjusted'].contrast.innerHTML = `<div class="${both.contrast >= MIN_CONTRAST ? 'pass' : 'fail'}">${both.contrast.toFixed(2)}</div>`;
+        show(results.fons, contrast(bg, fg, 1, CONTRAST.normal));
+        show(results.fols, contrast(bg, fg, 1, CONTRAST.large));
+        show(results.bons, contrast(bg, fg, 1, CONTRAST.normal));
+        show(results.bols, contrast(bg, fg, 1, CONTRAST.large));
+        show(results.bans, contrast(bg, fg, null, CONTRAST.normal));
+        show(results.bals, contrast(bg, fg, null, CONTRAST.large));
       }
 
       /**
@@ -323,8 +364,9 @@ console.log('type: '+type);
        * @param {string} bg - background color
        * @param {string} fg - foregrond color
        * @param {number} - adjust
+       * @param {number} - minimum
        */
-      function contrast(bg, fg, adjust) {
+      function contrast(bg, fg, adjust, minimum) {
         var colors = {
             bg,
             fg,
@@ -337,10 +379,10 @@ console.log('type: '+type);
             luminance(adjusted) === 0 || luminance(adjusted) === 100 :
             false;
 
-          return ratio(colors) >= MIN_CONTRAST || maxed;
+          return ratio(colors) >= minimum || maxed;
         }
 
-        if (ratio(colors) < MIN_CONTRAST) {
+        if (ratio(colors) < minimum) {
           switch (adjust) {
             case 0:
               var r = ratio(colors),
@@ -522,9 +564,12 @@ console.log('type: '+type);
         ndx,
         results = {
           'as-is': resultsRow(document.getElementById('as-is')),
-          'foreground-only': resultsRow(document.getElementById('foreground-only')),
-          'background-only': resultsRow(document.getElementById('background-only')),
-          'both-adjusted': resultsRow(document.getElementById('both-adjusted')),
+          'fons': resultsRow(document.getElementById('fons')),
+          'fols': resultsRow(document.getElementById('fols')),
+          'bons': resultsRow(document.getElementById('bons')),
+          'bols': resultsRow(document.getElementById('bols')),
+          'bans': resultsRow(document.getElementById('bans')),
+          'bals': resultsRow(document.getElementById('bals')),
         };
 
       btnToggleInput.disabled = false;
