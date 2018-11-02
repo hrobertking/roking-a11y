@@ -55,14 +55,26 @@ module.exports.default = function Color(value) {
   });
 
   /**
-   * @property luminance
+   * @property lightness
    * @type {tinyint}
    */
-  Object.defineProperty(this, 'luminance', {
+  Object.defineProperty(this, 'lightness', {
     enumerable: true,
     get: getL,
     set: setL,
     writeable: true,
+  });
+
+  /**
+   * @property luminance
+   * @type {number}
+   * @description Returns a number between 0 and 100 (inclusive) representing the luminance of a color.
+   * @see {@link https://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef}
+   * @see {@link https://www.w3.org/TR/WCAG20-TECHS/G17.html#G17-tests}
+   */
+  Object.defineProperty(this, 'luminance', {
+    enumerable: true,
+    get: getLuminance,
   });
 
   /**
@@ -86,6 +98,69 @@ module.exports.default = function Color(value) {
     set: setS,
     writeable: true,
   });
+
+  /**
+   * @method darken
+   * @description Darker the color.
+   * @returns {string}
+   * @param {number} degree - how much darker the new value should be
+   */
+  this.darken = function(degree) {
+    var color = this.toString(),
+      n = color ? parseInt(color.replace(/^#/, ''), 16) : 0,
+      R = Math.max(0, Math.min((n >> 16) - (degree || 1), 255)),
+      G = Math.max(0, Math.min((n & 0x0000FF) - (degree || 1), 255)),
+      B = Math.max(0, Math.min(((n >> 8) & 0x00FF) - (degree || 1), 255)),
+      h = (G | (B << 8) | (R << 16)).toString(16),
+      o = convertHColorToRgb(('000000' + h).substr(-6));
+
+    if (isSet(o.red) && isSet(o.green) && isSet(o.blue)) {
+      r = o.red;
+      g = o.green;
+      b = o.blue;
+      convertRgbToHsl();
+    }
+
+    return this;
+  };
+
+  /**
+   * @method lighten
+   * @description Lighten the color.
+   * @returns {string}
+   * @param {number} degree - how much lighter the new value should be
+   */
+  this.lighten = function(degree) {
+    var color = this.toString(),
+      n = color ? parseInt(color.replace(/^#/, ''), 16) : 0,
+      R = Math.max(0, Math.min((n >> 16) + (degree || 1), 255)),
+      G = Math.max(0, Math.min((n & 0x0000FF) + (degree || 1), 255)),
+      B = Math.max(0, Math.min(((n >> 8) & 0x00FF) + (degree || 1), 255)),
+      h = (g | (b << 8) | (r << 16)).toString(16),
+      o = convertHColorToRgb(('000000' + h).substr(-6));
+
+    if (isSet(o.red) && isSet(o.green) && isSet(o.blue)) {
+      r = o.red;
+      g = o.green;
+      b = o.blue;
+      convertRgbToHsl();
+    }
+
+    return this;
+  };
+
+  /**
+   * @method toString
+   * @description Returns a hexadecimal color string as used in CSS
+   * @returns {string}
+   */
+  this.toString = function() {
+    var css = '#' +
+      ('0' + this.red.toString(16)).substr(-2) +
+      ('0' + this.green.toString(16)).substr(-2) +
+      ('0' + this.blue.toString(16)).substr(-2);
+    return (/^[0-9a-f]{6}$/.test(css)) ? css : null;
+  };
 
   /* getters and setters */
   function getB() {
@@ -122,6 +197,19 @@ module.exports.default = function Color(value) {
   function setL(n) {
     l = strToNum(n);
     convertHslToRgb();
+  }
+  function getLuminance() {
+    function normalize(dec) {
+      var n = dec / 255;
+
+      return n < 0.03928 ? n / 12.92 : Math.pow((n + 0.055) / 1.055, 2.4);
+    }
+
+    if (isSet(r) && isSet(g) && isSet(b)) {
+      return (0.2126 * normalize(r) +
+        0.7152 * normalize(g) +
+        0.0722 * normalize(b)) * 100;
+    }
   }
   function getR() {
     return r;
