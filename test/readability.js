@@ -2,9 +2,20 @@
 const assert = require('assert');
 const utilities = require('../src/index.js');
 
-const Readability = utilities.readability;
+const Readability = utilities.Readability;
 
-describe('utilities - readability', function () {
+describe('utilities - Readability', function () {
+  it('constructs correctly for different calls', function() {
+    assert.equal((new Readability({ text: 'Drink this medicine', lang: 'en' })).item(0).score, 36);
+    assert.equal((new Readability('Drink this medicine', 3, 'en')).wlong, 6);
+    assert.equal((new Readability('Drink this medicine', 'en')).lang, 'en');
+    assert.equal((new Readability('Drink this medicine', 3)).wlong, 3);
+    assert.equal((new Readability('Drink this medicine')).avg, 36);
+  });
+  it('calculates a zero score for missing content', function() {
+    const evaluator = new Readability();
+    assert.equal(evaluator.avg, 0);
+  });
   it('calculates the correct score for a string', function () {
     const content = 'drink this medicine';
     const evaluator = new Readability(content);
@@ -39,6 +50,45 @@ describe('utilities - readability', function () {
     const evaluator = new Readability();
     evaluator.lang = 'zh';
     assert.equal(evaluator.wlong, 6);
+  });
+  it('does not set a new word length if the value is not a number', function () {
+    const evaluator = new Readability();
+    evaluator.wlong = 10;
+    assert.equal(evaluator.wlong, 10);
+    evaluator.wlong = 'foo';
+    assert.equal(evaluator.wlong, 10);
+  });
+  it('sets the word length when provided a langtag', function () {
+    const evaluator = new Readability(null, null, 'vi');
+    assert.equal(evaluator.wlong, 5);
+  });
+  it('sets the language when provided a langtag', function () {
+    const evaluator = new Readability(null, null, 'vi');
+    assert.equal(evaluator.lang, 'vi');
+  });
+  it('sets values correctly when given a config object', function () {
+    const lang = 'es';
+    const size = 4;
+    const text = 'Drink this medicine now';
+
+    assert.equal((new Readability({ lang, size, text })).lang, lang);
+    assert.equal((new Readability({ lang, size })).lang, lang);
+    assert.equal((new Readability({ lang, text })).lang, lang);
+    assert.equal((new Readability({ size, text })).wlong, size);
+    assert.equal((new Readability({ size, text })).avg, 54);
+  });
+  it('sets content correctly when given content', function() {
+    const content = 'Now is the time for all good men to come to the aid of their country';
+    const evaluator = new Readability();
+    assert.equal(evaluator.score(content).item(0).score, 22);
+  });
+  it('scores correctly for blank content', function() {
+    const evaluator = new Readability('');
+    assert.equal(evaluator.avg, 0);
+  });
+  it('returns itself when the score method is called', function() {
+    const evaluator = new Readability();
+    assert.equal(evaluator.score(), evaluator);
   });
   it('returns an array of languages supported', function () {
     const evaluator = new Readability();
@@ -76,25 +126,6 @@ describe('utilities - readability', function () {
       { code: 'vi', name: 'Vietnamese' },
     ];
     assert.equal(JSON.stringify(evaluator.languages), JSON.stringify(languages));
-  });
-  it('changes the word length when provided a langtag', function () {
-    const evaluator = new Readability(null, null, 'vi');
-    assert.equal(evaluator.wlong, 5);
-  });
-  it('changes the language when provided a langtag', function () {
-    const evaluator = new Readability(null, null, 'vi');
-    assert.equal(evaluator.lang, 'vi');
-  });
-  it('sets values correctly when given a config object', function () {
-    const lang = 'es';
-    const size = 4;
-    const text = 'Drink this medicine now';
-
-    assert.equal((new Readability({ lang, size, text })).lang, lang);
-    assert.equal((new Readability({ lang, size })).lang, lang);
-    assert.equal((new Readability({ lang, text })).lang, lang);
-    assert.equal((new Readability({ size, text })).wlong, size);
-    assert.equal((new Readability({ size, text })).avg, 54);
   });
 });
 

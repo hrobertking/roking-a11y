@@ -26,7 +26,7 @@
  * const r = new Readability('Drink this medicine', 4);
  * const r = new Readability('Drink this medicine');
  */
-module.exports.default = function Readability() {
+module.exports = function Readability() {
   /**
    * @property avg
    * @type {number}
@@ -101,7 +101,7 @@ module.exports.default = function Readability() {
    * @param {number} index
    */
   this.item = function getItem(index) {
-    return SELF.parsed ? SELF.parsed[index] : null;
+    return SELF.parsed[index];
   };
 
   /**
@@ -221,9 +221,15 @@ module.exports.default = function Readability() {
     const words = bites.length;
     const longWords = bites.filter(word => word.length > SELF.wlong).length;
     const sentences = phrase.split(/[:.]/g).filter(el => !!el).length;
-    const pcwords = words / (sentences || 1);
-    const pclwords = (longWords * 100) / (words || 1);
-    const score = !words || !sentences ? 0 : Math.round(pcwords + pclwords);
+    let pcwords = 0;
+    let pclwords = 0;
+    let score = 0;
+
+    if (words && sentences) {
+      pcwords = words / sentences;
+      pclwords = (longWords * 100) / words;
+      score = Math.round(pcwords + pclwords);
+    }
 
     return {
       longWords,
@@ -268,8 +274,8 @@ module.exports.default = function Readability() {
    * @param {number|string} n
    */
   function setLong(n) {
-    if (n && !Number.isNaN(n)) {
-      localSize = n;
+    if (n && !Number.isNaN(parseInt(n, 10))) {
+      localSize = parseInt(n, 10);
     }
   }
 
@@ -334,7 +340,7 @@ module.exports.default = function Readability() {
     text = arguments[0],
   } = (arguments[0] || {});
 
-  this.wlong = size || 6;
+  this.wlong = size || 6; // 6 is the average word length for all languages supported
   this.lang = lang;
   this.content = text;
 };
