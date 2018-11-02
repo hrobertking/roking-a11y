@@ -4,8 +4,10 @@
  * @description Accessibility evaluation tools
  */
 const color = require('./color.js');
+const luminance = require('./luminance.js');
 const readability = require('./readability.js');
 
-exports.Color = color.default;
-exports.readability = readability.default;
+exports.Color = color;
+exports.Luminance = luminance;
+exports.Readability = readability;
 

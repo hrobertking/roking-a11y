@@ -20,7 +20,7 @@
  * @property {number} luminance
  * @property {number} saturation
  */
-module.exports.default = function Color(value) {
+module.exports = function Color(value) {
   /**
    * @property blue
    * @type {tinyint}
@@ -40,6 +40,17 @@ module.exports.default = function Color(value) {
     enumerable: true,
     get: getG,
     set: setG,
+    writeable: true,
+  });
+
+  /**
+   * @property hcolor
+   * @type {hcolor}
+   */
+  Object.defineProperty(this, 'hcolor', {
+    enumerable: true,
+    get: getHColor,
+    set: setHColor,
     writeable: true,
   });
 
@@ -150,16 +161,33 @@ module.exports.default = function Color(value) {
   };
 
   /**
+   * @method isColorType
+   * @description Returns true if the provided data is one of `hcolor`, `rgb`, or `hsl`
+   * @returns {boolean}
+   * @param {*} data
+   */
+  this.isColorType = function(data) {
+    if (data) {
+      if (isSet(data.red) && isSet(data.green) && isSet(data.blue)) {
+        return true;
+      }
+      if (isSet(data.hue) && isSet(data.saturation) && isSet(data.lightness)) {
+        return true;
+      }
+      if (typeof data === 'string' && /^#?([0-9a-f]{3}|[0-9a-f]{6})$/i.test(data)) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  /**
    * @method toString
    * @description Returns a hexadecimal color string as used in CSS
    * @returns {string}
    */
   this.toString = function() {
-    var css = '#' +
-      ('0' + this.red.toString(16)).substr(-2) +
-      ('0' + this.green.toString(16)).substr(-2) +
-      ('0' + this.blue.toString(16)).substr(-2);
-    return (/^[0-9a-f]{6}$/.test(css)) ? css : null;
+    return this.hcolor;
   };
 
   /* getters and setters */
@@ -167,7 +195,7 @@ module.exports.default = function Color(value) {
     return b;
   }
   function setB(n) {
-    if (/[a-f]+/.test(n)) {
+    if (typeof n === 'string' && /[a-f]/i.test(n)) {
       b = strToNum(n);
     } else {
       b = Number(n);
@@ -177,8 +205,8 @@ module.exports.default = function Color(value) {
   function getG() {
     return g;
   }
-  function setG() {
-    if (/[a-f]+/.test(n)) {
+  function setG(n) {
+    if (typeof n === 'string' && /[a-f]/i.test(n)) {
       g = strToNum(n);
     } else {
       g = Number(n);
@@ -189,13 +217,35 @@ module.exports.default = function Color(value) {
     return h;
   }
   function setH(n) {
-    h = Number(n) + (n < 0 ? 360 : 0);
+    h = Number(n) + (n < 0 ? 360 : n > 360 ? -360 : 0);
+  }
+  function getHColor() {
+    var def, css,
+      r = this.red,
+      g = this.green,
+      b = this.blue;
+
+    if (isSet(r) && isSet(g) && isSet(b)) {
+      css = '#' +
+        ('0' + r.toString(16)).substr(-2) +
+        ('0' + g.toString(16)).substr(-2) +
+        ('0' + b.toString(16)).substr(-2);
+    }
+
+    return (css && /^#[0-9a-f]{6}$/.test(css)) ? css : def;
+  }
+  function setHColor(n) {
+    convertHColorToRgb(n);
   }
   function getL() {
     return Math.round(l * 100)+'%';
   }
   function setL(n) {
-    l = strToNum(n);
+    if (typeof n === 'string') {
+      l = strToNum(n);
+    } else {
+      l = Number(n);
+    }
     convertHslToRgb();
   }
   function getLuminance() {
@@ -214,8 +264,8 @@ module.exports.default = function Color(value) {
   function getR() {
     return r;
   }
-  function setR() {
-    if (/[a-f]+/.test(n)) {
+  function setR(n) {
+    if (typeof n === 'string' && /[a-f]/i.test(n)) {
       r = strToNum(n);
     } else {
       r = Number(n);
@@ -226,7 +276,11 @@ module.exports.default = function Color(value) {
     return Math.round(s * 100)+'%';
   }
   function setS(n) {
-    s = strToNum(n);
+    if (typeof n === 'string') {
+      s = strToNum(n);
+    } else {
+      s = Number(n);
+    }
     convertHslToRgb();
   }
 
@@ -375,22 +429,24 @@ module.exports.default = function Color(value) {
    * @param {hcolor|rgb|hsl} color
    */
   function init(color) {
-    var rgb = convertHColorToRgb(color);
+    if (color) {
+      var rgb = convertHColorToRgb(color);
 
-    r = isSet(rgb.red) ? rgb.red : color.red;
-    g = isSet(rgb.green) ? rgb.green : color.green;
-    b = isSet(rgb.blue) ? rgb.blue : color.blue;
+      r = isSet(rgb.red) ? rgb.red : color.red;
+      g = isSet(rgb.green) ? rgb.green : color.green;
+      b = isSet(rgb.blue) ? rgb.blue : color.blue;
 
-    h = parseInt(color.hue, 10);
-    s = strToNum(color.saturation);
-    l = strToNum(color.lightness);
+      h = parseInt(color.hue, 10);
+      s = strToNum(color.saturation);
+      l = strToNum(color.lightness);
 
-    h += h < 0 ? 360 : 0;
+      h += h < 0 ? 360 : 0;
 
-    if (isSet(r) && isSet(g) && isSet(b)) {
-      convertRgbToHsl();
-    } else if (isSet(h) && isSet(s) && isSet(l)) {
-      convertHslToRgb();
+      if (isSet(r) && isSet(g) && isSet(b)) {
+        convertRgbToHsl();
+      } else if (isSet(h) && isSet(s) && isSet(l)) {
+        convertHslToRgb();
+      }
     }
   }
 
