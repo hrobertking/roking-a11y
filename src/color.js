@@ -1,11 +1,10 @@
 /**
  * @module roking-a11y
- * @class Color
  *
  * @typedef {tinyint} A number between 0 and 255
  *
- * @typedef {hcolor} A 6-digit hexadecimal value with red in the first two digits, green in the
- * third and fourth digits, and blue in the fifth and sixth digits or a 3-digit hexadecimal value
+ * @typedef {hcolor} A 6-digit hexadecimal string with red in the first two digits, green in the
+ * third and fourth digits, and blue in the fifth and sixth digits or a 3-digit hexadecimal string
  * with red in the first digit, green in the second digit, and blue in the third digit. If the
  * 3-digit length is used, the digits are expanded by repitition. For
  * example, if the value is 'ABC', the expanded value is 'AABBCC'.
@@ -19,6 +18,18 @@
  * @property {number} hue
  * @property {number} luminance
  * @property {number} saturation
+ *
+ * @class Color
+ * @description A Color object that automatically converts between the three different color specifications:
+ * a hexadecimal number, an object with `red`, `green`, and `blue` values, and an object with `hue`,
+ * `saturation`, and `lightness` values.
+ * @param {hcolor|rgb|hsl} color
+ *
+ * @example
+ * const color = new Color({ hue: 193, saturation: '67%', lightness: '28%' });
+ * const color = new Color({ red: 24, green: 98, blue: 118 });
+ * const color = new Color('#186276');
+ * const color = new Color('#f0d');
  */
 module.exports = function Color(value) {
   /**
