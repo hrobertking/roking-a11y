@@ -5,12 +5,34 @@ const utilities = require('../src/index.js');
 const Color = utilities.Color;
 
 describe('utilities - Color', function () {
+  it('does not initialize if not given a valid color type', function() {
+    assert.equal((new Color({ hue: 10, lightness: .28 })).red, undefined);
+  });
   it('calculates the correct rgb values given a hue, saturation, and lightness', function () {
-    const color = new Color({ hue: 193, saturation: '67%', lightness: '28%' });
-    assert.equal(color.red, 24);
-    assert.equal(color.green, 98);
-    assert.equal(color.blue, 119);
-    assert.equal(color.luminance, 10.261464538163523);
+    let color = new Color({ hue: 10, saturation: .67, lightness: .28 });
+    assert.equal(color.red, 119);
+    assert.equal(color.green, 39);
+    assert.equal(color.blue, 24);
+    assert.equal(color.luminance, 5.43892431672119);
+
+    color.hue = 270;
+    color.saturation = '90%';
+    color.lightness = '90%';
+    assert.equal(color.toString(), '#e5cffc');
+
+    color.hue = -350;
+    color.saturation = .67;
+    color.lightness = .28;
+    assert.equal(color.hcolor, '#772718');
+
+    color.hue = 370;
+    assert.equal(color.hcolor, '#772718');
+  });
+  it('calculates the correct rgb values given a negative hue', function() {
+    let color = new Color({ hue: -350, saturation: .67, lightness: .28 });
+    assert.equal(color.red, 119);
+    assert.equal(color.green, 39);
+    assert.equal(color.blue, 24);
   });
   it('calculates the correct hsl values given a red, green, and blue', function() {
     const color = new Color({ red: 24, green: 98, blue: 118 });
@@ -39,10 +61,25 @@ describe('utilities - Color', function () {
     assert.equal(color.green, 98);
     assert.equal(color.blue, 118);
 
-    color.red = 0;
+    color.red = 'aa';
     color.green = 'ff';
-    color.blue = 0;
-    assert.equal(color.hcolor, '#00ff00');
+    color.blue = 'aa';
+    assert.equal(color.hcolor, '#aaffaa');
+
+    color.red = 24;
+    color.green = 98;
+    color.blue = 118;
+    assert.equal(color.hcolor, '#186276');
+  });
+  it('calculates the correct red, green, and blue, given an hcolor', function() {
+    let color = new Color();
+    color.hcolor = '#ZZZ';
+    assert.equal(color.red, undefined);
+
+    color.hcolor = '#186276';
+    assert.equal(color.red, 24);
+    assert.equal(color.green, 98);
+    assert.equal(color.blue, 118);
   });
   it('calculates the correct hsl values given a red, green, and blue', function() {
     const color = new Color({ red: 24, green: 98, blue: 118 });
@@ -62,6 +99,12 @@ describe('utilities - Color', function () {
     assert.equal(color.green, 102);
     assert.equal(color.blue, 102);
   });
+  it('calculates hsl only when all rgb values are set', function() {
+    const color = new Color();
+    color.red = 102;
+    assert.equal(color.hcolor, undefined);
+    assert.equal(color.luminance, undefined);
+  });
   it('validates color types', function() {
     const color = new Color();
     assert.equal(color.isColorType('#fff'), true);
@@ -73,6 +116,32 @@ describe('utilities - Color', function () {
     assert.equal(color.isColorType('#fffggg'), false);
     assert.equal(color.isColorType('#ff'), false);
     assert.equal(color.isColorType('#ffffffff'), false);
+  });
+  it('calculates -darken- and -lighten- as -black- and -white- when color is undefined', function() {
+    const dark = new Color().darken();
+    const light = new Color().lighten();
+    assert.equal(dark.toString(), '#000000');
+    assert.equal(light.toString(), '#ffffff');
+  });
+  it('darkens the color', function() {
+    const color = new Color('#fff').darken();
+    assert.equal(color.toString(), '#fefefe');
+    color.darken(9);
+    assert.equal(color.toString(), '#f5f5f5');
+  });
+  it('darkens to black', function() {
+    const color = new Color('#001').darken(100);
+    assert.equal(color.toString(), '#000000');
+  });
+  it('lightens the color', function() {
+    const color = new Color('#000').lighten();
+    assert.equal(color.toString(), '#010101');
+    color.lighten(9);
+    assert.equal(color.toString(), '#0a0a0a');
+  });
+  it('lightens to white', function() {
+    const color = new Color('#ffe').lighten(100);
+    assert.equal(color.toString(), '#ffffff');
   });
 });
 

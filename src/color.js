@@ -1,6 +1,17 @@
 /**
- * @module roking-a11y
+ * @class Color
+ * @author H Robert King <hrobertking@cathmhaol.com>
+ * @description The `Color` object automatically converts between the three different color specifications:
+ * a hexadecimal number, an object with `red`, `green`, and `blue` values, and an object with `hue`,
+ * `saturation`, and `lightness` values and simplifies modification of the values.
+ * @param {hcolor|rgb|hsl} color
  *
+ * @example
+ * const color = new Color({ hue: 193, saturation: '67%', lightness: '28%' });
+ * const color = new Color({ red: 24, green: 98, blue: 118 });
+ * const color = new Color('#186276');
+ * const color = new Color('#f0d');
+ * 
  * @typedef {tinyint} A number between 0 and 255
  *
  * @typedef {hcolor} A 6-digit hexadecimal string with red in the first two digits, green in the
@@ -14,22 +25,10 @@
  * @property {tinyint} green
  * @property {tinyint} red
  *
- * @typedef {hsl} An object with hue, luminance, and saturation.
+ * @typedef {hsl} An object with hue, lightness, and saturation.
  * @property {number} hue
- * @property {number} luminance
+ * @property {number} lightness
  * @property {number} saturation
- *
- * @class Color
- * @description A Color object that automatically converts between the three different color specifications:
- * a hexadecimal number, an object with `red`, `green`, and `blue` values, and an object with `hue`,
- * `saturation`, and `lightness` values.
- * @param {hcolor|rgb|hsl} color
- *
- * @example
- * const color = new Color({ hue: 193, saturation: '67%', lightness: '28%' });
- * const color = new Color({ red: 24, green: 98, blue: 118 });
- * const color = new Color('#186276');
- * const color = new Color('#f0d');
  */
 module.exports = function Color(value) {
   /**
@@ -124,24 +123,22 @@ module.exports = function Color(value) {
   /**
    * @method darken
    * @description Darker the color.
-   * @returns {string}
+   * @returns {Color}
    * @param {number} degree - how much darker the new value should be
    */
   this.darken = function(degree) {
-    var color = this.toString(),
-      n = color ? parseInt(color.replace(/^#/, ''), 16) : 0,
-      R = Math.max(0, Math.min((n >> 16) - (degree || 1), 255)),
-      G = Math.max(0, Math.min((n & 0x0000FF) - (degree || 1), 255)),
-      B = Math.max(0, Math.min(((n >> 8) & 0x00FF) - (degree || 1), 255)),
+    var color = this.toString() || '#000000',
+      n = parseInt(color.replace(/^#/, ''), 16),
+      R = Math.max(0, (n >> 16) - (degree || 1)),
+      G = Math.max(0, (n & 0x0000FF) - (degree || 1)),
+      B = Math.max(0, ((n >> 8) & 0x00FF) - (degree || 1)),
       h = (G | (B << 8) | (R << 16)).toString(16),
       o = convertHColorToRgb(('000000' + h).substr(-6));
 
-    if (isSet(o.red) && isSet(o.green) && isSet(o.blue)) {
-      r = o.red;
-      g = o.green;
-      b = o.blue;
-      convertRgbToHsl();
-    }
+    r = o.red;
+    g = o.green;
+    b = o.blue;
+    convertRgbToHsl();
 
     return this;
   };
@@ -149,24 +146,22 @@ module.exports = function Color(value) {
   /**
    * @method lighten
    * @description Lighten the color.
-   * @returns {string}
+   * @returns {Color}
    * @param {number} degree - how much lighter the new value should be
    */
   this.lighten = function(degree) {
-    var color = this.toString(),
-      n = color ? parseInt(color.replace(/^#/, ''), 16) : 0,
-      R = Math.max(0, Math.min((n >> 16) + (degree || 1), 255)),
-      G = Math.max(0, Math.min((n & 0x0000FF) + (degree || 1), 255)),
-      B = Math.max(0, Math.min(((n >> 8) & 0x00FF) + (degree || 1), 255)),
-      h = (g | (b << 8) | (r << 16)).toString(16),
+    var color = this.toString() || '#ffffff',
+      n = parseInt(color.replace(/^#/, ''), 16),
+      R = Math.min((n >> 16) + (degree || 1), 255),
+      G = Math.min((n & 0x0000FF) + (degree || 1), 255),
+      B = Math.min(((n >> 8) & 0x00FF) + (degree || 1), 255),
+      h = (G | (B << 8) | (R << 16)).toString(16),
       o = convertHColorToRgb(('000000' + h).substr(-6));
 
-    if (isSet(o.red) && isSet(o.green) && isSet(o.blue)) {
-      r = o.red;
-      g = o.green;
-      b = o.blue;
-      convertRgbToHsl();
-    }
+    r = o.red;
+    g = o.green;
+    b = o.blue;
+    convertRgbToHsl();
 
     return this;
   };
@@ -231,7 +226,7 @@ module.exports = function Color(value) {
     h = Number(n) + (n < 0 ? 360 : n > 360 ? -360 : 0);
   }
   function getHColor() {
-    var def, css,
+    var css,
       r = this.red,
       g = this.green,
       b = this.blue;
@@ -243,10 +238,18 @@ module.exports = function Color(value) {
         ('0' + b.toString(16)).substr(-2);
     }
 
-    return (css && /^#[0-9a-f]{6}$/.test(css)) ? css : def;
+    return css;
   }
   function setHColor(n) {
-    convertHColorToRgb(n);
+    var valid = /^#?([0-9a-f]{3}|[0-9a-f]{6})$/i.test(n);
+
+    if (valid) {
+      rgb = convertHColorToRgb(n);
+      r = rgb.red;
+      g = rgb.green;
+      b = rgb.blue;
+      convertRgbToHsl();
+    }
   }
   function getL() {
     return Math.round(l * 100)+'%';
@@ -319,7 +322,7 @@ module.exports = function Color(value) {
 
   /**
    * @private
-   * @description Converts hue, saturation, and luminance to red, green, and blue values, setting
+   * @description Converts hue, saturation, and lightness to red, green, and blue values, setting
    * internal variables r, g, and b.
    * @returns {undefined}
    */
@@ -365,12 +368,12 @@ module.exports = function Color(value) {
 
   /**
    * @private
-   * @description Converts red, green, and blue values to hue, saturation, and luminance,
+   * @description Converts red, green, and blue values to hue, saturation, and lightness
    * setting internal values.
    * @returns {undefined}
    */
   function convertRgbToHsl() {
-    if (!Number.isNaN(r) && !Number.isNaN(g) && !Number.isNaN(b)) {
+    if (isSet(r) && isSet(g) && isSet(b)) {
       var R = round(r / 255),
         G = round(g / 255),
         B = round(b / 255),
@@ -383,11 +386,11 @@ module.exports = function Color(value) {
         H = 60;
 
       /* convert hue to degrees on the color circle */
-      if (R == MAX) {
+      if (R === MAX) {
         H *= ((G - B) / (MAX - MIN));
-      } else if (G == MAX) {
+      } else if (G === MAX) {
         H *= (2.0 + (B - R) / (MAX - MIN));
-      } else if (B == MAX) {
+      } else {
         H *= (4.0 + (R - G) / (MAX - MIN));
       }
 
@@ -462,7 +465,7 @@ module.exports = function Color(value) {
   }
 
   /**
-   * internal variables for red, green, blue, hue, saturation, and luminance
+   * internal variables for red, green, blue, hue, saturation, and lightness
    */
   var r, g, b, h, s, l;
   init(value);

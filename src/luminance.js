@@ -1,17 +1,27 @@
 /**
- * @module roking-a11y
  * @class Luminance
- * @requires roking-a11y::Color
+ * @author H Robert King <hrobertking@cathmhaol.com>
+ * @requires roking-a11y:Color
+ * @description The `Luminance` object allows for easy generation of a contrast ratio, enabling comparison of two color definitions - `background` and `foreground`. Additionally, the contrast ratio can be tested against a `threshold` object.
+ * @param {Color|config} foreground
+ * @param {Color} background
+ *
+ * @example
+ * const l = new Luminance('#000', '#fff');
+ * const pass = l.test(l.THRESHOLD.AA.normal);
+ *
+ * @typedef config
+ * @property {Color} background
+ * @property {Color} foreground
  *
  * @typedef compliance
  * @property {threshold} AA - normal and large thresholds for WCAG 2.1 AA compliance
  * @property {threshold} AAA - normal and large thresholds for WCAG 2.1 AAA compliance
  *
  * @typedef threshold
- * @property {number} normal - the contrast threshold for compliance for normal-size text
  * @property {number} large - the contrast threshold for compliance for large-size text
+ * @property {number} normal - the contrast threshold for compliance for normal-size text
  */
-
 module.exports = function Luminance(foreground, background) {
   /**
    * @property background

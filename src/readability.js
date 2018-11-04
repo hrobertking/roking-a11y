@@ -1,15 +1,21 @@
 /**
- * @module roking-a11y
+ * @class Readability
  * @author H Robert King <hrobertking@cathmhaol.com>
- * @description The Readability utility calculates the Läsbarhetsindex for content.
+ * @description The `Readability` utility calculates the Läsbarhetsindex for content.
  * @param {string|string[]|HTMLElement|ConfigObject} [text] - content to evaluate or a ConfigObject
  * @param {number} [size] - length of a longword, defaults to 6 characters
  * @param {string} [lang] - the BCP-47 langtag or language subtag for the content
  *
+ * @example
+ * const r = new Readability({ text: 'Drink this medicine', lang: 'en' });
+ * const r = new Readability('Tomar este medicina', 'es');
+ * const r = new Readability('Drink this medicine', 4);
+ * const r = new Readability('Drink this medicine');
+ *
  * @typedef {Object} ConfigObject
  * @description A configuration object
  * @property {string} lang
- * @proprety {number} size
+ * @property {number} size
  * @property {string|string[]|HTMLElement} text
  *
  * @typedef {Object} ScoredItem
@@ -19,12 +25,6 @@
  * @property {number} score
  * @property {number} sentences
  * @property {number} words
- *
- * @example
- * const r = new Readability({ text: 'Drink this medicine', lang: 'en' });
- * const r = new Readability('Tomar este medicina', 'es');
- * const r = new Readability('Drink this medicine', 4);
- * const r = new Readability('Drink this medicine');
  */
 module.exports = function Readability() {
   /**
