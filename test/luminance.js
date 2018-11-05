@@ -6,11 +6,12 @@ const Luminance = utilities.Luminance;
 const WCAG = utilities.WCAG;
 
 describe('utilities - Luminance', function () {
-  it('constructs properly', function() {
+  it('constructs properly', function () {
     let lum = new Luminance();
-    assert.equal(lum.foreground, undefined);
-    assert.equal(lum.background, undefined);
-    assert.equal(lum.contrast, undefined);
+    let udef;
+    assert.equal(lum.foreground, udef);
+    assert.equal(lum.background, udef);
+    assert.equal(lum.contrast, udef);
 
     lum = new Luminance('#186276');
     assert.equal(lum.foreground.red, 24);
@@ -18,24 +19,25 @@ describe('utilities - Luminance', function () {
     assert.equal(lum.foreground.blue, 118);
 
     lum = new Luminance(null, '#186276');
-    assert.equal(lum.foreground, undefined);
+    assert.equal(lum.foreground, udef);
     assert.equal(lum.background.red, 24);
     assert.equal(lum.background.green, 98);
     assert.equal(lum.background.blue, 118);
 
-    lum = new Luminance('#186276', {red: 24, green: 98, blue: 118});
+    lum = new Luminance('#186276', { red: 24, green: 98, blue: 118 });
     assert.equal(lum.foreground.red, 24);
     assert.equal(lum.foreground.green, 98);
     assert.equal(lum.foreground.blue, 118);
     assert.equal(lum.background.hcolor, '#186276');
 
-    lum = new Luminance({red: 24, green: 98, blue: 118}, '#186276');
+    lum = new Luminance({ red: 24, green: 98, blue: 118 }, '#186276');
     assert.equal(lum.background.red, 24);
     assert.equal(lum.background.green, 98);
     assert.equal(lum.background.blue, 118);
     assert.equal(lum.foreground.hcolor, '#186276');
 
-    lum = new Luminance({foreground: {red: 24, green: 98, blue: 118}, background: '#186276'});
+    lum = new Luminance({ foreground: { red: 24, green: 98, blue: 118 },
+      background: '#186276' });
     assert.equal(lum.background.red, 24);
     assert.equal(lum.background.green, 98);
     assert.equal(lum.background.blue, 118);
@@ -93,6 +95,13 @@ describe('utilities - Luminance', function () {
     lum.search(WCAG.CONTRAST.AA.normal);
     assert.equal(lum.background.hcolor, '#ffffff');
     assert.equal(lum.foreground.hcolor, '#767676');
+    assert.equal(lum.test(WCAG.CONTRAST.AA.normal), true);
+
+    lum.background = '#bbb';
+    lum.foreground = '#ccc';
+    lum.search(WCAG.CONTRAST.AA.normal);
+    assert.equal(lum.foreground.hcolor, '#ffffff');
+    assert.equal(lum.background.hcolor, '#767676');
     assert.equal(lum.test(WCAG.CONTRAST.AA.normal), true);
   });
 });

@@ -2,7 +2,9 @@
  * @class Luminance
  * @author H Robert King <hrobertking@cathmhaol.com>
  * @requires roking-a11y:Color
- * @description The `Luminance` object allows for easy generation of a contrast ratio, enabling comparison of two color definitions - `background` and `foreground`. Additionally, the contrast ratio can be tested against a `threshold` object.
+ * @description The `Luminance` object allows for easy generation of a contrast ratio,
+ * enabling comparison of two color definitions - `background` and `foreground`. Additionally,
+ * the contrast ratio can be tested against a `threshold` object.
  * @param {Color|config} foreground
  * @param {Color} background
  *
@@ -55,12 +57,13 @@ module.exports = function Luminance(foreground, background) {
    * @param {number} level
    * @param {Color} isolate
    */
-  this.search = function(level, isolate) {
+  this.search = function search(level, isolate) {
     /*
      * if isolate is specified, only change the Color object specified in isolate,
      * else change _both_ Color properties: foreground and background.
      */
-    var b = this.background, f = this.foreground;
+    const b = this.background;
+    const f = this.foreground;
 
     /* assign the appropriate adjustment methods and check properties */
     if (this.foreground.luminance < this.background.luminance) {
@@ -81,8 +84,12 @@ module.exports = function Luminance(foreground, background) {
       }
     } else {
       while ((b[b.adjustProperty] || f[f.adjustProperty]) && !this.test(level)) {
-        b[b.adjustProperty] && b.adjust();
-        f[f.adjustProperty] && f.adjust();
+        if (b[b.adjustProperty]) {
+          b.adjust();
+        }
+        if (f[f.adjustProperty]) {
+          f.adjust();
+        }
       }
     }
 
@@ -91,11 +98,11 @@ module.exports = function Luminance(foreground, background) {
 
   /**
    * @method test
-   * @description Compares the contrast between the foreground and background to the specified level. 
+   * @description Compares the contrast between Colors to the specified level.
    * @returns {boolean}
    * @param {number} level
    */
-  this.test = function(level) {
+  this.test = function test(level) {
     return !(this.contrast < level);
   };
 
@@ -107,13 +114,15 @@ module.exports = function Luminance(foreground, background) {
     bg = new Color(color);
   }
   function getContrast() {
+    let f, b, n; // eslint-disable-line one-var, one-var-declaration-per-line
     if (fg && bg) {
-      var f = fg.luminance + 5,
-        b = bg.luminance + 5,
-        n = f / b;
+      f = fg.luminance + 5;
+      b = bg.luminance + 5;
+      n = f / b;
 
       return f < b ? 1 / n : n;
     }
+    return n;
   }
   function getFg() {
     return fg;
@@ -129,19 +138,18 @@ module.exports = function Luminance(foreground, background) {
    * @param {*} data
    */
   function isColorType(data) {
-    var c = new Color();
+    const c = new Color();
     return c.isColorType(data);
   }
 
-  var Color = require('./color.js'),
-    bg,
-    fg;
+  const Color = require('./color.js'); // eslint-disable-line global-require
+  let bg, fg; // eslint-disable-line one-var, one-var-declaration-per-line
 
   if (foreground && foreground.background) {
     this.background = foreground.background;
   } else if (isColorType(background)) {
     this.background = background;
-  } 
+  }
 
   if (foreground && foreground.foreground) {
     this.foreground = foreground.foreground;

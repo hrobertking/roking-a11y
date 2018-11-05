@@ -5,14 +5,14 @@ const utilities = require('../src/index.js');
 const Readability = utilities.Readability;
 
 describe('utilities - Readability', function () {
-  it('constructs correctly for different calls', function() {
+  it('constructs correctly for different calls', function () {
     assert.equal((new Readability({ text: 'Drink this medicine', lang: 'en' })).item(0).score, 36);
     assert.equal((new Readability('Drink this medicine', 3, 'en')).wlong, 6);
     assert.equal((new Readability('Drink this medicine', 'en')).lang, 'en');
     assert.equal((new Readability('Drink this medicine', 3)).wlong, 3);
     assert.equal((new Readability('Drink this medicine')).avg, 36);
   });
-  it('calculates a zero score for missing content', function() {
+  it('calculates a zero score for missing content', function () {
     const evaluator = new Readability();
     assert.equal(evaluator.avg, 0);
   });
@@ -77,16 +77,16 @@ describe('utilities - Readability', function () {
     assert.equal((new Readability({ size, text })).wlong, size);
     assert.equal((new Readability({ size, text })).avg, 54);
   });
-  it('sets content correctly when given content', function() {
+  it('sets content correctly when given content', function () {
     const content = 'Now is the time for all good men to come to the aid of their country';
     const evaluator = new Readability();
     assert.equal(evaluator.score(content).item(0).score, 22);
   });
-  it('scores correctly for blank content', function() {
+  it('scores correctly for blank content', function () {
     const evaluator = new Readability('');
     assert.equal(evaluator.avg, 0);
   });
-  it('returns itself when the score method is called', function() {
+  it('returns itself when the score method is called', function () {
     const evaluator = new Readability();
     assert.equal(evaluator.score(), evaluator);
   });

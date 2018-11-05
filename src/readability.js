@@ -26,6 +26,7 @@
  * @property {number} sentences
  * @property {number} words
  */
+/* eslint-disable prefer-rest-params */
 module.exports = function Readability() {
   /**
    * @property avg
@@ -85,14 +86,12 @@ module.exports = function Readability() {
    * @description The length, in characters, a word must be to be a long word.
    * @default 6
    */
-  //*
   Object.defineProperty(this, 'wlong', {
     get: getLong,
     set: setLong,
     enumerable: true,
     writeable: true,
   });
-  // */
 
   /**
    * @method item
@@ -329,6 +328,11 @@ module.exports = function Readability() {
     vi: { name: 'Vietnamese', l10n: 'Tiếng Việt', value: 4.5 },
   };
 
+  // calculate the average word size across all languages
+  const n = Object.keys(SIZES).map(el => SIZES[el].value).reduce((ttl, num) => ttl + num);
+  const i = Object.keys(SIZES).length;
+  const avgLength = n / i;
+
   // private variables
   let localLang;
   let localSize = 6;
@@ -340,7 +344,7 @@ module.exports = function Readability() {
     text = arguments[0],
   } = (arguments[0] || {});
 
-  this.wlong = size || 6; // 6 is the average word length for all languages supported
+  this.wlong = size || Math.round(avgLength);
   this.lang = lang;
   this.content = text;
 };

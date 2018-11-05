@@ -1,9 +1,10 @@
 /**
  * @class Color
  * @author H Robert King <hrobertking@cathmhaol.com>
- * @description The `Color` object automatically converts between the three different color specifications:
- * a hexadecimal number, an object with `red`, `green`, and `blue` values, and an object with `hue`,
- * `saturation`, and `lightness` values and simplifies modification of the values.
+ * @description The `Color` object automatically converts between the three different color
+ * specifications: a hexadecimal number, an object with `red`, `green`, and `blue` values, and an
+ * object with `hue`, `saturation`, and `lightness` values and simplifies modification of the
+ * values.
  * @param {hcolor|rgb|hsl} color
  *
  * @example
@@ -11,7 +12,7 @@
  * const color = new Color({ red: 24, green: 98, blue: 118 });
  * const color = new Color('#186276');
  * const color = new Color('#f0d');
- * 
+ *
  * @typedef {tinyint} A number between 0 and 255
  *
  * @typedef {hcolor} A 6-digit hexadecimal string with red in the first two digits, green in the
@@ -30,6 +31,7 @@
  * @property {number} lightness
  * @property {number} saturation
  */
+/* eslint-disable no-bitwise, no-mixed-operators */
 module.exports = function Color(value) {
   /**
    * @property blue
@@ -111,7 +113,7 @@ module.exports = function Color(value) {
   /**
    * @property luminance
    * @type {number}
-   * @description Returns a number between 0 and 100 (inclusive) representing the luminance of a color.
+   * @description Returns a number 0..100 (inclusive) representing the luminance of a color.
    * @see {@link https://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef}
    * @see {@link https://www.w3.org/TR/WCAG20-TECHS/G17.html#G17-tests}
    */
@@ -148,14 +150,14 @@ module.exports = function Color(value) {
    * @returns {Color}
    * @param {number} degree - how much darker the new value should be
    */
-  this.darken = function(degree) {
-    var color = this.toString() || '#000000',
-      n = parseInt(color.replace(/^#/, ''), 16),
-      R = Math.max(0, (n >> 16) - (degree || 1)),
-      G = Math.max(0, (n & 0x0000FF) - (degree || 1)),
-      B = Math.max(0, ((n >> 8) & 0x00FF) - (degree || 1)),
-      h = (G | (B << 8) | (R << 16)).toString(16),
-      o = convertHColorToRgb(('000000' + h).substr(-6));
+  this.darken = function darken(degree) {
+    const color = this.toString() || '#000000';
+    const n = parseInt(color.replace(/^#/, ''), 16);
+    const R = Math.max(0, (n >> 16) - (degree || 1));
+    const G = Math.max(0, (n & 0x0000FF) - (degree || 1));
+    const B = Math.max(0, ((n >> 8) & 0x00FF) - (degree || 1));
+    const h = (G | (B << 8) | (R << 16)).toString(16);
+    const o = convertHColorToRgb(`000000${h}`.substr(-6));
 
     r = o.red;
     g = o.green;
@@ -171,14 +173,14 @@ module.exports = function Color(value) {
    * @returns {Color}
    * @param {number} degree - how much lighter the new value should be
    */
-  this.lighten = function(degree) {
-    var color = this.toString() || '#ffffff',
-      n = parseInt(color.replace(/^#/, ''), 16),
-      R = Math.min((n >> 16) + (degree || 1), 255),
-      G = Math.min((n & 0x0000FF) + (degree || 1), 255),
-      B = Math.min(((n >> 8) & 0x00FF) + (degree || 1), 255),
-      h = (G | (B << 8) | (R << 16)).toString(16),
-      o = convertHColorToRgb(('000000' + h).substr(-6));
+  this.lighten = function lighten(degree) {
+    const color = this.toString() || '#ffffff';
+    const n = parseInt(color.replace(/^#/, ''), 16);
+    const R = Math.min((n >> 16) + (degree || 1), 255);
+    const G = Math.min((n & 0x0000FF) + (degree || 1), 255);
+    const B = Math.min(((n >> 8) & 0x00FF) + (degree || 1), 255);
+    const h = (G | (B << 8) | (R << 16)).toString(16);
+    const o = convertHColorToRgb(`000000${h}`.substr(-6));
 
     r = o.red;
     g = o.green;
@@ -194,7 +196,7 @@ module.exports = function Color(value) {
    * @returns {boolean}
    * @param {*} data
    */
-  this.isColorType = function(data) {
+  this.isColorType = function isColorType(data) {
     if (data) {
       if (isSet(data.red) && isSet(data.green) && isSet(data.blue)) {
         return true;
@@ -214,7 +216,7 @@ module.exports = function Color(value) {
    * @description Returns a hexadecimal color string as used in CSS
    * @returns {string}
    */
-  this.toString = function() {
+  this.toString = function toString() {
     return this.hcolor;
   };
 
@@ -245,28 +247,25 @@ module.exports = function Color(value) {
     return h;
   }
   function setH(n) {
-    h = Number(n) + (n < 0 ? 360 : n > 360 ? -360 : 0);
+    h = Number(n);
+    h += (h < 360) ? 360 : 0;
+    h %= 361;
   }
   function getHColor() {
-    var css,
-      r = this.red,
-      g = this.green,
-      b = this.blue;
-
-    if (isSet(r) && isSet(g) && isSet(b)) {
-      css = '#' +
-        ('0' + r.toString(16)).substr(-2) +
-        ('0' + g.toString(16)).substr(-2) +
-        ('0' + b.toString(16)).substr(-2);
+    function hex(n) {
+      return `0${n.toString(16)}`.substr(-2);
     }
 
-    return css;
+    if (isSet(this.red) && isSet(this.green) && isSet(this.blue)) {
+      return `#${hex(this.red)}${hex(this.green)}${hex(this.blue)}`;
+    }
+    let udef;
+    return udef;
   }
   function setHColor(n) {
-    var valid = /^#?([0-9a-f]{3}|[0-9a-f]{6})$/i.test(n);
+    const rgb = convertHColorToRgb(n);
 
-    if (valid) {
-      rgb = convertHColorToRgb(n);
+    if (isSet(rgb.red) && isSet(rgb.green) && isSet(rgb.blue)) {
       r = rgb.red;
       g = rgb.green;
       b = rgb.blue;
@@ -274,7 +273,7 @@ module.exports = function Color(value) {
     }
   }
   function getL() {
-    return Math.round(l * 100)+'%';
+    return `${Math.round(l * 100)}%`;
   }
   function setL(n) {
     if (typeof n === 'string') {
@@ -285,17 +284,19 @@ module.exports = function Color(value) {
     convertHslToRgb();
   }
   function getLuminance() {
-    function normalize(dec) {
-      var n = dec / 255;
+    function range(dec) {
+      const n = dec / 255;
 
       return n < 0.03928 ? n / 12.92 : Math.pow((n + 0.055) / 1.055, 2.4);
     }
 
     if (isSet(r) && isSet(g) && isSet(b)) {
-      return (0.2126 * normalize(r) +
-        0.7152 * normalize(g) +
-        0.0722 * normalize(b)) * 100;
+      return (0.2126 * range(r) +
+        0.7152 * range(g) +
+        0.0722 * range(b)) * 100;
     }
+    let udef;
+    return udef;
   }
   function getR() {
     return r;
@@ -309,7 +310,7 @@ module.exports = function Color(value) {
     convertRgbToHsl();
   }
   function getS() {
-    return Math.round(s * 100)+'%';
+    return `${Math.round(s * 100)}%`;
   }
   function setS(n) {
     if (typeof n === 'string') {
@@ -327,19 +328,13 @@ module.exports = function Color(value) {
    * @param {hcolor} color
    */
   function convertHColorToRgb(color) {
-    var h6 = /^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(color),
-      h3 = /^#?([0-9a-f]{1})([0-9a-f]{1})([0-9a-f]{1})$/i.exec(color),
-      matched = (h6 || h3),
-      R = matched ? (matched[1]+matched[1]).substr(-2) : null,
-      G = matched ? (matched[2]+matched[2]).substr(-2) : null,
-      B = matched ? (matched[3]+matched[3]).substr(-2) : null,
-      rgb = {
-        blue: parseInt(B, 16),
-        green: parseInt(G, 16),
-        red: parseInt(R, 16),
-      };
-
-    return rgb;
+    const h6 = /^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(color);
+    const h3 = /^#?([0-9a-f]{1})([0-9a-f]{1})([0-9a-f]{1})$/i.exec(color);
+    const matched = (h6 || h3);
+    const R = matched ? (matched[1] + matched[1]).substr(-2) : null;
+    const G = matched ? (matched[2] + matched[2]).substr(-2) : null;
+    const B = matched ? (matched[3] + matched[3]).substr(-2) : null;
+    return { blue: parseInt(B, 16), green: parseInt(G, 16), red: parseInt(R, 16) };
   }
 
   /**
@@ -349,10 +344,8 @@ module.exports = function Color(value) {
    * @returns {undefined}
    */
   function convertHslToRgb() {
-    var H = h / 360;
-
     /* normalizes values to be between 0 and 1 */
-    function normalize(n) {
+    function range(n) {
       if (n < 0) {
         return Math.floor((n + 1) * 1000) / 1000;
       } else if (n > 1) {
@@ -363,28 +356,29 @@ module.exports = function Color(value) {
 
     /* performs color tests */
     function test(n) {
-      var T1 = (l < .5) ? l * (1 + s) : l + s - l * s,
-        T2 = 2 * l - T1;
+      const T1 = (l < 0.5) ? l * (1 + s) : l + s - l * s;
+      const T2 = 2 * l - T1;
 
       if (6 * n < 1) {
         return T2 + (T1 - T2) * 6 * n;
       } else if (2 * n < 1) {
         return T1;
       } else if (3 * n < 2) {
-        return T2 + (T1 - T2) * (.666 - n) * 6;
+        return T2 + (T1 - T2) * (0.666 - n) * 6;
       }
       return T2;
     }
 
     /* if there is no saturation, the hue is gray with the specified lightness */
-    if (s == 0) {
+    if (s === 0) {
       r = l * 255;
       g = l * 255;
       b = l * 255;
     } else {
-      r = Math.round(test(normalize(H + .333)) * 255);
-      g = Math.round(test(normalize(H)) * 255);
-      b = Math.round(test(normalize(H - .333)) * 255);
+      const H = h / 360;
+      r = Math.round(test(range(H + 0.333)) * 255);
+      g = Math.round(test(range(H)) * 255);
+      b = Math.round(test(range(H - 0.333)) * 255);
     }
   }
 
@@ -396,18 +390,18 @@ module.exports = function Color(value) {
    */
   function convertRgbToHsl() {
     if (isSet(r) && isSet(g) && isSet(b)) {
-      var R = round(r / 255),
-        G = round(g / 255),
-        B = round(b / 255),
-        MAX = Math.max(R, G, B),
-        MIN = Math.min(R, G, B),
-        L = (MAX + MIN) / 2,
-        S = (MAX == MIN) ? 0 : L < .5 ?
-          (MAX - MIN)/(MAX + MIN) :
-          (MAX - MIN)/(2.0 - MAX - MIN),
-        H = 60;
+      const R = round(r / 255);
+      const G = round(g / 255);
+      const B = round(b / 255);
+      const MAX = Math.max(R, G, B);
+      const MIN = Math.min(R, G, B);
+      const L = (MAX + MIN) / 2;
+      const S = (MAX === MIN) ? 0 : L < 0.5 ? // eslint-disable-line no-nested-ternary
+        (MAX - MIN) / (MAX + MIN) :
+        (MAX - MIN) / (2.0 - MAX - MIN);
 
       /* convert hue to degrees on the color circle */
+      let H = 60;
       if (R === MAX) {
         H *= ((G - B) / (MAX - MIN));
       } else if (G === MAX) {
@@ -460,17 +454,35 @@ module.exports = function Color(value) {
 
   /**
    * @private
+   * @description Normalizes an rgb value
+   * @returns {rgb}
+   * @param {rgb|hcolor} data
+   */
+  function normalize(data) {
+    const rgb = convertHColorToRgb(data);
+    if (data && isSet(data.red) && isSet(data.green) && isSet(data.blue)) {
+      return data;
+    }
+    if (!isSet(rgb.red) || !isSet(rgb.green) || !isSet(rgb.blue)) {
+      let udef;
+      return { red: udef, green: udef, blue: udef };
+    }
+    return rgb;
+  }
+
+  /**
+   * @private
    * @description Initializes the values and sets corresponding variables.
    * @returns {undefined}
    * @param {hcolor|rgb|hsl} color
    */
   function init(color) {
-    if (color) {
-      var rgb = convertHColorToRgb(color);
+    const rgb = normalize(color);
 
-      r = isSet(rgb.red) ? rgb.red : color.red;
-      g = isSet(rgb.green) ? rgb.green : color.green;
-      b = isSet(rgb.blue) ? rgb.blue : color.blue;
+    if (color) {
+      r = rgb.red;
+      g = rgb.green;
+      b = rgb.blue;
 
       h = parseInt(color.hue, 10);
       s = strToNum(color.saturation);
@@ -489,7 +501,7 @@ module.exports = function Color(value) {
   /**
    * internal variables for red, green, blue, hue, saturation, and lightness
    */
-  var r, g, b, h, s, l;
+  let r, g, b, h, s, l; // eslint-disable-line one-var, one-var-declaration-per-line
   init(value);
 };
 
