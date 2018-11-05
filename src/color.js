@@ -43,6 +43,28 @@ module.exports = function Color(value) {
   });
 
   /**
+   * @property canDarken
+   * @type {boolean}
+   */
+  Object.defineProperty(this, 'canDarken', {
+    enumerable: true,
+    get: function canDarken() {
+      return this.luminance > 0;
+    },
+  });
+
+  /**
+   * @property canLighten
+   * @type {boolean}
+   */
+  Object.defineProperty(this, 'canLighten', {
+    enumerable: true,
+    get: function canLighten() {
+      return this.luminance < 100;
+    },
+  });
+
+  /**
    * @property green
    * @type {tinyint}
    */

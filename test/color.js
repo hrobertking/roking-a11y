@@ -130,7 +130,10 @@ describe('utilities - Color', function () {
     assert.equal(color.toString(), '#f5f5f5');
   });
   it('darkens to black', function() {
-    const color = new Color('#001').darken(100);
+    const color = new Color('#001');
+    assert.equal(color.canDarken, true);
+    color.darken(100);
+    assert.equal(color.canDarken, false);
     assert.equal(color.toString(), '#000000');
   });
   it('lightens the color', function() {
@@ -140,7 +143,10 @@ describe('utilities - Color', function () {
     assert.equal(color.toString(), '#0a0a0a');
   });
   it('lightens to white', function() {
-    const color = new Color('#ffe').lighten(100);
+    const color = new Color('#ffe');
+    assert.equal(color.canLighten, true);
+    color.lighten(100);
+    assert.equal(color.canLighten, false);
     assert.equal(color.toString(), '#ffffff');
   });
 });

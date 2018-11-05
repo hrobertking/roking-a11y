@@ -25,13 +25,15 @@ new Color([**_hcolor|rgb|hsl_**])
   - **_number_|_string_** saturation: The colorfulness of a stimulus relative to its own brightness.
 
 ### Properties
-- **_tinyint_ blue**
-- **_tinyint_ green**
+- **_tinyint_ blue**: The _blue_ portion of the color.
+- **_boolean_ canDarken**: The color value can be darkened.
+- **_boolean_ canLighten**: The color value can be lightened.
+- **_tinyint_ green**: The _green_ portion of the color.
 - **_hcolor_ hcolor** The rgb value expressed as a 6-digit hexadecimal.
 - **_number_ hue**: The attribute of a visual sensation according to which an area appears to be similar to one of the perceived colors: red, yellow, green, and blue, or to a combination of two of them.
 - **_tinyint_ lightness**: The brightness relative to the brightness of a similarly illuminated white.
 - **_number_ luminance**: A number between 0 and 100 (inclusive) representing the luminance of a color. The formulae used to determine luminance are those specified by the WCAG and can be found at https://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef and https://www.w3.org/TR/WCAG20-TECHS/G17.html#G17-tests.
-- **_tinyint_ red**
+- **_tinyint_ red**: The _red_ portion of the color.
 - **_number_ saturation**: The colorfulness of a stimulus relative to its own brightness.
 
 ### Methods
