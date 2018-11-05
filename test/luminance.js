@@ -82,6 +82,20 @@ describe('utilities - Luminance', function () {
     assert.equal(lum.test(WCAG.CONTRAST.AA.normal), false);
 
     // searches isolating changes to background only
+    lum.reset();
+    assert.equal(lum.background.hcolor, '#bbbbbb');
+    assert.equal(lum.foreground.hcolor, '#cccccc');
+  });
+  it('searches for a color value that passes a contrast threshold', function () {
+    const lum = new Luminance('#ccc', '#bbb');
+
+    // searches isolating changes to foreground only
+    lum.search(WCAG.CONTRAST.AA.normal, lum.foreground);
+    assert.equal(lum.foreground.hcolor, '#ffffff');
+    assert.equal(lum.background.hcolor, '#bbbbbb');
+    assert.equal(lum.test(WCAG.CONTRAST.AA.normal), false);
+
+    // searches isolating changes to background only
     lum.background = '#bbb';
     lum.foreground = '#ccc';
     lum.search(WCAG.CONTRAST.AA.normal, lum.background);

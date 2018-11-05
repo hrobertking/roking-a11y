@@ -62,6 +62,7 @@ new Luminance([**_Color|LuminanceConfig_** foreground[, **_Color_** background]]
 - **_Color_ foreground**
 
 ### Methods
+- **_Luminance_ reset()**: Resets the Colors to their initial value.
 - **_Luminance_ search(_number_ level[, _Color_ isolate])**: Adjusts either the Color(s) until the value cannot be adjusted further _or_ the specified contrast level is reached. Adjustments may be isolated to either the `foreground` or the `background` using the `isolate` parameter.
 - **_boolean_ test(_number_ level)**: Returns true if the `contrast` is greater than or equal to the provided level
 

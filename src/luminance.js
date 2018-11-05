@@ -51,6 +51,17 @@ module.exports = function Luminance(foreground, background) {
   });
 
   /**
+   * @method reset
+   * @description Resets the colors to their original values
+   * @returns {Luminance}
+   */
+  this.reset = function reset() {
+    this.foreground = initFg;
+    this.background = initBg;
+    return this;
+  };
+
+  /**
    * @method search
    * @description Modifies one or both Color properties to meet the specified level.
    * @returns {Luminance}
@@ -111,7 +122,8 @@ module.exports = function Luminance(foreground, background) {
     return bg;
   }
   function setBg(color) {
-    bg = new Color(color);
+    bg = color instanceof Color ? color : new Color(color);
+    initBg = initBg || new Color(color);
   }
   function getContrast() {
     let f, b, n; // eslint-disable-line one-var, one-var-declaration-per-line
@@ -128,7 +140,8 @@ module.exports = function Luminance(foreground, background) {
     return fg;
   }
   function setFg(color) {
-    fg = new Color(color);
+    fg = color instanceof Color ? color : new Color(color);
+    initFg = initFg || new Color(color);
   }
 
   /**
@@ -144,6 +157,7 @@ module.exports = function Luminance(foreground, background) {
 
   const Color = require('./color.js'); // eslint-disable-line global-require
   let bg, fg; // eslint-disable-line one-var, one-var-declaration-per-line
+  let initBg, initFg; // eslint-disable-line one-var, one-var-declaration-per-line
 
   if (foreground && foreground.background) {
     this.background = foreground.background;
