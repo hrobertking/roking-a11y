@@ -8,19 +8,11 @@
  *
  * @example
  * const l = new Luminance('#000', '#fff');
- * const pass = l.test(l.THRESHOLD.AA.normal);
+ * const pass = l.test(wcag.CONTRAST.AA.normal);
  *
  * @typedef config
  * @property {Color} background
  * @property {Color} foreground
- *
- * @typedef compliance
- * @property {threshold} AA - normal and large thresholds for WCAG 2.1 AA compliance
- * @property {threshold} AAA - normal and large thresholds for WCAG 2.1 AAA compliance
- *
- * @typedef threshold
- * @property {number} large - the contrast threshold for compliance for large-size text
- * @property {number} normal - the contrast threshold for compliance for normal-size text
  */
 module.exports = function Luminance(foreground, background) {
   /**
@@ -57,29 +49,54 @@ module.exports = function Luminance(foreground, background) {
   });
 
   /**
-   * @property THRESHOLD
-   * @description Thresholds for luminance contrast for `AA` and `AAA`
-   * @type {compliance}
+   * @method search
+   * @description Modifies one or both Color properties to meet the specified level.
+   * @returns {Luminance}
+   * @param {number} level
+   * @param {Color} isolate
    */
-  this.THRESHOLD = {
-    AA: {
-      normal: 4.5,
-      large: 3,
-    },
-    AAA: {
-      normal: 7.1,
-      large: 4.5,
+  this.search = function(level, isolate) {
+    /*
+     * if isolate is specified, only change the Color object specified in isolate,
+     * else change _both_ Color properties: foreground and background.
+     */
+    var b = this.background, f = this.foreground;
+
+    /* assign the appropriate adjustment methods and check properties */
+    if (this.foreground.luminance < this.background.luminance) {
+      this.foreground.adjust = this.foreground.darken;
+      this.foreground.adjustProperty = 'canDarken';
+      this.background.adjust = this.background.lighten;
+      this.background.adjustProperty = 'canLighten';
+    } else {
+      this.foreground.adjust = this.foreground.lighten;
+      this.foreground.adjustProperty = 'canLighten';
+      this.background.adjust = this.background.darken;
+      this.background.adjustProperty = 'canDarken';
     }
+
+    if (isolate) {
+      while (isolate[isolate.adjustProperty] && !this.test(level)) {
+        isolate.adjust();
+      }
+    } else {
+      while ((b[b.adjustProperty] || f[f.adjustProperty]) && !this.test(level)) {
+        b[b.adjustProperty] && b.adjust();
+        f[f.adjustProperty] && f.adjust();
+      }
+    }
+
+    return this;
   };
 
   /**
    * @method test
-   * @description Compares the contrast between the foreground and background to the provided threshold
+   * @description Compares the contrast between the foreground and background to the specified level. 
    * @returns {boolean}
-   * @param {threshold} t
+   * @param {number} level
    */
-  this.test = function(t) {
-    return !(this.contrast < t);
+  this.test = function(level) {
+    return !(this.contrast < level);
   };
 
   /* getters and setters */

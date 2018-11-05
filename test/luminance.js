@@ -3,6 +3,7 @@ const assert = require('assert');
 const utilities = require('../src/index.js');
 
 const Luminance = utilities.Luminance;
+const WCAG = utilities.WCAG;
 
 describe('utilities - Luminance', function () {
   it('constructs properly', function() {
@@ -67,7 +68,32 @@ describe('utilities - Luminance', function () {
   });
   it('tests using the specified threshold', function () {
     const lum = new Luminance('#000', '#fff');
-    assert.equal(lum.test(lum.THRESHOLD.AA.normal), true);
+    assert.equal(lum.test(WCAG.CONTRAST.AA.normal), true);
+  });
+  it('searches for a color value that passes a contrast threshold', function () {
+    const lum = new Luminance('#ccc', '#bbb');
+
+    // searches isolating changes to foreground only
+    lum.search(WCAG.CONTRAST.AA.normal, lum.foreground);
+    assert.equal(lum.foreground.hcolor, '#ffffff');
+    assert.equal(lum.background.hcolor, '#bbbbbb');
+    assert.equal(lum.test(WCAG.CONTRAST.AA.normal), false);
+
+    // searches isolating changes to background only
+    lum.background = '#bbb';
+    lum.foreground = '#ccc';
+    lum.search(WCAG.CONTRAST.AA.normal, lum.background);
+    assert.equal(lum.foreground.hcolor, '#cccccc');
+    assert.equal(lum.background.hcolor, '#565656');
+    assert.equal(lum.test(WCAG.CONTRAST.AA.normal), true);
+
+    // searches without isolating changes
+    lum.background = '#ccc';
+    lum.foreground = '#bbb';
+    lum.search(WCAG.CONTRAST.AA.normal);
+    assert.equal(lum.background.hcolor, '#ffffff');
+    assert.equal(lum.foreground.hcolor, '#767676');
+    assert.equal(lum.test(WCAG.CONTRAST.AA.normal), true);
   });
 });
 

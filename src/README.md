@@ -56,22 +56,14 @@ new Luminance([**_Color|LuminanceConfig_** foreground[, **_Color_** background]]
   - **_Color_ background**
   - **_Color_ foreground**
 
-- **_compliance_**
-  - **_threshold_ AA**: The `normal` and `large` thresholds for WCAG AA compliance
-  - **_threshold_ AAA**: The `normal` and `large` thresholds for WCAG AAA compliance
-
-- **_threshold_**
-  - **_number_ large**: The contrast threshold for compliance for large-size text
-  - **_number_ normal**: The contrast threshold for compliance for normal-size text
-
 ### Properties
 - **_Color_ background**
 - **_number_ contrast**: The luminance contrast ratio _n_:1 using the method identified by the WCAG at http://www.w3.org/TR/2008/REC-WCAG20-20081211/#contrast-ratiodef
 - **_Color_ foreground**
-- **_compliance_ THRESHOLD**
 
 ### Methods
-- **_boolean_ test(_threshold_)**: Returns true if the `contrast` is greater than or equal to the provided threshold
+- **_Luminance_ search(_number_ level[, _Color_ isolate])**: Adjusts either the Color(s) until the value cannot be adjusted further _or_ the specified contrast level is reached. Adjustments may be isolated to either the `foreground` or the `background` using the `isolate` parameter.
+- **_boolean_ test(_number_ level)**: Returns true if the `contrast` is greater than or equal to the provided level
 
 
 ## Readability
