@@ -1,43 +1,7 @@
 {
-  "samples": {
-    "it-IT": "Si riapre il caso Diciotti. Il tribunale dei ministri di Catania ha chiesto l'autorizzazione a procedere nei confronti del ministro dell'Interno Matteo Salvini per la vicenda della scorsa estate. Lo si apprende da fonti del Viminale. La decisione del tribunale dei ministri arriva dopo la richiesta motivata di archiviazione avanzata dalla procura di Catania.",
-    "en-US": "The Diciotti case reopens. It was learned from sources in the Interior Ministry that the court of the ministers of Catania has asked for the authorization to proceed towards the minister of the Interior Matteo Salvini for the affair of the last summer. The decision of the court of ministers comes after the reasoned request for filing filed by the prosecutor of Catania.",
-    "de-DE": "Der Diciotti-Fall wird wieder geöffnet. Das Gericht der Minister von Catania hat um die Erlaubnis gebeten, sich für die Angelegenheit des letzten Sommers an den Innenminister Matteo Salvini zu wenden. Es wird aus Quellen des Innenministeriums gelernt. Die Entscheidung des Ministerrates erfolgt nach dem mit Gründen versehenen Antrag des Staatsanwalts von Catania.",
-    "es-ES": "El caso Diciotti reabre. El tribunal de los ministros de Catania ha solicitado la autorización para proceder con el ministro del Interior, Matteo Salvini, por el asunto del verano pasado. Se aprende de fuentes del Ministerio del Interior. La decisión del tribunal de ministros se produce después de la solicitud razonada de presentación presentada por el fiscal de Catania.",
-    "fr-FR": "L'affaire Diciotti rouvre. La cour des ministres de Catane a demandé l'autorisation de poursuivre le ministre de l'Intérieur, Matteo Salvini, dans l'affaire de l'été dernier. Il est appris des sources du ministère de l'Intérieur. La décision du tribunal des ministres intervient après la demande motivée de dépôt déposée par le procureur de Catane."
-  },
-  "scores": {
-    "ar": [],
-    "cs": [],
-    "da": [],
-    "de": [55, 43],
-    "el": [],
-    "en": [40, 35],
-    "es": [50, 82],
-    "et": [],
-    "eu": [],
-    "fi": [],
-    "fr": [60, 55],
-    "hr": [],
-    "hu": [],
-    "is": [],
-    "it": [55, 57],
-    "lt": [],
-    "lv": [],
-    "nb": [],
-    "nl": [],
-    "nn": [],
-    "no": [],
-    "pl": [],
-    "pt": [],
-    "ro": [],
-    "ru": [],
-    "sk": [],
-    "sq": [],
-    "sv": [],
-    "tr": [],
-    "uk": [],
-    "vi": []
-  }
-}
-  
+  "it-IT": "Si riapre il caso Diciotti. Il tribunale dei ministri di Catania ha chiesto l'autorizzazione a procedere nei confronti del ministro dell'Interno Matteo Salvini per la vicenda della scorsa estate. Lo si apprende da fonti del Viminale. La decisione del tribunale dei ministri arriva dopo la richiesta motivata di archiviazione avanzata dalla procura di Catania.",
+  "en-US": "The Diciotti case reopens. It was learned from sources in the Interior Ministry that the court of the ministers of Catania has asked for the authorization to proceed towards the minister of the Interior Matteo Salvini for the affair of the last summer. The decision of the court of ministers comes after the reasoned request for filing filed by the prosecutor of Catania.",
+  "de-DE": "Der Diciotti-Fall wird wieder geöffnet. Das Gericht der Minister von Catania hat um die Erlaubnis gebeten, sich für die Angelegenheit des letzten Sommers an den Innenminister Matteo Salvini zu wenden. Es wird aus Quellen des Innenministeriums gelernt. Die Entscheidung des Ministerrates erfolgt nach dem mit Gründen versehenen Antrag des Staatsanwalts von Catania.",
+  "es-ES": "El caso Diciotti reabre. El tribunal de los ministros de Catania ha solicitado la autorización para proceder con el ministro del Interior, Matteo Salvini, por el asunto del verano pasado. Se aprende de fuentes del Ministerio del Interior. La decisión del tribunal de ministros se produce después de la solicitud razonada de presentación presentada por el fiscal de Catania.",
+  "fr-FR": "L'affaire Diciotti rouvre. La cour des ministres de Catane a demandé l'autorisation de poursuivre le ministre de l'Intérieur, Matteo Salvini, dans l'affaire de l'été dernier. Il est appris des sources du ministère de l'Intérieur. La décision du tribunal des ministres intervient après la demande motivée de dépôt déposée par le procureur de Catane."
+}  
