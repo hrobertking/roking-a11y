@@ -332,8 +332,8 @@
         // calulate the results with foreground only adjusted
         show(results.fons, contrast(bg, fg, 1, CONTRAST.normal));
         show(results.fols, contrast(bg, fg, 1, CONTRAST.large));
-        show(results.bons, contrast(bg, fg, 1, CONTRAST.normal));
-        show(results.bols, contrast(bg, fg, 1, CONTRAST.large));
+        show(results.bons, contrast(bg, fg, 0, CONTRAST.normal));
+        show(results.bols, contrast(bg, fg, 0, CONTRAST.large));
         show(results.bans, contrast(bg, fg, null, CONTRAST.normal));
         show(results.bals, contrast(bg, fg, null, CONTRAST.large));
       }
