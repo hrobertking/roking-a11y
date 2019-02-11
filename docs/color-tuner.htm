@@ -134,17 +134,17 @@
         width: 1.2rem;
       }
       .checkbox > input:checked + label:before {
-        content: '✓';
+        content: '✓' !important;
       }
       td > div.fail:before {
         border-color: rgb(225, 0, 0);
         color: rgb(225, 0, 0);
-        content: '⚠';
+        content: '⚠' !important;
       }
       td > div.pass:before {
         border-color: rgb(0, 130, 0);
         color: rgb(0, 130, 0);
-        content: '✓';
+        content: '✓' !important;
       }
 
       .large {
@@ -161,7 +161,7 @@
       }
       noscript.warning::before,
       p.warning::before {
-        content: '⚠';
+        content: '⚠' !important;
       }
 
       @media screen and (min-width: 960px) {
