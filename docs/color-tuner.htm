@@ -300,7 +300,7 @@
     <script>
       function usecolor() {
         var type = (inputFg.type || inputBg.type) === 'color' ? 'text' : 'color',
-          btns = [].slice.call(document.getElementsByClassName('input-switch));
+          btns = [].slice.call(document.getElementsByClassName('input-switch'));
 
         function labelString(str) {
           return str.replace(/color|text/g, function repl(match) {
