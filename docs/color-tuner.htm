@@ -19,6 +19,19 @@
         border: 1px solid rgb(60, 120, 60);
         color: rgb(0, 0, 0);
       }
+      button.input-switch {
+        background-color: transparent;
+        background-position: center;
+        background-size: contain;
+        height: 0.8em;
+        width: 0.8em;
+      }
+      [type="text"] + button.input-switch {
+        background-image: url(/roking-a11y/palette.png);
+      }
+      [type="color"] + button.input-switch {
+        background-image: url(/roking-a11y/text.png);
+      }
       input,
       label {
         display: block;
@@ -106,7 +119,7 @@
         align-items: center;
         display: flex;
       }
-      td > div:not(.error)::before,
+      td > div:not(.error):not(.input)::before,
       .checkbox > label::before {
         border: 0.05rem solid black;
         border-radius: 0.2rem;
@@ -215,12 +228,18 @@
             <th scope="row">As is</td>
             <td class="input">
               <label for="foreground">Foreground color</label>
-              <input id="foreground" type="text" />
+              <div class="input">
+                <input id="foreground" type="text" />
+                <button aria-label="use a color input instead of text" class="input-switch" type="button"></button>
+              </div>
               <div class="error" role="alert">Value provided for foreground is not a valid hexadecimal color</div>
             </td>
             <td class="input">
               <label for="background">Background color</label>
-              <input id="background" type="text" />
+              <div class="input">
+                <input id="background" type="text" />
+                <button aria-label="use a color input instead of text" class="input-switch" type="button"></button>
+              </div>
               <div class="error" role="alert">Value provided for background is not a valid hexadecimal color</div>
             </td>
             <td class="sample">
@@ -274,18 +293,30 @@
         </tbody>
       </table>
       <div role="group">
-        <button id="btnToggleInput" disabled>Input Color Values</button>
         <button id="btnCalculate" disabled>Calculate</button>
       </div>
     </main>
 
     <script>
       function usecolor() {
-        var type = (inputFg.type || inputBg.type) === 'color' ? 'text' : 'color';
+        var type = (inputFg.type || inputBg.type) === 'color' ? 'text' : 'color',
+          btns = document.getElementsByClassName('input-switch);
 
-        btnToggleInput.innerHTML = (type === 'color') ? 'Input color values' : 'Use color selectors';
+        function labelString(str) {
+          return str.replace(/color|text/g, function repl(match) {
+            switch (match) {
+              case 'color': return 'text';
+              case 'text': return 'color';
+              default: return '';
+            }
+          });
+        }
+
         inputBg.type = type;
         inputFg.type = type;
+        btns.forEach(function labelBtn(btn) {
+          btn.setAttribute('aria-label', labelString(btn.getAttribute('aria-label'));
+        });
       }
     </script>
     <script>
@@ -557,7 +588,7 @@
       }
 
       // initialize the buttons and results
-      var btnToggleInput = document.getElementById('btnToggleInput'),
+      var btnToggleInput = document.getElementsByClassName('input-switch'),
         btnCalculate = document.getElementById('btnCalculate'),
         inputBg = document.getElementById('background'),
         inputFg = document.getElementById('foreground'),
@@ -572,8 +603,10 @@
           'bals': resultsRow(document.getElementById('bals')),
         };
 
-      btnToggleInput.disabled = false;
-      btnToggleInput.addEventListener('click', usecolor);
+      btnToggleInput.forEach(function initToggle(btn) {
+        btn.disabled = false;
+        btn.addEventListener('click', usecolor);
+      });
       btnCalculate.disabled = false;
       btnCalculate.addEventListener('click', calculate);
       inputBg.addEventListener('keydown', onKeyDown);
