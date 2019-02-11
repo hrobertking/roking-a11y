@@ -315,7 +315,7 @@
         inputBg.type = type;
         inputFg.type = type;
         btns.forEach(function labelBtn(btn) {
-          btn.setAttribute('aria-label', labelString(btn.getAttribute('aria-label'));
+          btn.setAttribute('aria-label', labelString(btn.getAttribute('aria-label')));
         });
       }
     </script>
@@ -592,7 +592,7 @@
       }
 
       // initialize the buttons and results
-      var [].slice.call(btnToggleInput = document.getElementsByClassName('input-switch')),
+      var btnToggleInput = [].slice.call(document.getElementsByClassName('input-switch')),
         btnCalculate = document.getElementById('btnCalculate'),
         inputBg = document.getElementById('background'),
         inputFg = document.getElementById('foreground'),
