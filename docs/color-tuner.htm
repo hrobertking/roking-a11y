@@ -15,9 +15,9 @@
         margin: 0.2rem
       }
       button:not([disabled]) {
-        background-color: rgb(75, 150, 75);
-        border: 1px solid rgb(60, 120, 60);
-        color: rgb(0, 0, 0);
+        background-color: hsl(204, 100%, 60%);
+        border: 0.0625em solid hsl(204, 100%, 30%);
+        color: hsl(204, 100% 5%);
       }
       button.input-switch {
         background-color: transparent;
@@ -38,7 +38,7 @@
         width: 100%;
       }
       input[aria-invalid="true"] {
-        border-color: rgb(225, 0, 0);
+        border-color: hsl(0, 100%, 50%);
       }
       input[aria-invalid="true"] ~ .error {
         display: block;
@@ -57,7 +57,7 @@
         font-style: italic;
       }
       table {
-        border: 1px solid rgb(60, 120, 20);
+        border: 1px solid hsl(204, 100%, 30%);
         border-collapse: collapse;
         width: 100%;
       }
@@ -84,10 +84,10 @@
         text-align: center;
       }
       thead {
-        background-color: rgb(240, 240, 240);
+        background-color: hsl(0, 0%, 90%);
       }
       thead > tr:last-of-type > th {
-        border-bottom: 0.1rem solid rgb(60, 120, 20);
+        border-bottom: 0.1rem solid hsl(204, 100%, 30%);
       }
       th[scope="col"]:last-of-type {
         white-space: nowrap;
@@ -97,7 +97,7 @@
         vertical-align: top;
       }
       tr:not(:last-of-type) {
-        border-bottom: 0.1rem solid rgb(255, 255, 255);
+        border-bottom: 0.1rem solid hsl(0, 0%, 100%);
       }
       .checkbox > input {
         clip: rect(0, 0, 0, 0);
@@ -112,7 +112,7 @@
       .checkbox > input:focus ~ label {
         border: none;
         border-radius: 0.1rem;
-        box-shadow: 0 0 0.1rem 0.2rem rgba(84, 167, 240, 0.9);
+        box-shadow: 0 0 0.1rem 0.2rem hsla(208, 84%, 64%, 0.9);
         outline: none;
       }
       td > div,
@@ -122,7 +122,7 @@
       }
       td > div:not(.error):not(.input)::before,
       .checkbox > label::before {
-        border: 0.05rem solid black;
+        border: 0.05rem solid hsl(0, 0%, 0%);
         border-radius: 0.2rem;
         box-shadow: 0 0 0.1rem;
         content: '';
@@ -138,13 +138,13 @@
         content: '✓' !important;
       }
       td > div.fail:before {
-        border-color: rgb(225, 0, 0);
-        color: rgb(225, 0, 0);
+        border-color: hsl(0, 100%, 50%);
+        color: hsl(0, 100%, 50%);
         content: '⚠' !important;
       }
       td > div.pass:before {
-        border-color: rgb(0, 130, 0);
-        color: rgb(0, 130, 0);
+        border-color: hsl(120, 100%, 25%);
+        color: hsl(120, 100%, 25%);
         content: '✓' !important;
       }
 
@@ -157,8 +157,8 @@
       }
 
       .warning {
-        border-color: rgb(225, 0, 0);
-        color: rgb(225, 0, 0);
+        border-color: hsl(0, 100%, 50%);
+        color: hsl(0, 100%, 50%);
       }
       noscript.warning::before,
       p.warning::before {
