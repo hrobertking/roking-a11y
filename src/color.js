@@ -15,21 +15,24 @@
  *
  * @typedef {tinyint} A number between 0 and 255
  *
- * @typedef {hcolor} A 6-digit hexadecimal string with red in the first two digits, green in the
- * third and fourth digits, and blue in the fifth and sixth digits or a 3-digit hexadecimal string
- * with red in the first digit, green in the second digit, and blue in the third digit. If the
- * 3-digit length is used, the digits are expanded by repitition. For
- * example, if the value is 'ABC', the expanded value is 'AABBCC'.
+ * @typedef {hcolor} A 6-digit or 8-digit hexadecimal string with red in the first two digits, green
+ * in the third and fourth digits, blue in the fifth and sixth digits, and the opacity in the seventh
+ * and eighth digits (assumed to be ff), or a 3-digit or 4-digit hexadecimal string with red in the
+ * first digit, green in the second digit, blue in the third digit, and the opacity in the fourth
+ * digit. If the 3-digit or 4-digit length is used, the digits are expanded by repitition. For example, 
+ * if the value is 'ABC' or 'ABCD', the expanded value is 'AABBCC' or 'AABBCCDD', respectively.
  *
  * @typedef {rgb} An object with red, green, and blue values.
  * @property {tinyint} blue
  * @property {tinyint} green
  * @property {tinyint} red
+ * @property {number} opacity
  *
  * @typedef {hsl} An object with hue, lightness, and saturation.
  * @property {number} hue
  * @property {number} lightness
  * @property {number} saturation
+ * @property {number} opacity
  */
 /* eslint-disable no-bitwise, no-mixed-operators */
 module.exports = function Color(value) {
@@ -47,6 +50,7 @@ module.exports = function Color(value) {
   /**
    * @property canDarken
    * @type {boolean}
+   * @description A boolean representing a luminance greater than zero.
    */
   Object.defineProperty(this, 'canDarken', {
     enumerable: true,
@@ -58,6 +62,7 @@ module.exports = function Color(value) {
   /**
    * @property canLighten
    * @type {boolean}
+   * @description A boolean representing a luminance less than one hundred
    */
   Object.defineProperty(this, 'canLighten', {
     enumerable: true,
@@ -80,6 +85,7 @@ module.exports = function Color(value) {
   /**
    * @property hcolor
    * @type {hcolor}
+   * @description The hexadecimal color values as a 6-digit or 8-digit string
    */
   Object.defineProperty(this, 'hcolor', {
     enumerable: true,
@@ -113,13 +119,26 @@ module.exports = function Color(value) {
   /**
    * @property luminance
    * @type {number}
-   * @description Returns a number 0..100 (inclusive) representing the luminance of a color.
+   * @description A number 0..100 (inclusive) representing the luminance of a color.
    * @see {@link https://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef}
    * @see {@link https://www.w3.org/TR/WCAG20-TECHS/G17.html#G17-tests}
    */
   Object.defineProperty(this, 'luminance', {
     enumerable: true,
     get: getLuminance,
+  });
+
+  /**
+   * @property opacity
+   * @type {number}
+   * @description A floating-point value representing the percentage of the background color blocked
+   * @default 1
+   */
+  Object.defineProperty(this, 'opacity', {
+    enumerable: true,
+    get: getAlpha,
+    set: setAlpha,
+    writeable: true,
   });
 
   /**
@@ -221,6 +240,25 @@ module.exports = function Color(value) {
   };
 
   /* getters and setters */
+  function getAlpha() {
+    return typeof a !== 'number' ? 1 : a;
+  }
+  function setAlpha(n) {
+    // n may be a %, a hexadecimal, or digits
+    var fp;
+
+    if (typeof n === 'string' && /%/.test(n)) {
+      fp = Number(n.replace(/%/g, '')) / 100;
+    } else if (typeof n === 'string' && /^0|[a-f]/i.test(n)) {
+      // if the number is a hexadecimal, the percentage is n divided by 255
+      fp = parseInt(n, 16) / 255);
+    } else {
+      fp = Number(n);
+    }
+    if (!Number.isNaN(fp)) {
+      a = round(Math.floor(fp) > 0 ? fp / 100 : fp);
+    }
+  }
   function getB() {
     return b;
   }
@@ -257,6 +295,9 @@ module.exports = function Color(value) {
     }
 
     if (isSet(this.red) && isSet(this.green) && isSet(this.blue)) {
+      if (this.opacity < 1) {
+        return `#${hex(this.red)}${hex(this.green)}${hex(this.blue)}${hex(Math.round(this.opacity * 255))}`;
+      }
       return `#${hex(this.red)}${hex(this.green)}${hex(this.blue)}`;
     }
     let udef;
@@ -269,6 +310,7 @@ module.exports = function Color(value) {
       r = rgb.red;
       g = rgb.green;
       b = rgb.blue;
+      a = rgb.opacity
       convertRgbToHsl();
     }
   }
@@ -328,13 +370,30 @@ module.exports = function Color(value) {
    * @param {hcolor} color
    */
   function convertHColorToRgb(color) {
+    let R;
+    let G;
+    let B;
+    let A;
+
     const h6 = /^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(color);
     const h3 = /^#?([0-9a-f]{1})([0-9a-f]{1})([0-9a-f]{1})$/i.exec(color);
-    const matched = (h6 || h3);
-    const R = matched ? (matched[1] + matched[1]).substr(-2) : null;
-    const G = matched ? (matched[2] + matched[2]).substr(-2) : null;
-    const B = matched ? (matched[3] + matched[3]).substr(-2) : null;
-    return { blue: parseInt(B, 16), green: parseInt(G, 16), red: parseInt(R, 16) };
+    const matchS = (h6 || h3);
+    
+    const h8 = /^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(color);
+    const h4 = /^#?([0-9a-f]{1})([0-9a-f]{1})([0-9a-f]{1})([0-9a-f]{1})$/i.exec(color);
+    const matchL = (h8 || h4);
+    
+    if (matchS) {
+      R = parseInt((matchS[1] + matchS[1]).substr(-2), 16);
+      G = parseInt((matchS[2] + matchS[2]).substr(-2), 16);
+      B = parseInt((matchS[3] + matchS[3]).substr(-2), 16);
+    } else if (matchL) {
+      R = parseInt((matchL[1] + matchL[1]).substr(-2), 16);
+      G = parseInt((matchL[2] + matchL[2]).substr(-2), 16);
+      B = parseInt((matchL[3] + matchL[3]).substr(-2), 16);
+      A = parseInt((matchL[4] + matchL[4]).substr(-2), 16) / 255;
+    }
+    return { blue: B, green: G, red: R, opacity: A };
   }
 
   /**
@@ -431,25 +490,29 @@ module.exports = function Color(value) {
   /**
    * @private
    * @description Rounds to two decimal places
-   * @return {number}
+   * @return {number|undefined}
    * @param {number} n
    */
   function round(n) {
-    return Math.round(n * 100) / 100;
+    if (typeof n === 'number') {
+      return Number(n.toFixed(2));
+    }
   }
 
   /**
    * @private
    * @description Convert a percent string, a hexadecimal string, or a numeric string to a number.
-   * @returns {number}
+   * @returns {number|undefined}
    */
   function strToNum(n) {
-    if (/%$/.test(n)) {
-      return parseFloat(n.replace(/%$/, '')) / 100;
-    } else if (/^[0-9a-f]+$/i.test(n)) {
-      return parseInt(n, 16);
+    if (typeof n === 'string' || typeof n === 'number') {
+      if (/%$/.test(n)) {
+        return parseFloat(n.replace(/%$/, '')) / 100;
+      } else if (/^[0-9a-f]+$/i.test(n)) {
+        return parseInt(n, 16);
+      }
+      return parseFloat(n);
     }
-    return parseFloat(n);
   }
 
   /**
@@ -459,10 +522,11 @@ module.exports = function Color(value) {
    * @param {rgb|hcolor} data
    */
   function normalize(data) {
-    const rgb = convertHColorToRgb(data);
     if (data && isSet(data.red) && isSet(data.green) && isSet(data.blue)) {
       return data;
     }
+
+    const rgb = convertHColorToRgb(data);
     if (!isSet(rgb.red) || !isSet(rgb.green) || !isSet(rgb.blue)) {
       let udef;
       return { red: udef, green: udef, blue: udef };
@@ -483,10 +547,12 @@ module.exports = function Color(value) {
       r = rgb.red;
       g = rgb.green;
       b = rgb.blue;
+      a = rgb.opacity;
 
       h = parseInt(color.hue, 10);
       s = strToNum(color.saturation);
       l = strToNum(color.lightness);
+      a = strToNum(color.opacity);
 
       h += h < 0 ? 360 : 0;
 
@@ -499,9 +565,8 @@ module.exports = function Color(value) {
   }
 
   /**
-   * internal variables for red, green, blue, hue, saturation, and lightness
+   * internal variables for red, green, blue, hue, saturation, lightness, and opacity
    */
-  let r, g, b, h, s, l; // eslint-disable-line one-var, one-var-declaration-per-line
+  let r, g, b, h, s, l, a; // eslint-disable-line one-var, one-var-declaration-per-line
   init(value);
 };
-
