@@ -31,7 +31,7 @@ module.exports = function Luminance(foreground, background) {
   /**
    * @property contrast
    * @type {number}
-   * @description Returns the luminance contrast ratio n:1
+   * @description Returns the luminance contrast ratio n:1 with two-digit precision
    * @see {@link http://www.w3.org/TR/2008/REC-WCAG20-20081211/#contrast-ratiodef}
    */
   Object.defineProperty(this, 'contrast', {
@@ -128,11 +128,19 @@ module.exports = function Luminance(foreground, background) {
   function getContrast() {
     let f, b, n; // eslint-disable-line one-var, one-var-declaration-per-line
     if (fg && bg) {
-      f = fg.luminance + 5;
+      // compensate for any bleedthru from opacity
+      f = new Color({
+        red: (1 - fg.opacity) * bg.red + fg.opacity * fg.red,
+        green: (1 - fg.opacity) * bg.green + fg.opacity * fg.green,
+        blue: (1 - fg.opacity) * bg.blue + fg.opacity * fg.blue
+      }).luminance + 5;
       b = bg.luminance + 5;
       n = f / b;
 
-      return f < b ? 1 / n : n;
+      // normalize for inverted background and foreground luminance
+      n = f < b ? 1 / n : n;
+
+      n = n.toFixed(2);
     }
     return n;
   }

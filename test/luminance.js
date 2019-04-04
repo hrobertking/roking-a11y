@@ -57,7 +57,7 @@ describe('utilities - Luminance', function () {
     assert.equal(lum.foreground.green, 98);
     assert.equal(lum.foreground.blue, 118);
   });
-  it('calculates contrast correctly', function () {
+  it('calculates contrast correctly for full opacity', function () {
     const lum = new Luminance('#fff', '#000');
     assert.equal(lum.contrast, 21);
 
@@ -66,7 +66,18 @@ describe('utilities - Luminance', function () {
     assert.equal(lum.contrast, 21);
 
     lum.foreground = '#777';
-    assert.equal(lum.contrast, 4.478089453577214);
+    assert.equal(lum.contrast, 4.48);
+  });
+  it('calculates contrast correctly for partial opacity', function () {
+    const lum = new Luminance('#fff6', '#000');
+    assert.equal(lum.contrast, 3.66);
+
+    lum.background = '#fff';
+    lum.foreground = '#0006';
+    assert.equal(lum.contrast, 2.85);
+
+    lum.foreground = '#777';
+    assert.equal(lum.contrast, 4.48);
   });
   it('tests using the specified threshold', function () {
     const lum = new Luminance('#000', '#fff');
@@ -100,7 +111,7 @@ describe('utilities - Luminance', function () {
     lum.foreground = '#ccc';
     lum.search(WCAG.CONTRAST.AA.normal, lum.background);
     assert.equal(lum.foreground.hcolor, '#cccccc');
-    assert.equal(lum.background.hcolor, '#565656');
+    assert.equal(lum.background.hcolor, '#575757');
     assert.equal(lum.test(WCAG.CONTRAST.AA.normal), true);
 
     // searches without isolating changes
@@ -116,6 +127,13 @@ describe('utilities - Luminance', function () {
     lum.search(WCAG.CONTRAST.AA.normal);
     assert.equal(lum.foreground.hcolor, '#ffffff');
     assert.equal(lum.background.hcolor, '#767676');
+    assert.equal(lum.test(WCAG.CONTRAST.AA.normal), true);
+
+    lum.background = '#bbb';
+    lum.foreground = '#cccc';
+    lum.search(WCAG.CONTRAST.AA.normal);
+    assert.equal(lum.foreground.hcolor, '#cdcb33cc');
+    assert.equal(lum.background.hcolor, '#3f3f3f');
     assert.equal(lum.test(WCAG.CONTRAST.AA.normal), true);
   });
 });
