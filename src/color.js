@@ -389,6 +389,7 @@ module.exports = function Color(value) {
       R = parseInt((matchS[1] + matchS[1]).substr(-2), 16);
       G = parseInt((matchS[2] + matchS[2]).substr(-2), 16);
       B = parseInt((matchS[3] + matchS[3]).substr(-2), 16);
+      A = 1;
     } else if (matchL) {
       R = parseInt((matchL[1] + matchL[1]).substr(-2), 16);
       G = parseInt((matchL[2] + matchL[2]).substr(-2), 16);
