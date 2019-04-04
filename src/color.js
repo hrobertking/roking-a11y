@@ -217,13 +217,15 @@ module.exports = function Color(value) {
    */
   this.isColorType = function isColorType(data) {
     if (data) {
+      const isHex = HEX3.test(data) || HEX4.test(data) || HEX6.test(data) || HEX8.test(data);
+
       if (isSet(data.red) && isSet(data.green) && isSet(data.blue)) {
         return true;
       }
       if (isSet(data.hue) && isSet(data.saturation) && isSet(data.lightness)) {
         return true;
       }
-      if (typeof data === 'string' && /^#?([0-9a-f]{3}|[0-9a-f]{6})$/i.test(data)) {
+      if (typeof data === 'string' && isHex) {
         return true;
       }
     }
@@ -241,7 +243,7 @@ module.exports = function Color(value) {
 
   /* getters and setters */
   function getAlpha() {
-    return typeof a !== 'number' ? 1 : a;
+    return typeof a !== 'number' ? 1 : round(a);
   }
   function setAlpha(n) {
     // n may be a %, a hexadecimal, or digits
@@ -251,7 +253,7 @@ module.exports = function Color(value) {
       fp = Number(n.replace(/%/g, '')) / 100;
     } else if (typeof n === 'string' && /^0|[a-f]/i.test(n)) {
       // if the number is a hexadecimal, the percentage is n divided by 255
-      fp = parseInt(n, 16) / 255);
+      fp = parseInt(n, 16) / 255;
     } else {
       fp = Number(n);
     }
@@ -296,7 +298,7 @@ module.exports = function Color(value) {
 
     if (isSet(this.red) && isSet(this.green) && isSet(this.blue)) {
       if (this.opacity < 1) {
-        return `#${hex(this.red)}${hex(this.green)}${hex(this.blue)}${hex(Math.round(this.opacity * 255))}`;
+        return `#${hex(this.red)}${hex(this.green)}${hex(this.blue)}${hex(Math.floor(this.opacity * 255))}`;
       }
       return `#${hex(this.red)}${hex(this.green)}${hex(this.blue)}`;
     }
@@ -375,12 +377,12 @@ module.exports = function Color(value) {
     let B;
     let A;
 
-    const h6 = /^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(color);
-    const h3 = /^#?([0-9a-f]{1})([0-9a-f]{1})([0-9a-f]{1})$/i.exec(color);
-    const matchS = (h6 || h3);
+    const h3 = HEX3.exec(color);
+    const h4 = HEX4.exec(color);
+    const h6 = HEX6.exec(color);
+    const h8 = HEX8.exec(color);
     
-    const h8 = /^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(color);
-    const h4 = /^#?([0-9a-f]{1})([0-9a-f]{1})([0-9a-f]{1})([0-9a-f]{1})$/i.exec(color);
+    const matchS = (h6 || h3);
     const matchL = (h8 || h4);
     
     if (matchS) {
@@ -494,9 +496,7 @@ module.exports = function Color(value) {
    * @param {number} n
    */
   function round(n) {
-    if (typeof n === 'number') {
-      return Number(n.toFixed(2));
-    }
+    return Number(n.toFixed(2));
   }
 
   /**
@@ -547,12 +547,12 @@ module.exports = function Color(value) {
       r = rgb.red;
       g = rgb.green;
       b = rgb.blue;
-      a = rgb.opacity;
 
       h = parseInt(color.hue, 10);
       s = strToNum(color.saturation);
       l = strToNum(color.lightness);
-      a = strToNum(color.opacity);
+
+      a = rgb.opacity || strToNum(color.opacity);
 
       h += h < 0 ? 360 : 0;
 
@@ -563,6 +563,12 @@ module.exports = function Color(value) {
       }
     }
   }
+
+  const HEX3 = /^#?([0-9a-f]{1})([0-9a-f]{1})([0-9a-f]{1})$/i;
+  const HEX6 = /^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i;
+    
+  const HEX4 = /^#?([0-9a-f]{1})([0-9a-f]{1})([0-9a-f]{1})([0-9a-f]{1})$/i;
+  const HEX8 = /^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i;
 
   /**
    * internal variables for red, green, blue, hue, saturation, lightness, and opacity
