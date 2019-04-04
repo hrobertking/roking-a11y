@@ -7,7 +7,7 @@
   "license": "GPL",
   "repository": {
     "type": "git",
-    "url": "https://github.com/hrobertking/roking-validate.git"
+    "url": "https://github.com/hrobertking/roking-a11y.git"
   },
   "scripts": {
     "init": "npm install",
