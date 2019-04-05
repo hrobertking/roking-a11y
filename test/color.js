@@ -12,23 +12,28 @@ describe('utilities - Color', function () {
   it('calculates the correct rgb values given a hue, saturation, and lightness', function () {
     const color = new Color({ hue: 10, saturation: 0.67, lightness: 0.28 });
     assert.equal(color.red, 119);
-    assert.equal(color.green, 39);
+    assert.equal(color.green, 40);
     assert.equal(color.blue, 24);
-    assert.equal(color.luminance, 5.43892431672119);
+    assert.equal(color.luminance, 5.505469909001183);
     assert.equal(color.opacity, 1);
 
     color.hue = 270;
     color.saturation = '90%';
     color.lightness = '90%';
-    assert.equal(color.toString(), '#e5cffc');
+    assert.equal(color.toString(), '#e6cffc');
 
     color.hue = -350;
     color.saturation = 0.67;
     color.lightness = 0.28;
-    assert.equal(color.hcolor, '#772718');
+    assert.equal(color.hcolor, '#772818');
 
     color.hue = 370;
-    assert.equal(color.hcolor, '#772718');
+    assert.equal(color.hcolor, '#772818');
+  });
+  it('does not calculate prematurely', function () {
+    const color = new Color();
+    color.hue = 204;
+    assert.equal(color.red, udef);
   });
   it('calculates the correct opacity', function () {
     const color = new Color({ hue: -350, saturation: 0.67, lightness: 0.28 });
@@ -50,7 +55,7 @@ describe('utilities - Color', function () {
   it('calculates the correct rgb values given a negative hue', function () {
     const color = new Color({ hue: -350, saturation: 0.67, lightness: 0.28 });
     assert.equal(color.red, 119);
-    assert.equal(color.green, 39);
+    assert.equal(color.green, 40);
     assert.equal(color.blue, 24);
   });
   it('calculates the correct hsl values given a red, green, and blue', function () {
@@ -122,12 +127,8 @@ describe('utilities - Color', function () {
     assert.equal(color.green, 98);
     assert.equal(color.blue, 118);
   });
-  it('calculates the correct hsl values given a red, green, and blue', function () {
+  it('calculates the correct hsl values when lightness and saturation are modified', function () {
     const color = new Color({ red: 24, green: 98, blue: 118 });
-    assert.equal(color.hue, 193);
-    assert.equal(color.saturation, '67%');
-    assert.equal(color.lightness, '28%');
-
     color.lightness = 0.5;
     color.saturation = 0.3;
     assert.equal(color.red, 89);

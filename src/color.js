@@ -289,7 +289,8 @@ module.exports = function Color(value) {
   function setH(n) {
     h = Number(n);
     h += (h < 360) ? 360 : 0;
-    h %= 361;
+    h %= 360;
+    convertHslToRgb();
   }
   function getHColor() {
     function hex(n) {
@@ -406,41 +407,28 @@ module.exports = function Color(value) {
    * @returns {undefined}
    */
   function convertHslToRgb() {
-    /* normalizes values to be between 0 and 1 */
-    function range(n) {
-      if (n < 0) {
-        return Math.floor((n + 1) * 1000) / 1000;
-      } else if (n > 1) {
-        return Math.floor((n - 1) * 1000) / 1000;
-      }
-      return Math.floor(n * 1000) / 1000;
-    }
-
-    /* performs color tests */
-    function test(n) {
-      const T1 = (l < 0.5) ? l * (1 + s) : l + s - l * s;
-      const T2 = 2 * l - T1;
-
-      if (6 * n < 1) {
-        return T2 + (T1 - T2) * 6 * n;
-      } else if (2 * n < 1) {
-        return T1;
-      } else if (3 * n < 2) {
-        return T2 + (T1 - T2) * (0.666 - n) * 6;
-      }
-      return T2;
-    }
-
     /* if there is no saturation, the hue is gray with the specified lightness */
     if (s === 0) {
       r = l * 255;
       g = l * 255;
       b = l * 255;
-    } else {
-      const H = h / 360;
-      r = Math.round(test(range(H + 0.333)) * 255);
-      g = Math.round(test(range(H)) * 255);
-      b = Math.round(test(range(H - 0.333)) * 255);
+    } else if (typeof h === 'number' && typeof s === 'number' && typeof l === 'number') {
+      var C = (1 - Math.abs(l * 2 - 1)) * s,
+        hPrime = h / 60,
+        X = C * (1 - Math.abs((hPrime % 2) - 1)),
+        m = l - C / 2,
+        rgbPrime = [
+          [C, X, 0],
+          [X, C, 0],
+          [0, C, X],
+          [0, X, C],
+          [X, 0, C],
+          [C, 0, X]
+        ][Math.floor(hPrime) % 6];
+
+      r = Math.round((rgbPrime[0] + m) * 255);
+      g = Math.round((rgbPrime[1] + m) * 255);
+      b = Math.round((rgbPrime[2] + m) * 255);
     }
   }
 
