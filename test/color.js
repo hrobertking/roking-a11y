@@ -33,6 +33,8 @@ describe('utilities - Color', function () {
   it('does not calculate prematurely', function () {
     const color = new Color();
     color.hue = 204;
+    assert.equal(color.saturation, udef);
+    assert.equal(color.lightness, udef);
     assert.equal(color.red, udef);
   });
   it('calculates the correct opacity', function () {

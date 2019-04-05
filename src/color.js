@@ -318,7 +318,9 @@ module.exports = function Color(value) {
     }
   }
   function getL() {
-    return `${Math.round(l * 100)}%`;
+    if (typeof l === 'number') {
+      return `${Math.round(l * 100)}%`;
+    }
   }
   function setL(n) {
     if (typeof n === 'string') {
@@ -340,8 +342,6 @@ module.exports = function Color(value) {
         0.7152 * range(g) +
         0.0722 * range(b)) * 100;
     }
-    let udef;
-    return udef;
   }
   function getR() {
     return r;
@@ -355,7 +355,9 @@ module.exports = function Color(value) {
     convertRgbToHsl();
   }
   function getS() {
-    return `${Math.round(s * 100)}%`;
+    if (typeof s === 'number') {
+      return `${Math.round(s * 100)}%`;
+    }
   }
   function setS(n) {
     if (typeof n === 'string') {
