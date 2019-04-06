@@ -6,25 +6,30 @@ const Readability = utilities.Readability;
 
 describe('utilities - Readability', function () {
   it('constructs correctly for different calls', function () {
-    assert.equal((new Readability({ text: 'Drink this medicine', lang: 'en' })).item(0).score, 36);
-    assert.equal((new Readability('Drink this medicine', 3, 'en')).wlong, 6);
-    assert.equal((new Readability('Drink this medicine', 'en')).lang, 'en');
-    assert.equal((new Readability('Drink this medicine', 3)).wlong, 3);
-    assert.equal((new Readability('Drink this medicine')).avg, 36);
+    assert.equal((new Readability({ text: 'Drink this medicine, please. Thank you', lang: 'en' })).item(0).score, 36);
+    assert.equal((new Readability('Drink this medicine, please. Thank you.', 3, 'en')).wlong, 6);
+    assert.equal((new Readability('Drink this medicine, please. Thank you.', 'en')).lang, 'en');
+    assert.equal((new Readability('Drink this medicine, please. Thank you.', 3)).wlong, 3);
+    assert.equal((new Readability('Drink this medicine, please. Thank you.')).avg, 36);
   });
   it('calculates a zero score for missing content', function () {
     const evaluator = new Readability();
     assert.equal(evaluator.avg, 0);
   });
+  it('calculates a zero score and has an error if sample is too small', function () {
+    const evaluator = new Readability({ text: 'Drink this medicine' });
+    assert.equal(evaluator.avg, 0);
+    assert.notEqual(evaluator.error, undefined, `Error ${evaluator.error}`);
+  });
   it('calculates the correct score for a string', function () {
-    const content = 'drink this medicine';
+    const content = 'Drink this medicine, please. Thank you.';
     const evaluator = new Readability(content);
     assert.equal(evaluator.avg, 36);
   });
   it('calculates the correct score for a string array', function () {
     const content = [
-      'Tomar este medicina.',
-      'Drink this medicine.',
+      'Tomar este medicina, por favor. Gracias.',
+      'Drink this medicine, please. Thank you.',
       'Now is the time for all good men to come to the aid of their country.',
     ];
     const evaluator = new Readability(content);
@@ -34,12 +39,13 @@ describe('utilities - Readability', function () {
     const content = document.createElement('div');
     content.innerHTML = "<p>Tomar este medicina.</p><p>Drink this medicine.</p><p>Now is the time for all good men to come to the aid of their country.</p><p>I went to sleep with gum in my mouth and now there's gum in my hair and when I got out of bed this morning I tripped on my skateboard and by mistake I dropped my sweater in the sink while the water was running and I could tell it was going to be a terrible, horrible, no good, very bad day. I think I'll move to Australia.</p>";
     const evaluator = new Readability(content);
-    assert.equal(evaluator.avg, 36);
+    assert.equal(evaluator.avg, 18);
   });
   it('calculates the correct score for a multi-sentence phrase', function () {
     const content = "I went to sleep with gum in my mouth and now there's gum in my hair and when I got out of bed this morning I tripped on my skateboard and by mistake I dropped my sweater in the sink while the water was running and I could tell it was going to be a terrible, horrible, no good, very bad day. I think I'll move to Australia.";
     const evaluator = new Readability(content);
     assert.equal(evaluator.avg, 50);
+    assert.equal(evaluator.error, undefined, `Readability error: ${evaluator.error}`);
   });
   it('sets a new word length for a supported language', function () {
     const evaluator = new Readability();
@@ -69,13 +75,13 @@ describe('utilities - Readability', function () {
   it('sets values correctly when given a config object', function () {
     const lang = 'es';
     const size = 4;
-    const text = 'Drink this medicine now';
+    const text = 'Drink this medicine now, please.';
 
     assert.equal((new Readability({ lang, size, text })).lang, lang);
     assert.equal((new Readability({ lang, size })).lang, lang);
     assert.equal((new Readability({ lang, text })).lang, lang);
     assert.equal((new Readability({ size, text })).wlong, size);
-    assert.equal((new Readability({ size, text })).avg, 54);
+    assert.equal((new Readability({ size, text })).avg, 65);
   });
   it('sets content correctly when given content', function () {
     const content = 'Now is the time for all good men to come to the aid of their country';

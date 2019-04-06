@@ -212,7 +212,7 @@ module.exports = function Readability() {
   /**
    * @private
    * @description returns an object with word, longword, & sentence counts with score
-   * @returns {object}
+   * @returns {ScoredItem}
    * @param {string} phrase
    */
   function parse(phrase) {
@@ -220,14 +220,25 @@ module.exports = function Readability() {
     const words = bites.length;
     const longWords = bites.filter(word => word.length > SELF.wlong).length;
     const sentences = phrase.split(/[:.]/g).filter(el => !!el).length;
+
     let pcwords = 0;
     let pclwords = 0;
     let score = 0;
 
-    if (words && sentences) {
+    // clear previous errors
+    if (SELF.error) {
+      delete SELF.error;
+    }
+
+    if (words && sentences && words > 4) {
       pcwords = words / sentences;
       pclwords = (longWords * 100) / words;
       score = Math.round(pcwords + pclwords);
+    } else {
+      const wordCount = `${words} word${words === 1 ? '' : 's'}`;
+      const sentenceCount = `${sentences} sentence${sentences === 1 ? '' : 's'}`;
+
+      SELF.error = new Error(`Sample size is too small: ${wordCount}, ${sentenceCount}`);
     }
 
     return {
