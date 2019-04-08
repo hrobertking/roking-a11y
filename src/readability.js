@@ -20,11 +20,12 @@
  *
  * @typedef {Object} ScoredItem
  * @description A scored phrase
- * @property {number} longwords
- * @property {string} phrase
- * @property {number} lix
- * @property {number} sentences
- * @property {number} words
+ * @property {number} longwords - the count of words exceeding normal length
+ * @property {string} phrase - the content evaluated
+ * @property {number} lix - the Läsbarhetsindex for the content
+ * @property {number} ovix - the word variation index
+ * @property {number} sentences - the number of sentences in the content
+ * @property {number} words - the count of words in the content
  */
 /* eslint-disable prefer-rest-params */
 module.exports = function Readability() {
@@ -42,7 +43,7 @@ module.exports = function Readability() {
   /**
    * @property OVIX
    * @type {number}
-   * @description The average Läsbarhetsindex for parsed content.
+   * @description The average OVIX scores for parsed content.
    * @read-only
    */
   Object.defineProperty(this, 'OVIX', {
@@ -249,6 +250,9 @@ module.exports = function Readability() {
     const sentences = phrase.split(/[:.]/g).filter(el => !!el).length;
     const unique = bites.filter((v, i, a) => a.indexOf(v) === i).length;
 
+    const ovixNum = Math.log(words);
+    const ovixDenom = Math.log(2 - Math.log(unique) / Math.log(words));
+
     let pcwords = 0;
     let pclwords = 0;
     let lix = 0;
@@ -263,7 +267,7 @@ module.exports = function Readability() {
       pcwords = words / sentences;
       pclwords = (longWords * 100) / words;
       lix = Math.round(pcwords + pclwords);
-      ovix = Math.log(words) / Math.log(2 - Math.log(unique) / Math.log(words));
+      ovix = Number((ovixDenom ? ovixNum / ovixDenom : 0).toFixed(2));
     } else {
       const wordCount = `${words} word${words === 1 ? '' : 's'}`;
       const sentenceCount = `${sentences} sentence${sentences === 1 ? '' : 's'}`;
