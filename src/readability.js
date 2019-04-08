@@ -29,15 +29,27 @@
 /* eslint-disable prefer-rest-params */
 module.exports = function Readability() {
   /**
-   * @property avg
+   * @property LIX
    * @type {number}
    * @description The average Läsbarhetsindex for parsed content.
    * @read-only
    */
-  Object.defineProperty(this, 'avg', {
-    get: getAvg,
+  Object.defineProperty(this, 'LIX', {
+    get: getAvgLix,
     enumerable: true,
   });
+
+  /**
+   * @property OVIX
+   * @type {number}
+   * @description The average Läsbarhetsindex for parsed content.
+   * @read-only
+   */
+  Object.defineProperty(this, 'OVIX', {
+    get: getAvgOvix,
+    enumerable: true,
+  });
+
 
   /**
    * @property content
@@ -123,9 +135,24 @@ module.exports = function Readability() {
    * @description Returns the average score for all parsed content
    * @returns {number}
    */
-  function getAvg() {
+  function getAvgLix() {
     if (SELF.parsed && SELF.parsed.length) {
       const scores = SELF.parsed.map(si => si.lix);
+      const sum = scores.reduce((ttl, score) => ttl + score);
+
+      return Math.round(sum / SELF.parsed.length);
+    }
+    return 0;
+  }
+
+  /**
+   * @private
+   * @description Returns the average score for all parsed content
+   * @returns {number}
+   */
+  function getAvgOvix() {
+    if (SELF.parsed && SELF.parsed.length) {
+      const scores = SELF.parsed.map(si => si.ovix);
       const sum = scores.reduce((ttl, score) => ttl + score);
 
       return Math.round(sum / SELF.parsed.length);
@@ -220,10 +247,12 @@ module.exports = function Readability() {
     const words = bites.length;
     const longWords = bites.filter(word => word.length > SELF.wlong).length;
     const sentences = phrase.split(/[:.]/g).filter(el => !!el).length;
+    const unique = bites.filter((v, i, a) => a.indexOf(v) === i).length;
 
     let pcwords = 0;
     let pclwords = 0;
     let lix = 0;
+    let ovix = 0;
 
     // clear previous errors
     if (SELF.error) {
@@ -234,6 +263,7 @@ module.exports = function Readability() {
       pcwords = words / sentences;
       pclwords = (longWords * 100) / words;
       lix = Math.round(pcwords + pclwords);
+      ovix = Math.log(words) / Math.log(2 - Math.log(unique) / Math.log(words));
     } else {
       const wordCount = `${words} word${words === 1 ? '' : 's'}`;
       const sentenceCount = `${sentences} sentence${sentences === 1 ? '' : 's'}`;
@@ -245,6 +275,7 @@ module.exports = function Readability() {
       longWords,
       phrase,
       lix,
+      ovix,
       sentences,
       words,
     };
