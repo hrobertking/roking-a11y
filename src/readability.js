@@ -22,7 +22,7 @@
  * @description A scored phrase
  * @property {number} longwords
  * @property {string} phrase
- * @property {number} score
+ * @property {number} lix
  * @property {number} sentences
  * @property {number} words
  */
@@ -125,7 +125,7 @@ module.exports = function Readability() {
    */
   function getAvg() {
     if (SELF.parsed && SELF.parsed.length) {
-      const scores = SELF.parsed.map(si => si.score);
+      const scores = SELF.parsed.map(si => si.lix);
       const sum = scores.reduce((ttl, score) => ttl + score);
 
       return Math.round(sum / SELF.parsed.length);
@@ -223,7 +223,7 @@ module.exports = function Readability() {
 
     let pcwords = 0;
     let pclwords = 0;
-    let score = 0;
+    let lix = 0;
 
     // clear previous errors
     if (SELF.error) {
@@ -233,7 +233,7 @@ module.exports = function Readability() {
     if (words && sentences && words > 4) {
       pcwords = words / sentences;
       pclwords = (longWords * 100) / words;
-      score = Math.round(pcwords + pclwords);
+      lix = Math.round(pcwords + pclwords);
     } else {
       const wordCount = `${words} word${words === 1 ? '' : 's'}`;
       const sentenceCount = `${sentences} sentence${sentences === 1 ? '' : 's'}`;
@@ -244,7 +244,7 @@ module.exports = function Readability() {
     return {
       longWords,
       phrase,
-      score,
+      lix,
       sentences,
       words,
     };

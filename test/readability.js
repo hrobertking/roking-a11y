@@ -6,7 +6,7 @@ const Readability = utilities.Readability;
 
 describe('utilities - Readability', function () {
   it('constructs correctly for different calls', function () {
-    assert.equal((new Readability({ text: 'Drink this medicine, please. Thank you', lang: 'en' })).item(0).score, 36);
+    assert.equal((new Readability({ text: 'Drink this medicine, please. Thank you', lang: 'en' })).item(0).lix, 36);
     assert.equal((new Readability('Drink this medicine, please. Thank you.', 3, 'en')).wlong, 6);
     assert.equal((new Readability('Drink this medicine, please. Thank you.', 'en')).lang, 'en');
     assert.equal((new Readability('Drink this medicine, please. Thank you.', 3)).wlong, 3);
@@ -86,7 +86,7 @@ describe('utilities - Readability', function () {
   it('sets content correctly when given content', function () {
     const content = 'Now is the time for all good men to come to the aid of their country';
     const evaluator = new Readability();
-    assert.equal(evaluator.score(content).item(0).score, 22);
+    assert.equal(evaluator.score(content).item(0).lix, 22);
   });
   it('scores correctly for blank content', function () {
     const evaluator = new Readability('');
