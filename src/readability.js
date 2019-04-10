@@ -113,7 +113,7 @@ module.exports = function Readability() {
    * @param {number} index
    */
   this.item = function getItem(index) {
-    return SELF.parsed[index];
+    return Me.parsed[index];
   };
 
   /**
@@ -125,10 +125,10 @@ module.exports = function Readability() {
   this.score = function calculate(content) {
     /* parse the content if it's passed in */
     if (content) {
-      SELF.content = content;
+      Me.content = content;
     }
 
-    return SELF;
+    return Me;
   };
 
   /**
@@ -137,11 +137,11 @@ module.exports = function Readability() {
    * @returns {number}
    */
   function getAvgLix() {
-    if (SELF.parsed && SELF.parsed.length) {
-      const scores = SELF.parsed.map(si => si.lix);
+    if (Me.parsed && Me.parsed.length) {
+      const scores = Me.parsed.map(si => si.lix);
       const sum = scores.reduce((ttl, score) => ttl + score);
 
-      return Math.round(sum / SELF.parsed.length);
+      return Math.round(sum / Me.parsed.length);
     }
     return 0;
   }
@@ -152,11 +152,11 @@ module.exports = function Readability() {
    * @returns {number}
    */
   function getAvgOvix() {
-    if (SELF.parsed && SELF.parsed.length) {
-      const scores = SELF.parsed.map(si => si.ovix);
+    if (Me.parsed && Me.parsed.length) {
+      const scores = Me.parsed.map(si => si.ovix);
       const sum = scores.reduce((ttl, score) => ttl + score);
 
-      return Math.round(sum / SELF.parsed.length);
+      return Math.round(sum / Me.parsed.length);
     }
     return 0;
   }
@@ -246,7 +246,7 @@ module.exports = function Readability() {
   function parse(phrase) {
     const bites = phrase.split(' ');
     const words = bites.length;
-    const longWords = bites.filter(word => word.length > SELF.wlong).length;
+    const longWords = bites.filter(word => word.length > Me.wlong).length;
     const sentences = phrase.split(/[:.]/g).filter(el => !!el).length;
     const unique = bites.filter((v, i, a) => a.indexOf(v) === i).length;
 
@@ -259,8 +259,8 @@ module.exports = function Readability() {
     let ovix = 0;
 
     // clear previous errors
-    if (SELF.error) {
-      delete SELF.error;
+    if (Me.error) {
+      Me.error = null;
     }
 
     if (words && sentences && words > 4) {
@@ -272,7 +272,7 @@ module.exports = function Readability() {
       const wordCount = `${words} word${words === 1 ? '' : 's'}`;
       const sentenceCount = `${sentences} sentence${sentences === 1 ? '' : 's'}`;
 
-      SELF.error = new Error(`Sample size is too small: ${wordCount}, ${sentenceCount}`);
+      Me.error = new Error(`Sample size is too small: ${wordCount}, ${sentenceCount}`);
     }
 
     return {
@@ -291,7 +291,8 @@ module.exports = function Readability() {
    * @returns {undefined}
    */
   function setContent(data) {
-    SELF.parsed = Array.isArray(data) ?
+    Me.error = null;
+    Me.parsed = Array.isArray(data) ?
       data.map(el => parse(el)) :
       normalize(data).map(el => parse(el));
   }
@@ -308,7 +309,7 @@ module.exports = function Readability() {
     /* we can only set a new value if we have the language */
     if (Object.prototype.hasOwnProperty.call(SIZES, langSubtag)) {
       localLang = langSubtag;
-      SELF.wlong = Math.round(SIZES[langSubtag].value);
+      Me.wlong = Math.round(SIZES[langSubtag].value);
     }
   }
 
@@ -331,7 +332,7 @@ module.exports = function Readability() {
    */
   const ISO639_1 = /^([a-z]{2})(-[a-z]{2})?$/i;
 
-  const SELF = this;
+  const Me = this;
 
   /**
    * @description The average number of characters in one word, by ISO 639-2 language code.
