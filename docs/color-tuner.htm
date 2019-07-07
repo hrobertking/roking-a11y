@@ -52,6 +52,15 @@
       input[aria-invalid="false"] ~ .error {
         display: none;
       }
+      input[type="color"],
+      input[type="text"] {
+        background-color: transparent;
+        background-position: center;
+        background-size: contain;
+        border: 1px solid blue;
+        border-radius: 0.25em;
+        font-size: 1.1rem;
+      }
       label {
         font-size: 0.8rem;
         font-style: italic;
@@ -71,8 +80,17 @@
         user-select: text;
         vertical-align: top;
       }
-      td:nth-of-type(3) {
+      td:nth-of-type(2),
+      td:nth-of-type(3),
+      th:nth-of-type(2),
+      th:nth-of-type(3) {
+        width: 10rem;
+      }
+      td:nth-of-type(4) {
         width: 100%;
+      }
+      td:nth-of-type(5) {
+        white-space: nowrap;
       }
       input[type="text"],
       td.number {
@@ -86,6 +104,15 @@
       thead {
         background-color: hsl(204, 100%, 90%);
       }
+      thead .checkbox {
+        align-items: flex-end;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      thead th {
+        vertical-align: bottom;
+      }
       thead > tr:last-of-type > th {
         border-bottom: 0.1rem solid hsl(204, 100%, 30%);
       }
@@ -95,9 +122,6 @@
       th[scope="row"] {
         text-align: right;
         vertical-align: top;
-      }
-      tr:not(:last-of-type) {
-        border-bottom: 0.1rem solid hsl(0, 0%, 100%);
       }
       .checkbox > input {
         clip: rect(0, 0, 0, 0);
@@ -115,12 +139,12 @@
         box-shadow: 0 0 0.1rem 0.2rem hsla(208, 84%, 64%, 0.9);
         outline: none;
       }
-      td > div,
+      tbody td > div,
       .checkbox > label {
         align-items: center;
         display: flex;
       }
-      td > div:not(.error):not(.input)::before,
+      tbody td > div:not(.error):not(.input)::before,
       .checkbox > label::before {
         border: 0.05rem solid hsl(0, 0%, 0%);
         border-radius: 0.2rem;
@@ -137,12 +161,12 @@
       .checkbox > input:checked + label:before {
         content: '✓' !important;
       }
-      td > div.fail:before {
+      tbody td > div.fail:before {
         border-color: hsl(0, 100%, 50%);
         color: hsl(0, 100%, 50%);
         content: '⚠' !important;
       }
-      td > div.pass:before {
+      tbody td > div.pass:before {
         border-color: hsl(120, 100%, 25%);
         color: hsl(120, 100%, 25%);
         content: '✓' !important;
@@ -200,7 +224,9 @@
         compliance level. Test results are also shown for <em>large</em> text, which is defined as
         <span id="large-def">either (a) 120 percent the normal size <em>and</em> bold weight or (b) 150 percent
         the normal size</span>. If you wish to use the higher, <em>AAA</em>, threshold, check the
-        <strong><em>Use stricter AAA compliance level</em></strong> box.
+        <strong><em>Use stricter AAA compliance level</em></strong> box. <strong>If you wish to check the
+        luminance value for <em>non-text items</em>, such as a color map, check the <em>Use non-text compliance
+        level</em>.</strong> 
       </p>
       <p>
         Although sufficient contrast is calculated for both normal and large size fonts separately, it is
@@ -211,23 +237,39 @@
       <table>
         <thead>
           <tr>
-            <th scope="col">Action</th>
-            <th scope="col">Foreground</th>
-            <th scope="col">Background</th>
-            <th scope="col">Sample</th>
-            <th scope="col">
-              Contrast (<span aria-label="n to 1">n:1</span>)
-              <div class="checkbox">
-                <input id="compliance" type="checkbox" />
-                <label for="compliance">Use stricter AAA compliance level</label>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>
+              <div role="group">
+                <div class="checkbox">
+                  <input id="aa" name="compliance" type="radio" checked />
+                  <label for="aa">Use AA compliance level for text</label>
+                </div>
+                <div class="checkbox">
+                  <input id="aaa" name="compliance" type="radio" />
+                  <label for="aaa">Use stricter AAA compliance level for text</label>
+                </div>
+                <div class="checkbox">
+                  <input id="nontext" name="compliance" type="radio" />
+                  <label for="nontext">Use non-text compliance level</label>
+                </div>
               </div>
-            </th>
+            </td>
+          </tr>
+          <tr>
+            <th scope="col">Action</th>
+            <th scope="col" class="number">Foreground</th>
+            <th scope="col" class="number">Background</th>
+            <th scope="col">Sample</th>
+            <th scope="col">Contrast (<span aria-label="n to 1">n:1</span>)</th>
           </tr>
         </thead>
         <tbody aria-atomic="true" aria-live="polite">
           <tr id="as-is">
             <th scope="row">As is</td>
-            <td class="input">
+            <td class="input number">
               <label for="foreground">Foreground color</label>
               <div class="input">
                 <input id="foreground" type="text" />
@@ -235,7 +277,7 @@
                 <div class="error" role="alert">Value provided for foreground is not a valid hexadecimal color</div>
               </div>
             </td>
-            <td class="input">
+            <td class="input number">
               <label for="background">Background color</label>
               <div class="input">
                 <input id="background" type="text" />
@@ -340,11 +382,15 @@
       function calculate() {
         var fg = colorize(inputFg.value),
           bg = colorize(inputBg.value),
-          CONTRAST = document.getElementById('compliance').checked ? RATIOS.AAA : RATIOS.AA;
+          CONTRAST = document.getElementById('aaa').checked ? RATIOS.AAA : RATIOS.AA;
 
         /* jump out if we don't have values to calculate */
         if (!fg || !bg) {
           return;
+        }
+
+        if (document.getElementById('nontext').checked) {
+          CONTRAST = { normal: 3, large: 3 };
         }
 
         function show(row, config) {
@@ -360,6 +406,10 @@
           asIsLarge = asIsRatio >= CONTRAST.large ? 'pass' : 'fail';
         results['as-is'].sample.setAttribute('style', `background-color: ${bg}; color: ${fg};`);
         results['as-is'].contrast.innerHTML = `<div class="${asIsNormal}">Normal text will ${asIsNormal} at ${asIsRatio.toFixed(2)}</div><div class="${asIsLarge}">Large text will ${asIsLarge} at ${asIsRatio.toFixed(2)}</div>`;
+
+        if (document.getElementById('nontext').checked) {
+          results['as-is'].contrast.innerHTML = `<div class="${asIsNormal}"><div>Non-text contrast will ${asIsNormal} at ${asIsRatio.toFixed(2)}</div>`;
+        }
 
         // calulate the results with foreground only adjusted
         show(results.fons, contrast(bg, fg, 1, CONTRAST.normal));
