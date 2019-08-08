@@ -1,7 +1,250 @@
 {
-  "it-IT": "Si riapre il caso Diciotti. Il tribunale dei ministri di Catania ha chiesto l'autorizzazione a procedere nei confronti del ministro dell'Interno Matteo Salvini per la vicenda della scorsa estate. Lo si apprende da fonti del Viminale. La decisione del tribunale dei ministri arriva dopo la richiesta motivata di archiviazione avanzata dalla procura di Catania.",
-  "en-US": "The Diciotti case reopens. It was learned from sources in the Interior Ministry that the court of the ministers of Catania has asked for the authorization to proceed towards the minister of the Interior Matteo Salvini for the affair of the last summer. The decision of the court of ministers comes after the reasoned request for filing filed by the prosecutor of Catania.",
-  "de-DE": "Der Diciotti-Fall wird wieder geöffnet. Das Gericht der Minister von Catania hat um die Erlaubnis gebeten, sich für die Angelegenheit des letzten Sommers an den Innenminister Matteo Salvini zu wenden. Es wird aus Quellen des Innenministeriums gelernt. Die Entscheidung des Ministerrates erfolgt nach dem mit Gründen versehenen Antrag des Staatsanwalts von Catania.",
-  "es-ES": "El caso Diciotti reabre. El tribunal de los ministros de Catania ha solicitado la autorización para proceder con el ministro del Interior, Matteo Salvini, por el asunto del verano pasado. Se aprende de fuentes del Ministerio del Interior. La decisión del tribunal de ministros se produce después de la solicitud razonada de presentación presentada por el fiscal de Catania.",
-  "fr-FR": "L'affaire Diciotti rouvre. La cour des ministres de Catane a demandé l'autorisation de poursuivre le ministre de l'Intérieur, Matteo Salvini, dans l'affaire de l'été dernier. Il est appris des sources du ministère de l'Intérieur. La décision du tribunal des ministres intervient après la demande motivée de dépôt déposée par le procureur de Catane."
+  "ar": {
+    "samples": [
+      {
+        "sample": "Arabic",
+        "LIX": null,
+        "OVIX": null
+      }
+    ],
+  "cs":
+    "samples": [
+      {
+        "sample": "Czech",
+        "LIX": null,
+        "OVIX": null
+      }
+    ],
+  "da":
+    "samples": [
+      {
+        "sample": "Danish",
+        "LIX": null,
+        "OVIX": null
+      }
+    ],
+  "de":
+    "samples": [
+      {
+        "sample": "Der Diciotti-Fall wird wieder geöffnet. Das Gericht der Minister von Catania hat um die Erlaubnis gebeten, sich für die Angelegenheit des letzten Sommers an den Innenminister Matteo Salvini zu wenden. Es wird aus Quellen des Innenministeriums gelernt. Die Entscheidung des Ministerrates erfolgt nach dem mit Gründen versehenen Antrag des Staatsanwalts von Catania.",
+        "LIX": 57,
+        "OVIX": 129
+      }
+    ],
+  "el":
+    "samples": [
+      {
+        "sample": "Greek",
+        "LIX": null,
+        "OVIX": null
+      }
+    ],
+  "en":
+    "samples": [
+      {
+        "sample": "The Diciotti case reopens. It was learned from sources in the Interior Ministry that the court of the ministers of Catania has asked for the authorization to proceed towards the minister of the Interior Matteo Salvini for the affair of the last summer. The decision of the court of ministers comes after the reasoned request for filing filed by the prosecutor of Catania.",
+        "LIX": 54,
+        "OVIX": 44
+      }
+    ],
+  "es":
+    "samples": [
+      {
+        "sample": "El caso Diciotti reabre. El tribunal de los ministros de Catania ha solicitado la autorización para proceder con el ministro del Interior, Matteo Salvini, por el asunto del verano pasado. Se aprende de fuentes del Ministerio del Interior. La decisión del tribunal de ministros se produce después de la solicitud razonada de presentación presentada por el fiscal de Catania.",
+        "LIX": 59,
+        "OVIX": 51
+      }
+    ],
+  "et":
+    "samples": [
+      {
+        "sample": "Estonian",
+        "LIX": null,
+        "OVIX": null
+      }
+    ],
+  "eu":
+    "samples": [
+      {
+        "sample": "Basque",
+        "LIX": null,
+        "OVIX": null
+      }
+    ],
+  "fi":
+    "samples": [
+      {
+        "sample": "Finnish",
+        "LIX": null,
+        "OVIX": null
+      }
+    ],
+  "fr":
+    "samples": [
+      {
+        "sample": "L'affaire Diciotti rouvre. La cour des ministres de Catane a demandé l'autorisation de poursuivre le ministre de l'Intérieur, Matteo Salvini, dans l'affaire de l'été dernier. Il est appris des sources du ministère de l'Intérieur. La décision du tribunal des ministres intervient après la demande motivée de dépôt déposée par le procureur de Catane.",
+        "LIX": 64,
+        "OVIX": 63
+      }
+    ],
+  "hr":
+    "samples": [
+      {
+        "sample": "Croatian",
+        "LIX": null,
+        "OVIX": null
+      }
+    ],
+  "hu":
+    "samples": [
+      {
+        "sample": "Hungarian",
+        "LIX": null,
+        "OVIX": null
+      }
+    ],
+  "is":
+    "samples": [
+      {
+        "sample": "Icelandic",
+        "LIX": null,
+        "OVIX": null
+      }
+    ],
+  "it":
+    "samples": [
+      {
+        "sample": "Si riapre il caso Diciotti. Il tribunale dei ministri di Catania ha chiesto l'autorizzazione a procedere nei confronti del ministro dell'Interno Matteo Salvini per la vicenda della scorsa estate. Lo si apprende da fonti del Viminale. La decisione del tribunale dei ministri arriva dopo la richiesta motivata di archiviazione avanzata dalla procura di Catania.",
+        "LIX": 65,
+        "OVIX": 101
+      }
+    ],
+  "lt":
+    "samples": [
+      {
+        "sample": "Lithuanian",
+        "LIX": null,
+        "OVIX": null
+      }
+    ],
+  "lv":
+    "samples": [
+      {
+        "sample": "Latvian",
+        "LIX": null,
+        "OVIX": null
+      }
+    ],
+  "nb":
+    "samples": [
+      {
+        "sample": "Norwegian Bokmål",
+        "LIX": null,
+        "OVIX": null
+      }
+    ],
+  "nl":
+    "samples": [
+      {
+        "sample": "Dutch",
+        "LIX": null,
+        "OVIX": null
+      }
+    ],
+  "nn":
+    "samples": [
+      {
+        "sample": "Norwegian Nynorsk",
+        "LIX": null,
+        "OVIX": null
+      }
+    ],
+  "no":
+    "samples": [
+      {
+        "sample": "Norwegian",
+        "LIX": null,
+        "OVIX": null
+      }
+    ],
+  "pl":
+    "samples": [
+      {
+        "sample": "Polish",
+        "LIX": null,
+        "OVIX": null
+      }
+    ],
+  "pt":
+    "samples": [
+      {
+        "sample": "Portuguese",
+        "LIX": null,
+        "OVIX": null
+      }
+    ],
+  "ro":
+    "samples": [
+      {
+        "sample": "Romanian",
+        "LIX": null,
+        "OVIX": null
+      }
+    ],
+  "ru":
+    "samples": [
+      {
+        "sample": "Russian",
+        "LIX": null,
+        "OVIX": null
+      }
+    ],
+  "sk":
+    "samples": [
+      {
+        "sample": "Slovak",
+        "LIX": null,
+        "OVIX": null
+      }
+    ],
+  "sq":
+    "samples": [
+      {
+        "sample": "Albanian",
+        "LIX": null,
+        "OVIX": null
+      }
+    ],
+  "sv":
+    "samples": [
+      {
+        "sample": "Swedish",
+        "LIX": null,
+        "OVIX": null
+      }
+    ],
+  "tr":
+    "samples": [
+      {
+        "sample": "Turkish",
+        "LIX": null,
+        "OVIX": null
+      }
+    ],
+  "uk":
+    "samples": [
+      {
+        "sample": "Ukrainian",
+        "LIX": null,
+        "OVIX": null
+      }
+    ],
+  "vi":
+    "samples": [
+      {
+        "sample": "Vietnamese",
+        "LIX": null,
+        "OVIX": null
+      }
+    ]
 }  

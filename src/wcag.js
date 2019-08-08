@@ -13,27 +13,27 @@
  * @property {number} normal - the contrast threshold for compliance for normal-size text
  */
 module.exports = {
-  /**
-   * @property CONTRAST
-   * @type {compliance}
-   */
-  CONTRAST: {
-    /**
-     * @property CONTRAST.AA
-     * @type {fontSize}
-     */
-    AA: {
-      normal: 4.5,
-      large: 3,
-    },
-    /**
-     * @property CONTRAST.AAA
-     * @type {fontSize}
-     */
-    AAA: {
-      normal: 7.1,
-      large: 4.5,
-    },
-  },
+	/**
+	 * @property CONTRAST
+	 * @type {compliance}
+	 */
+	CONTRAST: {
+		/**
+		 * @property CONTRAST.AA
+		 * @type {fontSize}
+		 */
+		AA: {
+			normal: 4.5,
+			large: 3,
+		},
+		/**
+		 * @property CONTRAST.AAA
+		 * @type {fontSize}
+		 */
+		AAA: {
+			normal: 7.1,
+			large: 4.5,
+		},
+	},
 };
 

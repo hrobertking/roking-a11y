@@ -16,167 +16,244 @@
  * @property {Color} background
  * @property {Color} foreground
  */
+var Color = require('./color.js'); // eslint-disable-line global-require
+
 module.exports = function Luminance(foreground, background) {
-  /**
-   * @property background
-   * @type {Color}
-   */
-  Object.defineProperty(this, 'background', {
-    enumerable: true,
-    get: getBg,
-    set: setBg,
-    writeable: true,
-  });
+	/**
+	 * @property background
+	 * @type {Color}
+	 */
+	Object.defineProperty(this, 'background', {
+		enumerable: true,
+		get: getBg,
+		set: setBg,
+		writeable: true,
+	});
 
-  /**
-   * @property contrast
-   * @type {number}
-   * @description Returns the luminance contrast ratio n:1 with two-digit precision
-   * @see {@link http://www.w3.org/TR/2008/REC-WCAG20-20081211/#contrast-ratiodef}
-   */
-  Object.defineProperty(this, 'contrast', {
-    enumerable: true,
-    get: getContrast,
-  });
+	/**
+	 * @property contrast
+	 * @type {number}
+	 * @description Returns the luminance contrast ratio n:1 with two-digit precision
+	 * @see {@link http://www.w3.org/TR/2008/REC-WCAG20-20081211/#contrast-ratiodef}
+	 */
+	Object.defineProperty(this, 'contrast', {
+		enumerable: true,
+		get: getContrast,
+	});
 
-  /**
-   * @property foreground
-   * @type {Color}
-   */
-  Object.defineProperty(this, 'foreground', {
-    enumerable: true,
-    get: getFg,
-    set: setFg,
-    writeable: true,
-  });
+	/**
+	 * @property foreground
+	 * @type {Color}
+	 */
+	Object.defineProperty(this, 'foreground', {
+		enumerable: true,
+		get: getFg,
+		set: setFg,
+		writeable: true,
+	});
 
-  /**
-   * @method reset
-   * @description Resets the colors to their original values
-   * @returns {Luminance}
-   */
-  this.reset = function reset() {
-    this.foreground = initFg;
-    this.background = initBg;
-    return this;
-  };
+	/**
+	 * @method matrix
+	 * @description Generates a contrast matrix using the provided palette
+	 * @returns {LuminanceMatrix}
+	 * @example
+	 * const l = new Luminance().matrix(['#000', '#fff', '#f00']);
+	 *
+	 * @example
+	 * const m = new Luminance().Matrix('#000, #fff, #f00');
+	 */
+	this.matrix = function matrix() {
+		var table = {},
+			colors = {},
+			palette = [].slice.call(arguments)
+				.map(function splitter(arg) {
+					// split any csv in the arguments into a string array
+					if (typeof arg === 'string' && arg.indexOf(',')) {
+						return arg.split(',');
+					}
+					return arg instanceof Array ? arg : [arg];
+				})
+				.reduce(function combine(value, total) {
+					// concatenate all arrays in the arguments into a single array
+					return total.concat(value);
+				}, [])
+				.map(function toColor(hex) {
+					// convert each element in the combined array to a Color
+					var isColor = hex instanceof Color,
+						color = isColor ? hex : new Color(hex);
 
-  /**
-   * @method search
-   * @description Modifies one or both Color properties to meet the specified level.
-   * @returns {Luminance}
-   * @param {number} level
-   * @param {Color} isolate
-   */
-  this.search = function search(level, isolate) {
-    /*
-     * if isolate is specified, only change the Color object specified in isolate,
-     * else change _both_ Color properties: foreground and background.
-     */
-    const b = this.background;
-    const f = this.foreground;
+					return color;
+				})
+				.filter(function filterNotColor(el) {
+					// filter out any elements that cannot be converted to a Color
+					return typeof el.hue === 'number';
+				})
+				.sort(function byHue(a, b) {
+					// sort the colors by hue
+					return a.hue - b.hue;
+				})
+				.map(function toHex(el) {
+					// add the Color to the library using the hexadecimal value as the key
+					// and return the hexadecimal value to the array
+					var hcolor = el.hcolor.replace(/\W/g, '');
 
-    /* assign the appropriate adjustment methods and check properties */
-    if (this.foreground.luminance < this.background.luminance) {
-      this.foreground.adjust = this.foreground.darken;
-      this.foreground.adjustProperty = 'canDarken';
-      this.background.adjust = this.background.lighten;
-      this.background.adjustProperty = 'canLighten';
-    } else {
-      this.foreground.adjust = this.foreground.lighten;
-      this.foreground.adjustProperty = 'canLighten';
-      this.background.adjust = this.background.darken;
-      this.background.adjustProperty = 'canDarken';
-    }
+					colors[hcolor] = el;
+					return hcolor;
+				});
 
-    if (isolate) {
-      while (isolate[isolate.adjustProperty] && !this.test(level)) {
-        isolate.adjust();
-      }
-    } else {
-      while ((b[b.adjustProperty] || f[f.adjustProperty]) && !this.test(level)) {
-        if (b[b.adjustProperty]) {
-          b.adjust();
-        }
-        if (f[f.adjustProperty]) {
-          f.adjust();
-        }
-      }
-    }
+		palette.forEach(function buildTable(h) {
+			var values = {};
 
-    return this;
-  };
+			palette.forEach(function addContrast(p) {
+				values[p] = contrast(colors[h], colors[p]);
+			});
+			table[h] = values;
+		});
 
-  /**
-   * @method test
-   * @description Compares the contrast between Colors to the specified level.
-   * @returns {boolean}
-   * @param {number} level
-   */
-  this.test = function test(level) {
-    return !(this.contrast < level);
-  };
+		return table;
+	};
 
-  /* getters and setters */
-  function getBg() {
-    return bg;
-  }
-  function setBg(color) {
-    bg = color instanceof Color ? color : new Color(color);
-    initBg = initBg || new Color(color);
-  }
-  function getContrast() {
-    let f, b, n; // eslint-disable-line one-var, one-var-declaration-per-line
-    if (fg && bg) {
-      // compensate for any bleedthru from opacity
-      f = new Color({
-        red: (1 - fg.opacity) * bg.red + fg.opacity * fg.red,
-        green: (1 - fg.opacity) * bg.green + fg.opacity * fg.green,
-        blue: (1 - fg.opacity) * bg.blue + fg.opacity * fg.blue
-      }).luminance + 5;
-      b = bg.luminance + 5;
-      n = f / b;
+	/**
+	 * @method reset
+	 * @description Resets the colors to their original values
+	 * @returns {Luminance}
+	 */
+	this.reset = function reset() {
+		this.foreground = initFg;
+		this.background = initBg;
+		return this;
+	};
 
-      // normalize for inverted background and foreground luminance
-      n = f < b ? 1 / n : n;
+	/**
+	 * @method search
+	 * @description Modifies one or both Color properties to meet the specified level.
+	 * @returns {Luminance}
+	 * @param {number} level
+	 * @param {Color} isolate
+	 */
+	this.search = function search(level, isolate) {
+		/*
+		 * if isolate is specified, only change the Color object specified in isolate,
+		 * else change _both_ Color properties: foreground and background.
+		 */
+		var b = this.background,
+			f = this.foreground;
 
-      n = n.toFixed(2);
-    }
-    return n;
-  }
-  function getFg() {
-    return fg;
-  }
-  function setFg(color) {
-    fg = color instanceof Color ? color : new Color(color);
-    initFg = initFg || new Color(color);
-  }
+		/* assign the appropriate adjustment methods and check properties */
+		if (this.foreground.luminance < this.background.luminance) {
+			this.foreground.adjust = this.foreground.darken;
+			this.foreground.adjustProperty = 'canDarken';
+			this.background.adjust = this.background.lighten;
+			this.background.adjustProperty = 'canLighten';
+		} else {
+			this.foreground.adjust = this.foreground.lighten;
+			this.foreground.adjustProperty = 'canLighten';
+			this.background.adjust = this.background.darken;
+			this.background.adjustProperty = 'canDarken';
+		}
 
-  /**
-   * @private
-   * @description Checks the datatype to verify it's defined in the Color module
-   * @returns {boolean}
-   * @param {*} data
-   */
-  function isColorType(data) {
-    const c = new Color();
-    return c.isColorType(data);
-  }
+		if (isolate) {
+			while (isolate[isolate.adjustProperty] && !this.test(level)) {
+				isolate.adjust();
+			}
+		} else {
+			while ((b[b.adjustProperty] || f[f.adjustProperty]) && !this.test(level)) {
+				if (b[b.adjustProperty]) {
+					b.adjust();
+				}
+				if (f[f.adjustProperty]) {
+					f.adjust();
+				}
+			}
+		}
 
-  const Color = require('./color.js'); // eslint-disable-line global-require
-  let bg, fg; // eslint-disable-line one-var, one-var-declaration-per-line
-  let initBg, initFg; // eslint-disable-line one-var, one-var-declaration-per-line
+		return this;
+	};
 
-  if (foreground && foreground.background) {
-    this.background = foreground.background;
-  } else if (isColorType(background)) {
-    this.background = background;
-  }
+	/**
+	 * @method test
+	 * @description Compares the contrast between Colors to the specified level.
+	 * @returns {boolean}
+	 * @param {number} level
+	 */
+	this.test = function test(level) {
+		return !(this.contrast < level);
+	};
 
-  if (foreground && foreground.foreground) {
-    this.foreground = foreground.foreground;
-  } else if (isColorType(foreground)) {
-    this.foreground = foreground;
-  }
+	/* getters and setters */
+	function getBg() {
+		return bg;
+	}
+	function setBg(color) {
+		bg = color instanceof Color ? color : new Color(color);
+		initBg = initBg || new Color(color);
+	}
+	function getContrast() {
+		if (fg && bg) {
+			return contrast(fg, bg);
+		}
+	}
+	function getFg() {
+		return fg;
+	}
+	function setFg(color) {
+		fg = color instanceof Color ? color : new Color(color);
+		initFg = initFg || new Color(color);
+	}
+
+	/**
+	 * @private
+	 * @description Checks the datatype to verify it's defined in the Color module
+	 * @returns {boolean}
+	 * @param {*} data
+	 */
+	function isColorType(data) {
+		var c = new Color();
+		return c.isColorType(data);
+	}
+	/**
+	 * @private
+	 * @description Calculates the contrast between foreground and background
+	 * @returns {Number}
+	 * @param {Color} fColor
+	 * @param {Color} bColor
+	 */
+	function contrast(fColor, bColor) {
+		var f, b, n; // eslint-disable-line one-var, one-var-declaration-per-line
+
+		// compensate for any bleedthru from opacity
+		f = new Color({
+			red: ((1 - fColor.opacity) * bColor.red) +
+				(fColor.opacity * fColor.red),
+			green: ((1 - fColor.opacity) * bColor.green) +
+				(fColor.opacity * fColor.green),
+			blue: ((1 - fColor.opacity) * bColor.blue) +
+				(fColor.opacity * fColor.blue),
+		}).luminance + 5;
+		b = bColor.luminance + 5;
+		n = f / b;
+
+		// normalize for inverted background and foreground luminance
+		n = f < b ? 1 / n : n;
+
+		return n.toFixed(2);
+	}
+
+	var bg, // eslint-disable-line vars-on-top,
+		fg,
+		initBg,
+		initFg;
+
+	if (foreground && foreground.background) {
+		this.background = foreground.background;
+	} else if (isColorType(background)) {
+		this.background = background;
+	}
+
+	if (foreground && foreground.foreground) {
+		this.foreground = foreground.foreground;
+	} else if (isColorType(foreground)) {
+		this.foreground = foreground;
+	}
 };
 
