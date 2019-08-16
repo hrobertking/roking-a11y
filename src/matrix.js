@@ -31,7 +31,7 @@ module.exports = function LuminanceMatrix() {
 			green: ((1 - fColor.opacity) * bColor.green) +
 				(fColor.opacity * fColor.green),
 			blue: ((1 - fColor.opacity) * bColor.blue) +
-				(fColor.opacity * fColor.blue),
+				(fColor.opacity * fColor.blue)
 		}).luminance + 5;
 		b = bColor.luminance + 5;
 		n = f / b;

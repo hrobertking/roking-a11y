@@ -24,7 +24,7 @@ module.exports = {
 		 */
 		AA: {
 			normal: 4.5,
-			large: 3,
+			large: 3
 		},
 		/**
 		 * @property CONTRAST.AAA
@@ -32,8 +32,8 @@ module.exports = {
 		 */
 		AAA: {
 			normal: 7.1,
-			large: 4.5,
-		},
-	},
+			large: 4.5
+		}
+	}
 };
 

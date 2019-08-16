@@ -33,7 +33,7 @@ describe('utilities - Readability', function () {
 		const content = [
 			'Tomar este medicina, por favor. Gracias.',
 			'Drink this medicine, please. Thank you.',
-			'Now is the time for all good men to come to the aid of their country.',
+			'Now is the time for all good men to come to the aid of their country.'
 		];
 		const evaluator = new Readability(content);
 		assert.equal(evaluator.LIX, 31);
@@ -137,7 +137,7 @@ describe('utilities - Readability', function () {
 			{ code: 'sv', name: 'Swedish' },
 			{ code: 'tr', name: 'Turkish' },
 			{ code: 'uk', name: 'Ukrainian' },
-			{ code: 'vi', name: 'Vietnamese' },
+			{ code: 'vi', name: 'Vietnamese' }
 		];
 		assert.equal(JSON.stringify(evaluator.languages), JSON.stringify(languages));
 	});

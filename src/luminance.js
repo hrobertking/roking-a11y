@@ -27,7 +27,7 @@ module.exports = function Luminance(foreground, background) {
 		enumerable: true,
 		get: getBg,
 		set: setBg,
-		writeable: true,
+		writeable: true
 	});
 
 	/**
@@ -38,7 +38,7 @@ module.exports = function Luminance(foreground, background) {
 	 */
 	Object.defineProperty(this, 'contrast', {
 		enumerable: true,
-		get: getContrast,
+		get: getContrast
 	});
 
 	/**
@@ -49,7 +49,7 @@ module.exports = function Luminance(foreground, background) {
 		enumerable: true,
 		get: getFg,
 		set: setFg,
-		writeable: true,
+		writeable: true
 	});
 
 	/**
@@ -95,9 +95,12 @@ module.exports = function Luminance(foreground, background) {
 				.map(function toHex(el) {
 					// add the Color to the library using the hexadecimal value as the key
 					// and return the hexadecimal value to the array
-					var hcolor = el.hcolor.replace(/\W/g, '');
+					var hcolor = el.hcolor;
 
-					colors[hcolor] = el;
+					if (hcolor) {
+						hcolor = hcolor.replace(/\W/g, '');
+						colors[hcolor] = el;
+					}
 					return hcolor;
 				});
 
@@ -221,22 +224,24 @@ module.exports = function Luminance(foreground, background) {
 	function contrast(fColor, bColor) {
 		var f, b, n; // eslint-disable-line one-var, one-var-declaration-per-line
 
-		// compensate for any bleedthru from opacity
-		f = new Color({
-			red: ((1 - fColor.opacity) * bColor.red) +
-				(fColor.opacity * fColor.red),
-			green: ((1 - fColor.opacity) * bColor.green) +
-				(fColor.opacity * fColor.green),
-			blue: ((1 - fColor.opacity) * bColor.blue) +
-				(fColor.opacity * fColor.blue),
-		}).luminance + 5;
-		b = bColor.luminance + 5;
-		n = f / b;
+    if (new Color().isColorType(fColor) && new Color().isColorType(bColor)) {
+  		// compensate for any bleedthru from opacity
+	  	f = new Color({
+		  	red: ((1 - fColor.opacity) * bColor.red) +
+			  	(fColor.opacity * fColor.red),
+  			green: ((1 - fColor.opacity) * bColor.green) +
+	  			(fColor.opacity * fColor.green),
+		  	blue: ((1 - fColor.opacity) * bColor.blue) +
+			  	(fColor.opacity * fColor.blue)
+  		}).luminance + 5;
+	  	b = bColor.luminance + 5;
+		  n = f / b;
 
-		// normalize for inverted background and foreground luminance
-		n = f < b ? 1 / n : n;
+  		// normalize for inverted background and foreground luminance
+	  	n = f < b ? 1 / n : n;
 
-		return n.toFixed(2);
+		  return n.toFixed(2);
+    }
 	}
 
 	var bg, // eslint-disable-line vars-on-top,
@@ -256,4 +261,3 @@ module.exports = function Luminance(foreground, background) {
 		this.foreground = foreground;
 	}
 };
-

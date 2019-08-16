@@ -37,7 +37,7 @@ module.exports = function Readability() {
 	 */
 	Object.defineProperty(this, 'LIX', {
 		get: getAvgLix,
-		enumerable: true,
+		enumerable: true
 	});
 
 	/**
@@ -48,7 +48,7 @@ module.exports = function Readability() {
 	 */
 	Object.defineProperty(this, 'OVIX', {
 		get: getAvgOvix,
-		enumerable: true,
+		enumerable: true
 	});
 
 	/**
@@ -59,7 +59,7 @@ module.exports = function Readability() {
 	Object.defineProperty(this, 'content', {
 		set: setContent,
 		enumerable: true,
-		writeable: true,
+		writeable: true
 	});
 
 	/**
@@ -71,7 +71,7 @@ module.exports = function Readability() {
 		get: getLang,
 		set: setLang,
 		enumerable: true,
-		writeable: true,
+		writeable: true
 	});
 
 	/**
@@ -82,7 +82,7 @@ module.exports = function Readability() {
 	Object.defineProperty(this, 'languages', {
 		get: getLangs,
 		enumerable: true,
-		writeable: false,
+		writeable: false
 	});
 
 	/**
@@ -102,7 +102,7 @@ module.exports = function Readability() {
 		get: getLong,
 		set: setLong,
 		enumerable: true,
-		writeable: true,
+		writeable: true
 	});
 
 	/**
@@ -284,7 +284,7 @@ module.exports = function Readability() {
 			lix,
 			ovix,
 			sentences,
-			words,
+			words
 		};
 	}
 
@@ -372,7 +372,7 @@ module.exports = function Readability() {
 		sv: { name: 'Swedish', l10n: 'Svenska', value: 5.97 },
 		tr: { name: 'Turkish', l10n: 'Türkçe', value: 7.22 },
 		uk: { name: 'Ukrainian', l10n: 'Українська', value: 7.52 },
-		vi: { name: 'Vietnamese', l10n: 'Tiếng Việt', value: 4.5 },
+		vi: { name: 'Vietnamese', l10n: 'Tiếng Việt', value: 4.5 }
 	};
 
 	// calculate the average word size across all languages

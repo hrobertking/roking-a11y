@@ -15,7 +15,7 @@ const matrix = {
 		'ff0000': '5.25',
 		'ff00ff': '6.70',
 		'ffff00': '19.56',
-		'ffffff': '21.00',
+		'ffffff': '21.00'
 	},
 	'0000ff': {
 		'000000': '2.44',
@@ -25,7 +25,7 @@ const matrix = {
 		'ff0000': '2.15',
 		'ff00ff': '2.74',
 		'ffff00': '8.00',
-		'ffffff': '8.59',
+		'ffffff': '8.59'
 	},
 	'00ff00': {
 		'000000': '15.30',
@@ -35,7 +35,7 @@ const matrix = {
 		'ff0000': '2.91',
 		'ff00ff': '2.29',
 		'ffff00': '1.28',
-		'ffffff': '1.37',
+		'ffffff': '1.37'
 	},
 	'00ffff': {
 		'000000': '16.75',
@@ -45,7 +45,7 @@ const matrix = {
 		'ff0000': '3.19',
 		'ff00ff': '2.50',
 		'ffff00': '1.17',
-		'ffffff': '1.25',
+		'ffffff': '1.25'
 	},
 	'ff0000': {
 		'000000': '5.25',
@@ -55,7 +55,7 @@ const matrix = {
 		'ff0000': '1.00',
 		'ff00ff': '1.27',
 		'ffff00': '3.72',
-		'ffffff': '4.00',
+		'ffffff': '4.00'
 	},
 	'ff00ff': {
 		'000000': '6.70',
@@ -65,7 +65,7 @@ const matrix = {
 		'ff0000': '1.27',
 		'ff00ff': '1.00',
 		'ffff00': '2.92',
-		'ffffff': '3.14',
+		'ffffff': '3.14'
 	},
 	'ffff00': {
 		'000000': '19.56',
@@ -75,7 +75,7 @@ const matrix = {
 		'ff0000': '3.72',
 		'ff00ff': '2.92',
 		'ffff00': '1.00',
-		'ffffff': '1.07',
+		'ffffff': '1.07'
 	},
 	'ffffff': {
 		'000000': '21.00',
@@ -85,8 +85,8 @@ const matrix = {
 		'ff0000': '4.00',
 		'ff00ff': '3.14',
 		'ffff00': '1.07',
-		'ffffff': '1.00',
-	},
+		'ffffff': '1.00'
+	}
 };
 
 describe('utilities - Luminance', function () {
@@ -234,7 +234,7 @@ describe('utilities - Luminance', function () {
 			new Color('#00ffff'),
 			new Color('#00ff00'),
 			new Color('#0000ff'),
-			new Color('#000000'),
+			new Color('#000000')
 		);
 
 		assert.deepEqual(lum, matrix);
@@ -248,7 +248,7 @@ describe('utilities - Luminance', function () {
 			'#00ffff',
 			'#00ff00',
 			'#0000ff',
-			'#000000',
+			'#000000'
 		);
 
 		assert.deepEqual(lum, matrix);
@@ -262,7 +262,7 @@ describe('utilities - Luminance', function () {
 			new Color('#00ffff'),
 			new Color('#00ff00'),
 			new Color('#0000ff'),
-			new Color('#000000'),
+			new Color('#000000')
 		]);
 
 		assert.deepEqual(lum, matrix);
@@ -276,7 +276,7 @@ describe('utilities - Luminance', function () {
 			new Color('#00ffff'),
 			'#00ff00',
 			new Color('#0000ff'),
-			'#000000',
+			'#000000'
 		);
 
 		assert.deepEqual(lum, matrix);
@@ -289,10 +289,10 @@ describe('utilities - Luminance', function () {
 				new Color('#ff00ff'),
 				'#ff0000',
 				new Color('#00ffff'),
-				'#00ff00',
+				'#00ff00'
 			],
 			new Color('#0000ff'),
-			'#000000',
+			'#000000'
 		);
 
 		assert.deepEqual(lum, matrix);

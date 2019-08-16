@@ -45,7 +45,7 @@ module.exports = function Color(value) {
 		enumerable: true,
 		get: getB,
 		set: setB,
-		writeable: true,
+		writeable: true
 	});
 
 	/**
@@ -57,7 +57,7 @@ module.exports = function Color(value) {
 		enumerable: true,
 		get: function canDarken() {
 			return this.luminance > 0;
-		},
+		}
 	});
 
 	/**
@@ -69,7 +69,7 @@ module.exports = function Color(value) {
 		enumerable: true,
 		get: function canLighten() {
 			return this.luminance < 100;
-		},
+		}
 	});
 
 	/**
@@ -80,7 +80,7 @@ module.exports = function Color(value) {
 		enumerable: true,
 		get: getG,
 		set: setG,
-		writeable: true,
+		writeable: true
 	});
 
 	/**
@@ -92,7 +92,7 @@ module.exports = function Color(value) {
 		enumerable: true,
 		get: getHColor,
 		set: setHColor,
-		writeable: true,
+		writeable: true
 	});
 
 	/**
@@ -103,7 +103,7 @@ module.exports = function Color(value) {
 		enumerable: true,
 		get: getH,
 		set: setH,
-		writeable: true,
+		writeable: true
 	});
 
 	/**
@@ -114,7 +114,7 @@ module.exports = function Color(value) {
 		enumerable: true,
 		get: getL,
 		set: setL,
-		writeable: true,
+		writeable: true
 	});
 
 	/**
@@ -126,7 +126,7 @@ module.exports = function Color(value) {
 	 */
 	Object.defineProperty(this, 'luminance', {
 		enumerable: true,
-		get: getLuminance,
+		get: getLuminance
 	});
 
 	/**
@@ -139,7 +139,7 @@ module.exports = function Color(value) {
 		enumerable: true,
 		get: getAlpha,
 		set: setAlpha,
-		writeable: true,
+		writeable: true
 	});
 
 	/**
@@ -150,7 +150,7 @@ module.exports = function Color(value) {
 		enumerable: true,
 		get: getR,
 		set: setR,
-		writeable: true,
+		writeable: true
 	});
 
 	/**
@@ -161,7 +161,7 @@ module.exports = function Color(value) {
 		enumerable: true,
 		get: getS,
 		set: setS,
-		writeable: true,
+		writeable: true
 	});
 
 	/**
@@ -420,7 +420,7 @@ module.exports = function Color(value) {
 				[0, C, X],
 				[0, X, C],
 				[X, 0, C],
-				[C, 0, X],
+				[C, 0, X]
 			][Math.floor(hPrime) % 6];
 
 			r = Math.round((rgbPrime[0] + m) * 255);
