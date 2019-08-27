@@ -6,6 +6,113 @@ const Color = utilities.Color;
 const Luminance = utilities.Luminance;
 const WCAG = utilities.WCAG;
 
+const html = `<table>
+	<thead>
+		<tr>
+			<th></th>
+			<th><span class="pic" style="background-color: #ffffff;"></span> #ffffff</th>
+			<th><span class="pic" style="background-color: #ff0000;"></span> #ff0000</th>
+			<th><span class="pic" style="background-color: #ffff00;"></span> #ffff00</th>
+			<th><span class="pic" style="background-color: #00ff00;"></span> #00ff00</th>
+			<th><span class="pic" style="background-color: #00ffff;"></span> #00ffff</th>
+			<th><span class="pic" style="background-color: #0000ff;"></span> #0000ff</th>
+			<th><span class="pic" style="background-color: #ff00ff;"></span> #ff00ff</th>
+			<th><span class="pic" style="background-color: #000000;"></span> #000000</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<th><span class="pic" style="background-color: #ffffff;"></span> #ffffff</th>
+			<td>1.00</td>
+			<td>4.00</td>
+			<td>1.07</td>
+			<td>1.37</td>
+			<td>1.25</td>
+			<td>8.59</td>
+			<td>3.14</td>
+			<td>21.00</td>
+		</tr>
+		<tr>
+			<th><span class="pic" style="background-color: #ff0000;"></span> #ff0000</th>
+			<td>4.00</td>
+			<td>1.00</td>
+			<td>3.72</td>
+			<td>2.91</td>
+			<td>3.19</td>
+			<td>2.15</td>
+			<td>1.27</td>
+			<td>5.25</td>
+		</tr>
+		<tr>
+			<th><span class="pic" style="background-color: #ffff00;"></span> #ffff00</th>
+			<td>1.07</td>
+			<td>3.72</td>
+			<td>1.00</td>
+			<td>1.28</td>
+			<td>1.17</td>
+			<td>8.00</td>
+			<td>2.92</td>
+			<td>19.56</td>
+		</tr>
+		<tr>
+			<th><span class="pic" style="background-color: #00ff00;"></span> #00ff00</th>
+			<td>1.37</td>
+			<td>2.91</td>
+			<td>1.28</td>
+			<td>1.00</td>
+			<td>1.09</td>
+			<td>6.26</td>
+			<td>2.29</td>
+			<td>15.30</td>
+		</tr>
+		<tr>
+			<th><span class="pic" style="background-color: #00ffff;"></span> #00ffff</th>
+			<td>1.25</td>
+			<td>3.19</td>
+			<td>1.17</td>
+			<td>1.09</td>
+			<td>1.00</td>
+			<td>6.85</td>
+			<td>2.50</td>
+			<td>16.75</td>
+		</tr>
+		<tr>
+			<th><span class="pic" style="background-color: #0000ff;"></span> #0000ff</th>
+			<td>8.59</td>
+			<td>2.15</td>
+			<td>8.00</td>
+			<td>6.26</td>
+			<td>6.85</td>
+			<td>1.00</td>
+			<td>2.74</td>
+			<td>2.44</td>
+		</tr>
+		<tr>
+			<th><span class="pic" style="background-color: #ff00ff;"></span> #ff00ff</th>
+			<td>3.14</td>
+			<td>1.27</td>
+			<td>2.92</td>
+			<td>2.29</td>
+			<td>2.50</td>
+			<td>2.74</td>
+			<td>1.00</td>
+			<td>6.70</td>
+		</tr>
+		<tr>
+			<th><span class="pic" style="background-color: #000000;"></span> #000000</th>
+			<td>21.00</td>
+			<td>5.25</td>
+			<td>19.56</td>
+			<td>15.30</td>
+			<td>16.75</td>
+			<td>2.44</td>
+			<td>6.70</td>
+			<td>1.00</td>
+		</tr>
+	</tbody>
+</table>
+`;
+
 const matrix = {
 	'000000': {
 		'000000': '1.00',
@@ -296,5 +403,19 @@ describe('utilities - Luminance', function () {
 		);
 
 		assert.deepEqual(lum, matrix);
+	});
+	it('constructs an HTML table properly', function () {
+		const lum = new Luminance().toHtml(
+			'#fff',
+			'#ff0',
+			'#f0f',
+			'#f00',
+			'#0ff',
+			'#0f0',
+			'#00f',
+			'#000'
+		);
+
+		assert.deepEqual(lum, html);
 	});
 });

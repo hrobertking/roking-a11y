@@ -97,6 +97,7 @@ module.exports = function Luminance(foreground, background) {
 					// and return the hexadecimal value to the array
 					var hcolor = el.hcolor;
 
+					/* istanbul ignore else */
 					if (hcolor) {
 						hcolor = hcolor.replace(/\W/g, '');
 						colors[hcolor] = el;
@@ -183,6 +184,181 @@ module.exports = function Luminance(foreground, background) {
 		return !(this.contrast < level);
 	};
 
+	/**
+	 * @method toHtml
+	 * @description Outputs a matrix as an HTML table
+	 * @returns {String}
+	 * @example
+	 * const lum = new Luminance().toHtml('#fff','#ff0', '#f0f', '#f00', '#0ff', '#0f0', '#00f', '#000');
+	 * // lum === 
+	 * <table>
+	 * 	<thead>
+	 * 		<tr>
+	 * 			<th></th>
+	 * 			<th><span class="pic" style="background-color: #ffffff;"></span> #ffffff</th>
+	 * 			<th><span class="pic" style="background-color: #ff0000;"></span> #ff0000</th>
+	 * 			<th><span class="pic" style="background-color: #ffff00;"></span> #ffff00</th>
+	 * 			<th><span class="pic" style="background-color: #00ff00;"></span> #00ff00</th>
+	 * 			<th><span class="pic" style="background-color: #00ffff;"></span> #00ffff</th>
+	 * 			<th><span class="pic" style="background-color: #0000ff;"></span> #0000ff</th>
+	 * 			<th><span class="pic" style="background-color: #ff00ff;"></span> #ff00ff</th>
+	 * 			<th><span class="pic" style="background-color: #000000;"></span> #000000</th>
+	 * 		</tr>
+	 * 	</thead>
+	 * 	<tbody>
+	 * 		<tr>
+	 * 			<th><span class="pic" style="background-color: #ffffff;"></span> #ffffff</th>
+	 * 			<td>1.00</td>
+	 * 			<td>4.00</td>
+	 * 			<td>1.07</td>
+	 * 			<td>1.37</td>
+	 * 			<td>1.25</td>
+	 * 			<td>8.59</td>
+	 * 			<td>3.14</td>
+	 * 			<td>21.00</td>
+	 * 		</tr>
+	 * 		<tr>
+	 * 			<th><span class="pic" style="background-color: #ff0000;"></span> #ff0000</th>
+	 * 			<td>4.00</td>
+	 * 			<td>1.00</td>
+	 * 			<td>3.72</td>
+	 * 			<td>2.91</td>
+	 * 			<td>3.19</td>
+	 * 			<td>2.15</td>
+	 * 			<td>1.27</td>
+	 * 			<td>5.25</td>
+	 * 		</tr>
+	 * 		<tr>
+	 * 			<th><span class="pic" style="background-color: #ffff00;"></span> #ffff00</th>
+	 * 			<td>1.07</td>
+	 * 			<td>3.72</td>
+	 * 			<td>1.00</td>
+	 * 			<td>1.28</td>
+	 * 			<td>1.17</td>
+	 * 			<td>8.00</td>
+	 * 			<td>2.92</td>
+	 * 			<td>19.56</td>
+	 * 		</tr>
+	 * 		<tr>
+	 * 			<th><span class="pic" style="background-color: #00ff00;"></span> #00ff00</th>
+	 * 			<td>1.37</td>
+	 * 			<td>2.91</td>
+	 * 			<td>1.28</td>
+	 * 			<td>1.00</td>
+	 * 			<td>1.09</td>
+	 * 			<td>6.26</td>
+	 * 			<td>2.29</td>
+	 * 			<td>15.30</td>
+	 * 		</tr>
+	 * 		<tr>
+	 * 			<th><span class="pic" style="background-color: #00ffff;"></span> #00ffff</th>
+	 * 			<td>1.25</td>
+	 * 			<td>3.19</td>
+	 * 			<td>1.17</td>
+	 * 			<td>1.09</td>
+	 * 			<td>1.00</td>
+	 * 			<td>6.85</td>
+	 * 			<td>2.50</td>
+	 * 			<td>16.75</td>
+	 * 		</tr>
+	 * 		<tr>
+	 * 			<th><span class="pic" style="background-color: #0000ff;"></span> #0000ff</th>
+	 * 			<td>8.59</td>
+	 * 			<td>2.15</td>
+	 * 			<td>8.00</td>
+	 * 			<td>6.26</td>
+	 * 			<td>6.85</td>
+	 * 			<td>1.00</td>
+	 * 			<td>2.74</td>
+	 * 			<td>2.44</td>
+	 * 		</tr>
+	 * 		<tr>
+	 * 			<th><span class="pic" style="background-color: #ff00ff;"></span> #ff00ff</th>
+	 * 			<td>3.14</td>
+	 * 			<td>1.27</td>
+	 * 			<td>2.92</td>
+	 * 			<td>2.29</td>
+	 * 			<td>2.50</td>
+	 * 			<td>2.74</td>
+	 * 			<td>1.00</td>
+	 * 			<td>6.70</td>
+	 * 		</tr>
+	 * 		<tr>
+	 * 			<th><span class="pic" style="background-color: #000000;"></span> #000000</th>
+	 * 			<td>21.00</td>
+	 * 			<td>5.25</td>
+	 * 			<td>19.56</td>
+	 * 			<td>15.30</td>
+	 * 			<td>16.75</td>
+	 * 			<td>2.44</td>
+	 * 			<td>6.70</td>
+	 * 			<td>1.00</td>
+	 * 		</tr>
+	 * 	</tbody>
+	 * </table>
+	 */
+	this.toHtml = function toHtml() {
+		var HEXCOLOR = /^[0-9a-f]+$/i,
+			lum = this.matrix([].slice.call(arguments)),
+			tbl = '',
+			tbh = [],
+			tbb = [],
+			thr;
+
+		tbh.push([]);
+		thr = tbh[tbh.length - 1];
+		thr.push('<th></th>');
+
+		Object.keys(lum).forEach(function (key) {
+			var contrasts = lum[key],
+				hex = key
+					.replace(/undefined/i, '--------')
+					.replace(HEXCOLOR, function toHex(m) { return '#' + m; }),
+				pic = '',
+				th = '',
+				tr;
+
+			/* istanbul ignore else */
+			if (/#[0-9a-f]{6}/i.test(hex)) {
+				pic = '<span class="pic" style="background-color: ' + hex + ';"></span>';
+			}
+
+			th = '<th>' + pic + ' ' + hex + '</th>';
+
+			// add the color to the head
+			thr.push(th);
+
+			// add a row to the body
+			tbb.push([]);
+			tr = tbb[tbb.length - 1];
+			tr.push(th);
+
+			Object.keys(contrasts).forEach(function (contrast) {
+				var cell = '<td>' + contrasts[contrast] + '</td>';
+
+				tr.push(cell);
+			});
+		});
+
+		tbl += '<table>\n';
+
+		tbl += '\t<thead>\n' + tbh.map(function headerRow(row) {
+			var html = '\t\t\t' + row.join('\n\t\t\t');
+
+			return '\t\t<tr>\n' + html + '\n\t\t</tr>\n';
+		}).join('') + '\t</thead>\n';
+
+		tbl += '\t<tbody>\n' + tbb.map(function bodyRow(row) {
+			var html = '\t\t\t' + row.join('\n\t\t\t');
+
+			return '\t\t<tr>\n' + html + '\n\t\t</tr>\n';
+		}).join('') + '\t</tbody>\n';
+
+		tbl += '</table>\n';
+
+		return tbl;
+	};
+
 	/* getters and setters */
 	function getBg() {
 		return bg;
@@ -224,24 +400,25 @@ module.exports = function Luminance(foreground, background) {
 	function contrast(fColor, bColor) {
 		var f, b, n; // eslint-disable-line one-var, one-var-declaration-per-line
 
-    if (new Color().isColorType(fColor) && new Color().isColorType(bColor)) {
-  		// compensate for any bleedthru from opacity
-	  	f = new Color({
-		  	red: ((1 - fColor.opacity) * bColor.red) +
-			  	(fColor.opacity * fColor.red),
-  			green: ((1 - fColor.opacity) * bColor.green) +
-	  			(fColor.opacity * fColor.green),
-		  	blue: ((1 - fColor.opacity) * bColor.blue) +
-			  	(fColor.opacity * fColor.blue)
-  		}).luminance + 5;
-	  	b = bColor.luminance + 5;
-		  n = f / b;
+		/* istanbul ignore else */
+		if (new Color().isColorType(fColor) && new Color().isColorType(bColor)) {
+			// compensate for any bleedthru from opacity
+			f = new Color({
+				red: ((1 - fColor.opacity) * bColor.red) +
+					(fColor.opacity * fColor.red),
+				green: ((1 - fColor.opacity) * bColor.green) +
+					(fColor.opacity * fColor.green),
+				blue: ((1 - fColor.opacity) * bColor.blue) +
+					(fColor.opacity * fColor.blue)
+			}).luminance + 5;
+			b = bColor.luminance + 5;
+			n = f / b;
 
-  		// normalize for inverted background and foreground luminance
-	  	n = f < b ? 1 / n : n;
+			// normalize for inverted background and foreground luminance
+			n = f < b ? 1 / n : n;
 
-		  return n.toFixed(2);
-    }
+			return n.toFixed(2);
+		}
 	}
 
 	var bg, // eslint-disable-line vars-on-top,
