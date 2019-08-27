@@ -1,152 +1,152 @@
 <!DOCTYPE html>
 <html lang="en-US">
-  <head>
-    <title>roking-a11y</title>
-    <style type="text/css">
-      body {
-        margin: auto;
-        width: 80%;
-      }
+	<head>
+		<title>roking-a11y</title>
+		<style type="text/css">
+			body {
+				margin: auto;
+				width: 80%;
+			}
 
-      blockquote {
-        border-left: 0.25rem solid rgb(240, 240, 240);
-        display: flex;
-        margin: 0;
-        padding: 1rem;
-      }
-      blockquote::before {
-        background: rgb(255, 255, 255);
-        color: rgb(255, 0, 0);
-        content: "⚠";
-        font-size: 2rem;
-        margin: -0.5rem 0.5rem 0 0;
-      }
-      blockquote > p {
-        margin-top: 0;
-      }
+			blockquote {
+				border-left: 0.25rem solid rgb(240, 240, 240);
+				display: flex;
+				margin: 0;
+				padding: 1rem;
+			}
+			blockquote::before {
+				background: rgb(255, 255, 255);
+				color: rgb(255, 0, 0);
+				content: "⚠";
+				font-size: 2rem;
+				margin: -0.5rem 0.5rem 0 0;
+			}
+			blockquote > p {
+				margin-top: 0;
+			}
 
-      dt {
-        font-weight: bold;
-      }
-      dd {
-        margin-bottom: 1rem;
-      }
+			dt {
+				font-weight: bold;
+			}
+			dd {
+				margin-bottom: 1rem;
+			}
 
-      ul.datatype {
-        display: inline-flex;
-        list-style-type: none;
-        margin: 0;
-        padding: 0;
-      }
-      ul.datatype > li {
-        border-left: 0.1rem solid currentColor;
-        padding: 0 0.25rem;
-      }
-      ul.datatype > li:first-of-type {
-        border: none;
-        padding-left: 0;
-      }
+			ul.datatype {
+				display: inline-flex;
+				list-style-type: none;
+				margin: 0;
+				padding: 0;
+			}
+			ul.datatype > li {
+				border-left: 0.1rem solid currentColor;
+				padding: 0 0.25rem;
+			}
+			ul.datatype > li:first-of-type {
+				border: none;
+				padding-left: 0;
+			}
 
-      .code {
-        background: rgb(240, 240, 240);
-        border: 0.125rem solid rgb(204, 204, 204);
-        font-family: monospace;
-        padding: 1rem;
-      }
+			.code {
+				background: rgb(240, 240, 240);
+				border: 0.125rem solid rgb(204, 204, 204);
+				font-family: monospace;
+				padding: 1rem;
+			}
 
-      .datatype {
-        font-style: italic;
-      }
-    </style>
-  </head>
-  <body>
-    <main>
-      <h1>Accessibility tools</h1>
+			.datatype {
+				font-style: italic;
+			}
+		</style>
+	</head>
+	<body>
+		<main>
+			<h1>Accessibility tools</h1>
 
-      <h2>Color Tuner</h2>
-      <p>
-      The <i>Color Tuner</i> is a design tool that allows you to see, and select, accessible foreground
-        and background colors by calculating and displaying the contrast ratio for colors as well
-        as modifying foreground and background colors to meet accessibilityguidelines for luminance
-        contrast (WCAG 2.1, Guideline 1.4, Success Criterion 1.4.3 and Success Criterion 1.4.6).
-      </p>
+			<h2>Color Tuner</h2>
+			<p>
+			The <i>Color Tuner</i> is a design tool that allows you to see, and select, accessible foreground
+				and background colors by calculating and displaying the contrast ratio for colors as well
+				as modifying foreground and background colors to meet accessibilityguidelines for luminance
+				contrast (WCAG 2.1, Guideline 1.4, Success Criterion 1.4.3 and Success Criterion 1.4.6).
+			</p>
 
-      <p>
-        <a href="color-tuner.htm">The <i>Color Tuner</i> tool</a>
-      </p>
+			<p>
+				<a href="color-tuner.htm">The <i>Color Tuner</i> tool</a>
+			</p>
 
-      <h2>Color Matrix</h2>
-      <p>
-        Along with the Color Tuner, the Color Matrix allows you to evaluate the contrast of an entire
-        palette at one time.
-      </p>
+			<h2>Color Matrix</h2>
+			<p>
+				Along with the Color Tuner, the Color Matrix allows you to evaluate the contrast of an entire
+				palette at one time.
+			</p>
 
-      <p>
-        <a href="color-matrix.htm">The <i>Color Matrix</i> tool</a>
-      </p>
+			<p>
+				<a href="color-matrix.htm">The <i>Color Matrix</i> tool</a>
+			</p>
 
-      <h2>Readability</h2>
-      <p>
-        The <i>Readability</i> utility calculates the <i>Läsbarhetsindex</i> for content. The
-        <i>Läsbarhetsindex</i>, or <i>LIX</i>, was developed by Carl-Hugo Björnsson in the late 1960s,
-        nearly a decade prior to the readability tests primarily used in the US that were developed by
-        <span aria-label="doctors">Drs.</span> Flesch and Kincaid. Unlike the Flesch-Kincaid readability tests,
-        i.e., the <i>Flesch Reading Ease</i> and the <i>Flesch-Kincaid Grade Level</i>, the <i>LIX</i> is not
-        tied to a single language by using a syllable count to determine word complexity - the <i>LIX</i> uses
-        word <em>length</em> to determine word complexity.
-      </p>
-      <p>
-        The reason this is important can be demonstrated by examining two short sentences - one in English
-        and the other in Spanish - "drink this medicine" and "tomar este medicina" and passing them through
-        the <i>Flesch Reading Ease</i> test and the <i>LIX</i> to see if the readability scores are significantly
-        different or close.
-      </p>
-      <p>
-        Both phrases, "drink this medicine" and "tomar este medicina", are three words in one sentence and,
-        using the <i>LIX</i> measure, each contains one <em>complex</em> word. Where they differ significantly,
-        however, is in the syllable count - the English phrase contains five syllables and the Spanish phrase
-        contains eight. When we compute the <i>Flesch Reading Ease</i> for these phrases, we get a score of
-        <strong><em>62.9</em></strong> for the English phrase and a score of <span aria-label="negative">-</span>21.8
-        for the Spanish phrase. Their <i>LIX</i> scores, however, are both 36.3.
-      </p>
-      <p>
-        The higher the <i>Flesch Reading Ease</i> score, and the lower a <i>LIX</i> score, the easier text is to
-        read. A <i>Flesch Reading Ease</i> score that falls between 60 and 70, as the score for the English phrase
-        does, <em>should</em> correspond to a eigth or ninth grade reading level. A <i>Flesch Reading Ease</i> score
-        that falls between 0 and 30, which is still <em>much</em> higher than the score for the Spanish phrase,
-        <em>should</em> correspond to a college graduate reading level and is considered very difficult to read. A
-        <i>LIX</i> score of 50, on the other hand, <em>should</em> correspond to a first or second grade reading
-        level.
-      </p>
+			<h2>Readability</h2>
+			<p>
+				The <i>Readability</i> utility calculates the <i>Läsbarhetsindex</i> for content. The
+				<i>Läsbarhetsindex</i>, or <i>LIX</i>, was developed by Carl-Hugo Björnsson in the late 1960s,
+				nearly a decade prior to the readability tests primarily used in the US that were developed by
+				<span aria-label="doctors">Drs.</span> Flesch and Kincaid. Unlike the Flesch-Kincaid readability tests,
+				i.e., the <i>Flesch Reading Ease</i> and the <i>Flesch-Kincaid Grade Level</i>, the <i>LIX</i> is not
+				tied to a single language by using a syllable count to determine word complexity - the <i>LIX</i> uses
+				word <em>length</em> to determine word complexity.
+			</p>
+			<p>
+				The reason this is important can be demonstrated by examining two short sentences - one in English
+				and the other in Spanish - "drink this medicine" and "tomar este medicina" and passing them through
+				the <i>Flesch Reading Ease</i> test and the <i>LIX</i> to see if the readability scores are significantly
+				different or close.
+			</p>
+			<p>
+				Both phrases, "drink this medicine" and "tomar este medicina", are three words in one sentence and,
+				using the <i>LIX</i> measure, each contains one <em>complex</em> word. Where they differ significantly,
+				however, is in the syllable count - the English phrase contains five syllables and the Spanish phrase
+				contains eight. When we compute the <i>Flesch Reading Ease</i> for these phrases, we get a score of
+				<strong><em>62.9</em></strong> for the English phrase and a score of <span aria-label="negative">-</span>21.8
+				for the Spanish phrase. Their <i>LIX</i> scores, however, are both 36.3.
+			</p>
+			<p>
+				The higher the <i>Flesch Reading Ease</i> score, and the lower a <i>LIX</i> score, the easier text is to
+				read. A <i>Flesch Reading Ease</i> score that falls between 60 and 70, as the score for the English phrase
+				does, <em>should</em> correspond to a eigth or ninth grade reading level. A <i>Flesch Reading Ease</i> score
+				that falls between 0 and 30, which is still <em>much</em> higher than the score for the Spanish phrase,
+				<em>should</em> correspond to a college graduate reading level and is considered very difficult to read. A
+				<i>LIX</i> score of 50, on the other hand, <em>should</em> correspond to a first or second grade reading
+				level.
+			</p>
 
-      <h3>Caveats</h3>
-      <blockquote>
-        <p>
-          <strong>There are jurisdictions in which a maximum <em>reading grade level</em> is established for
-          content.</strong> The <i>LIX</i> <em>cannot</em> be used in those situations, you
-          <strong><em>must</em></strong> use the <i>Flesch-Kincaid Grade Level</i>. There have not been an
-          adequate number of samples used to determine if there is a relationship between the <i>LIX</i> and
-          reading grade level, so if reading grade level is important in your consideration, it is recommended
-          that you use the <i>Flesch-Kincaid Grade Level</i> and note that its results apply <em>only</em> to
-          English text.
-        </p>
-      </blockquote>
+			<h3>Caveats</h3>
+			<blockquote>
+				<p>
+					<strong>There are jurisdictions in which a maximum <em>reading grade level</em> is established for
+					content.</strong> The <i>LIX</i> <em>cannot</em> be used in those situations, you
+					<strong><em>must</em></strong> use the <i>Flesch-Kincaid Grade Level</i>. There have not been an
+					adequate number of samples used to determine if there is a relationship between the <i>LIX</i> and
+					reading grade level, so if reading grade level is important in your consideration, it is recommended
+					that you use the <i>Flesch-Kincaid Grade Level</i> and note that its results apply <em>only</em> to
+					English text.
+				</p>
+			</blockquote>
 
-      <blockquote>
-        <p>
-          The current version of the <i>Readability</i> object does not account well for phrases that are not
-          complete sentences, so some measure of caution should be used. For example, the phrase "Last Name"
-          would have a <i>Läsbarhetsindex</i> score of 2, but the the phrase "Surname" would have a
-          <i>Läsbarhetsindex</i> score of 101, even though its complexity would not <em>ordinarily</em> be
-          considered that much greater. I am currently working to determine how best to accommodate this to improve
-          the tool's handling for forms where this is a significant issue.
-        </p>
-      </blockquote>
+			<blockquote>
+				<p>
+					The current version of the <i>Readability</i> object does not account well for phrases that are not
+					complete sentences, so some measure of caution should be used. For example, the phrase "Last Name"
+					would have a <i>Läsbarhetsindex</i> score of 2, but the the phrase "Surname" would have a
+					<i>Läsbarhetsindex</i> score of 101, even though its complexity would not <em>ordinarily</em> be
+					considered that much greater. I am currently working to determine how best to accommodate this to improve
+					the tool's handling for forms where this is a significant issue.
+				</p>
+			</blockquote>
 
-      <p>
-        <a href="readability.htm">The <i>Readability</i> tool</a>
-      </p>
-    </main>
-  </body>
+			<p>
+				<a href="readability.htm">The <i>Readability</i> tool</a>
+			</p>
+		</main>
+	</body>
 </html>
 

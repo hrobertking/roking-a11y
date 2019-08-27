@@ -1,137 +1,137 @@
 <!DOCTYPE html>
 <html lang="en-US">
-  <head>
-    <meta charset="UTF-8">
-    <title>Roking A11y Readability Evaluator</title>
-    <link href="readability.css" rel="stylesheet" type="text/css">
-  </head>
-  <body>
-    <main>
-      <h1>
-        Readability evaluation using the
-        <span id="lix-name">Läsbarhetsindex</span>
-        (LIX) and the 
-        <span id="ovix-name">Ordvariationsindex</span>
-        (OVIX)
-      </h1>
-      <section>
-        <h2>
-          Enter or paste the text to evaluate in the form below.
-        </h2>
-        <blockquote>
-          The previous version of the `Readability` object did not account for phrases that
-          are not complete sentences, so some measure of caution was advised. For example,
-          the phrase "Last Name" would have a Läsbarhetsindex score of 2, but the the phrase
-          "Surname" would have a Läsbarhetsindex score of 101, even though its complexity would
-          not ordinarily be considered that much greater. To address this, a sample
-          must have at least five words to be considered complete.
-        </blockquote>
-        <form>
-          <p>
-            <span class="row justified">
-              <label for="text-in">Text to evaluate</label>
-              <span class="inline">
-                <label for="lang">Text Language</label>
-                <select id="lang"><option value="en">English</option></select>
-              </span>
-            </span>
-            <textarea id="text-in"></textarea>
-            <span class="score row" id="results" role="status">
-              <span>
-                <span>LIX:</span>
-                <span aria-labelledby="lix-name" id="lix">?</span>
-              </span>
-              <span>
-                <span>OVIX:</span>
-                <span aria-labelledby="ovix-name" id="ovix">?</span>
-              </span>
-            </span>
-            <span class="score hidden" id="error" role="status"></span>
-          </p>
-          <p>
-            <button type="button" onclick="calc();">Evaluate</button>
-          </p>
-        </form>
-      </section>
-      <section>
-        <h2>Reliability of the Läsbarhetsindex and Ordvariationsindex</h2>
-        <p>
-          There are several methods by which the readability of a text can be assessed. <em>Most</em> assessment
-          methods require data beyond the text itself - either the number of syllables a word contains or the
-          part of speech a word is, or even its place in a dependency tree. The amount of data necessary for these
-          assessments can be significant and does not lend itself to a quick estimation of the readability of 
-          a text.
-        </p>
-        <p>
-          Of the various assessment methods, the <em>most reliable</em> analysis, aside from a human assessment,
-          is an assessment based on ratios between parts of speech, such as nouns, pronouns, adverbs, and verbs, 
-          which matches human assessments 96 to 97 percent of the time. A dependency distance assessment 
-          <a href="#liu-2008">(Liu, 2008)</a> is the next best analysis with approximately 89 percent accuracy.
-          Unfortunately, both - a parts-of-speech analysis and a dependency distance analysis - require a dictionary
-          and/or dependency map for each language or text analyzed, and the analysis takes more than the few seconds 
-          the simpler, shallow feature assessments, Läsbarhetsindex and Ordvariationsindex, which achieved 
-          approximately 85 and 86 percent accuracy, respectively.
-        </p>
+	<head>
+		<meta charset="UTF-8">
+		<title>Roking A11y Readability Evaluator</title>
+		<link href="readability.css" rel="stylesheet" type="text/css">
+	</head>
+	<body>
+		<main>
+			<h1>
+				Readability evaluation using the
+				<span id="lix-name">Läsbarhetsindex</span>
+				(LIX) and the 
+				<span id="ovix-name">Ordvariationsindex</span>
+				(OVIX)
+			</h1>
+			<section>
+				<h2>
+					Enter or paste the text to evaluate in the form below.
+				</h2>
+				<blockquote>
+					The previous version of the `Readability` object did not account for phrases that
+					are not complete sentences, so some measure of caution was advised. For example,
+					the phrase "Last Name" would have a Läsbarhetsindex score of 2, but the the phrase
+					"Surname" would have a Läsbarhetsindex score of 101, even though its complexity would
+					not ordinarily be considered that much greater. To address this, a sample
+					must have at least five words to be considered complete.
+				</blockquote>
+				<form>
+					<p>
+						<span class="row justified">
+							<label for="text-in">Text to evaluate</label>
+							<span class="inline">
+								<label for="lang">Text Language</label>
+								<select id="lang"><option value="en">English</option></select>
+							</span>
+						</span>
+						<textarea id="text-in"></textarea>
+						<span class="score row" id="results" role="status">
+							<span>
+								<span>LIX:</span>
+								<span aria-labelledby="lix-name" id="lix">?</span>
+							</span>
+							<span>
+								<span>OVIX:</span>
+								<span aria-labelledby="ovix-name" id="ovix">?</span>
+							</span>
+						</span>
+						<span class="score hidden" id="error" role="status"></span>
+					</p>
+					<p>
+						<button type="button" onclick="calc();">Evaluate</button>
+					</p>
+				</form>
+			</section>
+			<section>
+				<h2>Reliability of the Läsbarhetsindex and Ordvariationsindex</h2>
+				<p>
+					There are several methods by which the readability of a text can be assessed. <em>Most</em> assessment
+					methods require data beyond the text itself - either the number of syllables a word contains or the
+					part of speech a word is, or even its place in a dependency tree. The amount of data necessary for these
+					assessments can be significant and does not lend itself to a quick estimation of the readability of 
+					a text.
+				</p>
+				<p>
+					Of the various assessment methods, the <em>most reliable</em> analysis, aside from a human assessment,
+					is an assessment based on ratios between parts of speech, such as nouns, pronouns, adverbs, and verbs, 
+					which matches human assessments 96 to 97 percent of the time. A dependency distance assessment 
+					<a href="#liu-2008">(Liu, 2008)</a> is the next best analysis with approximately 89 percent accuracy.
+					Unfortunately, both - a parts-of-speech analysis and a dependency distance analysis - require a dictionary
+					and/or dependency map for each language or text analyzed, and the analysis takes more than the few seconds 
+					the simpler, shallow feature assessments, Läsbarhetsindex and Ordvariationsindex, which achieved 
+					approximately 85 and 86 percent accuracy, respectively.
+				</p>
 
-        <h3>References (Links open in a new window)</h3>
-        <ol>
-          <li id="falkenjack-2014">
-            <a href="https://aclweb.org/anthology/W14-1213" target="_blank">
-              Johan Falkenjack and Arne Jönsson.
-              2014.
-              Classifying easy-to-read texts without parsing.
-              Proceedings of the 3rd Workshop on Predicting and Improving Text Readability for Target Reader
-                Populations (PITR) at EACL 2014:114-122.
-            </a>
-          </li>
-          <li id="liu-2008">
-            Haitao Liu.
-            2008.
-            Dependency distance as a metric of language comprehension difficulty.
-            Journal of Cognitive Science, 9(2):169–191.
-          </li>
-        </ol>
-      </section>
-    </main>
-    <script src="readability.js"></script>
-    <script>
-      var lang = document.getElementById('lang'),
-        textIn = document.getElementById('text-in'),
-        evaluator = new Readability(),
-        error = document.getElementById('error'),
-        results = document.getElementById('results'),
-        lix = document.getElementById('lix'),
-        ovix = document.getElementById('ovix');
+				<h3>References (Links open in a new window)</h3>
+				<ol>
+					<li id="falkenjack-2014">
+						<a href="https://aclweb.org/anthology/W14-1213" target="_blank">
+							Johan Falkenjack and Arne Jönsson.
+							2014.
+							Classifying easy-to-read texts without parsing.
+							Proceedings of the 3rd Workshop on Predicting and Improving Text Readability for Target Reader
+								Populations (PITR) at EACL 2014:114-122.
+						</a>
+					</li>
+					<li id="liu-2008">
+						Haitao Liu.
+						2008.
+						Dependency distance as a metric of language comprehension difficulty.
+						Journal of Cognitive Science, 9(2):169–191.
+					</li>
+				</ol>
+			</section>
+		</main>
+		<script src="readability.js"></script>
+		<script>
+			var lang = document.getElementById('lang'),
+				textIn = document.getElementById('text-in'),
+				evaluator = new Readability(),
+				error = document.getElementById('error'),
+				results = document.getElementById('results'),
+				lix = document.getElementById('lix'),
+				ovix = document.getElementById('ovix');
 
-      evaluator.languages.forEach(el => {
-        const opt = document.createElement('option');
-        opt.value = el.code;
-        opt.text = el.name;
-        lang.add(opt);
-      });
+			evaluator.languages.forEach(el => {
+				const opt = document.createElement('option');
+				opt.value = el.code;
+				opt.text = el.name;
+				lang.add(opt);
+			});
 
-      function calc () {
-        var content = textIn.value,
-          language = lang.options[lang.selectedIndex].value;
+			function calc () {
+				var content = textIn.value,
+					language = lang.options[lang.selectedIndex].value;
 
-        if (evaluator) {
-          evaluator.lang = language;
-          evaluator.score(content);
-          if (evaluator.error) {
-            results.className = [results.className.replace(/\bhidden\b/, ''), 'hidden'].join(' ').trim();
-            error.className = error.className.replace(/\bhidden\b/, '');
-            error.innerHTML = evaluator.error.message;
-            console.log(evaluator.error.message);
-          } else {
-            error.className = [error.className.replace(/\bhidden\b/, ''), 'hidden'].join(' ').trim();
-            results.className = results.className.replace(/\bhidden\b/, '');   
-            lix.innerHTML = evaluator.LIX;
-            ovix.innerHTML = evaluator.OVIX;
-            console.log('LIX: '+evaluator.LIX+'\nOVIX: '+evaluator.OVIX);
-          }
-        }
-      }
-    </script>
-  </body>
+				if (evaluator) {
+					evaluator.lang = language;
+					evaluator.score(content);
+					if (evaluator.error) {
+						results.className = [results.className.replace(/\bhidden\b/, ''), 'hidden'].join(' ').trim();
+						error.className = error.className.replace(/\bhidden\b/, '');
+						error.innerHTML = evaluator.error.message;
+						console.log(evaluator.error.message);
+					} else {
+						error.className = [error.className.replace(/\bhidden\b/, ''), 'hidden'].join(' ').trim();
+						results.className = results.className.replace(/\bhidden\b/, '');	 
+						lix.innerHTML = evaluator.LIX;
+						ovix.innerHTML = evaluator.OVIX;
+						console.log('LIX: '+evaluator.LIX+'\nOVIX: '+evaluator.OVIX);
+					}
+				}
+			}
+		</script>
+	</body>
 </html>
 

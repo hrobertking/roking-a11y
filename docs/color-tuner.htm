@@ -1,674 +1,674 @@
 <!DOCTYPE html>
 <html lang="en-US">
-  <head>
-    <meta charset="utf-8">
-    <title>Roking A11y Color Tuner</title>
-    <style type="text/css">
-      body {
-        margin: auto;
-        user-select: none;
-        width: 80%;
-      }
-      button {
-        border-radius: 0.25rem;
-        font-size: 1.5rem;
-        margin: 0.2rem
-      }
-      button:not([disabled]) {
-        background-color: hsl(204, 100%, 60%);
-        border: 0.0625em solid hsl(204, 100%, 30%);
-        color: hsl(204, 100%, 5%);
-      }
-      button.input-switch {
-        background-color: transparent;
-        background-position: center;
-        background-size: contain;
-        height: 0.8em;
-        width: 0.8em;
-      }
-      [type="text"] + button.input-switch {
-        background-image: url(/roking-a11y/palette.png);
-      }
-      [type="color"] + button.input-switch {
-        background-image: url(/roking-a11y/text.png);
-      }
-      input,
-      label {
-        display: block;
-        width: 100%;
-      }
-      input[aria-invalid="true"] {
-        border-color: hsl(0, 100%, 50%);
-      }
-      input[aria-invalid="true"] ~ .error {
-        display: block;
-        margin-top: 1.5em;
-      }
-      input:not([aria-invalid]),
-      input[aria-invalid="false"] {
-        border-color: initial;
-      }
-      input:not([aria-invalid]) ~ .error,
-      input[aria-invalid="false"] ~ .error {
-        display: none;
-      }
-      input[type="color"],
-      input[type="text"] {
-        background-color: transparent;
-        background-position: center;
-        background-size: contain;
-        border: 1px solid blue;
-        border-radius: 0.25em;
-        font-size: 1.1rem;
-      }
-      label {
-        font-size: 0.8rem;
-        font-style: italic;
-      }
-      table {
-        border: 1px solid hsl(204, 100%, 30%);
-        border-collapse: collapse;
-        width: 100%;
-      }
-      td,
-      th {
-        padding: 0.5rem;
-      }
-      td {
-        height: 5rem;
-        min-width: 8rem;
-        user-select: text;
-        vertical-align: top;
-      }
-      td:nth-of-type(2),
-      td:nth-of-type(3),
-      th:nth-of-type(2),
-      th:nth-of-type(3) {
-        width: 10rem;
-      }
-      td:nth-of-type(4) {
-        width: 100%;
-      }
-      td:nth-of-type(5) {
-        white-space: nowrap;
-      }
-      input[type="text"],
-      td.number {
-        font-family: monospace;
-        text-align: center;
-      }
-      td.sample {
-        padding: 0.25rem;
-        text-align: center;
-      }
-      thead {
-        background-color: hsl(204, 100%, 90%);
-      }
-      thead .checkbox {
-        align-items: flex-end;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-      }
-      thead th {
-        vertical-align: bottom;
-      }
-      thead > tr:last-of-type > th {
-        border-bottom: 0.1rem solid hsl(204, 100%, 30%);
-      }
-      th[scope="col"]:last-of-type {
-        white-space: nowrap;
-      }
-      th[scope="row"] {
-        text-align: right;
-        vertical-align: top;
-      }
-      .checkbox > input {
-        clip: rect(0, 0, 0, 0);
-        clip-path: polygon(0 0, 0 0, 0 0, 0 0);
-        position: absolute;
-      }
-      .checkbox > label {
-        margin-top: 0.25rem;
-        padding: 0.25rem 0.125rem 0.25rem 0;
-      }
-      :not(button):focus,
-      .checkbox > input:focus ~ label {
-        border: none;
-        border-radius: 0.1rem;
-        box-shadow: 0 0 0.1rem 0.2rem hsla(208, 84%, 64%, 0.9);
-        outline: none;
-      }
-      tbody td > div,
-      .checkbox > label {
-        align-items: center;
-        display: flex;
-      }
-      tbody td > div:not(.error):not(.input)::before,
-      .checkbox > label::before {
-        border: 0.05rem solid hsl(0, 0%, 0%);
-        border-radius: 0.2rem;
-        box-shadow: 0 0 0.1rem;
-        content: '';
-        display: block;
-        font-size: 1rem;
-        line-height: 1.2rem;
-        height: 1.2rem;
-        margin: 0 0.2rem 0;
-        text-align: center;
-        width: 1.2rem;
-      }
-      .checkbox > input:checked + label:before {
-        content: '✓' !important;
-      }
-      tbody td > div.fail:before {
-        border-color: hsl(0, 100%, 50%);
-        color: hsl(0, 100%, 50%);
-        content: '⚠' !important;
-      }
-      tbody td > div.pass:before {
-        border-color: hsl(120, 100%, 25%);
-        color: hsl(120, 100%, 25%);
-        content: '✓' !important;
-      }
+	<head>
+		<meta charset="utf-8">
+		<title>Roking A11y Color Tuner</title>
+		<style type="text/css">
+			body {
+				margin: auto;
+				user-select: none;
+				width: 80%;
+			}
+			button {
+				border-radius: 0.25rem;
+				font-size: 1.5rem;
+				margin: 0.2rem
+			}
+			button:not([disabled]) {
+				background-color: hsl(204, 100%, 60%);
+				border: 0.0625em solid hsl(204, 100%, 30%);
+				color: hsl(204, 100%, 5%);
+			}
+			button.input-switch {
+				background-color: transparent;
+				background-position: center;
+				background-size: contain;
+				height: 0.8em;
+				width: 0.8em;
+			}
+			[type="text"] + button.input-switch {
+				background-image: url(/roking-a11y/palette.png);
+			}
+			[type="color"] + button.input-switch {
+				background-image: url(/roking-a11y/text.png);
+			}
+			input,
+			label {
+				display: block;
+				width: 100%;
+			}
+			input[aria-invalid="true"] {
+				border-color: hsl(0, 100%, 50%);
+			}
+			input[aria-invalid="true"] ~ .error {
+				display: block;
+				margin-top: 1.5em;
+			}
+			input:not([aria-invalid]),
+			input[aria-invalid="false"] {
+				border-color: initial;
+			}
+			input:not([aria-invalid]) ~ .error,
+			input[aria-invalid="false"] ~ .error {
+				display: none;
+			}
+			input[type="color"],
+			input[type="text"] {
+				background-color: transparent;
+				background-position: center;
+				background-size: contain;
+				border: 1px solid blue;
+				border-radius: 0.25em;
+				font-size: 1.1rem;
+			}
+			label {
+				font-size: 0.8rem;
+				font-style: italic;
+			}
+			table {
+				border: 1px solid hsl(204, 100%, 30%);
+				border-collapse: collapse;
+				width: 100%;
+			}
+			td,
+			th {
+				padding: 0.5rem;
+			}
+			td {
+				height: 5rem;
+				min-width: 8rem;
+				user-select: text;
+				vertical-align: top;
+			}
+			td:nth-of-type(2),
+			td:nth-of-type(3),
+			th:nth-of-type(2),
+			th:nth-of-type(3) {
+				width: 10rem;
+			}
+			td:nth-of-type(4) {
+				width: 100%;
+			}
+			td:nth-of-type(5) {
+				white-space: nowrap;
+			}
+			input[type="text"],
+			td.number {
+				font-family: monospace;
+				text-align: center;
+			}
+			td.sample {
+				padding: 0.25rem;
+				text-align: center;
+			}
+			thead {
+				background-color: hsl(204, 100%, 90%);
+			}
+			thead .checkbox {
+				align-items: flex-end;
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+			}
+			thead th {
+				vertical-align: bottom;
+			}
+			thead > tr:last-of-type > th {
+				border-bottom: 0.1rem solid hsl(204, 100%, 30%);
+			}
+			th[scope="col"]:last-of-type {
+				white-space: nowrap;
+			}
+			th[scope="row"] {
+				text-align: right;
+				vertical-align: top;
+			}
+			.checkbox > input {
+				clip: rect(0, 0, 0, 0);
+				clip-path: polygon(0 0, 0 0, 0 0, 0 0);
+				position: absolute;
+			}
+			.checkbox > label {
+				margin-top: 0.25rem;
+				padding: 0.25rem 0.125rem 0.25rem 0;
+			}
+			:not(button):focus,
+			.checkbox > input:focus ~ label {
+				border: none;
+				border-radius: 0.1rem;
+				box-shadow: 0 0 0.1rem 0.2rem hsla(208, 84%, 64%, 0.9);
+				outline: none;
+			}
+			tbody td > div,
+			.checkbox > label {
+				align-items: center;
+				display: flex;
+			}
+			tbody td > div:not(.error):not(.input)::before,
+			.checkbox > label::before {
+				border: 0.05rem solid hsl(0, 0%, 0%);
+				border-radius: 0.2rem;
+				box-shadow: 0 0 0.1rem;
+				content: '';
+				display: block;
+				font-size: 1rem;
+				line-height: 1.2rem;
+				height: 1.2rem;
+				margin: 0 0.2rem 0;
+				text-align: center;
+				width: 1.2rem;
+			}
+			.checkbox > input:checked + label:before {
+				content: '✓' !important;
+			}
+			tbody td > div.fail:before {
+				border-color: hsl(0, 100%, 50%);
+				color: hsl(0, 100%, 50%);
+				content: '⚠' !important;
+			}
+			tbody td > div.pass:before {
+				border-color: hsl(120, 100%, 25%);
+				color: hsl(120, 100%, 25%);
+				content: '✓' !important;
+			}
 
-      .large {
-        font-size: 1.5rem;
-      }
+			.large {
+				font-size: 1.5rem;
+			}
 
-      .error {
-        position: absolute;
-      }
+			.error {
+				position: absolute;
+			}
 
-      .warning {
-        border-color: hsl(0, 100%, 50%);
-        color: hsl(0, 100%, 50%);
-      }
-      noscript.warning::before,
-      p.warning::before {
-        content: '⚠' !important;
-      }
+			.warning {
+				border-color: hsl(0, 100%, 50%);
+				color: hsl(0, 100%, 50%);
+			}
+			noscript.warning::before,
+			p.warning::before {
+				content: '⚠' !important;
+			}
 
-      @media screen and (min-width: 960px) {
-        .small-viewport {
-          display: none;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <main>
-      <h1>Color selector with luminance contrast testing.</h1>
-      <noscript class="warning">
-        This utility relies on JavaScript to perform the calculations for luminance and contrast. The page will not
-        function without it.
-      </noscript>
-      <p class="small-viewport warning">
-        The device you are using does not have enough horizontal landscape to prevent scrolling. It is recommended
-        that you switch to a device that is at least 960 pixels wide.
-      </p>
-      <p>
-        This tool allows you to select an accessible foreground and background color by performing luminance contrast
-        calculations in real time and adjusting the foreground and background color to meet the specified guideline.
-        To tune your colors, simply enter the foreground and background colors in the input boxes below and
-        <strong><em>Calculate</em></strong>. The tuner will calculate the luminance contrast and, if it does
-        not meet the selected guideline level, will adjust the foreground, the background, and both values
-        to give you the closest possible matches that are compliant.
-      </p>
-      <p>
-        If you wish to use a color picker instead of entering the hexadecimal color values, click the
-        <strong><em>Input Color Values</em></strong> button below.
-      </p>
-      <p>
-        The default setting uses the WCAG luminance contrast threshold for normal text at the <em>AA</em>
-        compliance level. Test results are also shown for <em>large</em> text, which is defined as
-        <span id="large-def">either (a) 120 percent the normal size <em>and</em> bold weight or (b) 150 percent
-        the normal size</span>. If you wish to use the higher, <em>AAA</em>, threshold, check the
-        <strong><em>Use stricter AAA compliance level</em></strong> box. <strong>If you wish to check the
-        luminance value for <em>non-text items</em>, such as a color map, check the <em>Use non-text compliance
-        level</em>.</strong> 
-      </p>
-      <p>
-        Although sufficient contrast is calculated for both normal and large size fonts separately, it is
-        recommended that the values for <em>normal size</em> be used as the contrast ratio will be sufficient
-        for <em>large size</em> automatically; however, sufficient contrast at <em>large size</em> may not be
-        sufficient at <em>normal size</em>.
-      </p>
-      <table>
-        <thead>
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>
-              <div role="group">
-                <div class="checkbox">
-                  <input id="aa" name="compliance" type="radio" checked />
-                  <label for="aa">Use AA compliance level for text</label>
-                </div>
-                <div class="checkbox">
-                  <input id="aaa" name="compliance" type="radio" />
-                  <label for="aaa">Use stricter AAA compliance level for text</label>
-                </div>
-                <div class="checkbox">
-                  <input id="nontext" name="compliance" type="radio" />
-                  <label for="nontext">Use non-text compliance level</label>
-                </div>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <th scope="col">Action</th>
-            <th scope="col" class="number">Foreground</th>
-            <th scope="col" class="number">Background</th>
-            <th scope="col">Sample</th>
-            <th scope="col">Contrast (<span aria-label="n to 1">n:1</span>)</th>
-          </tr>
-        </thead>
-        <tbody aria-atomic="true" aria-live="polite">
-          <tr id="as-is">
-            <th scope="row">As is</td>
-            <td class="input number">
-              <label for="foreground">Foreground color</label>
-              <div class="input">
-                <input id="foreground" type="text" />
-                <button aria-label="use a color input instead of text" class="input-switch" type="button"></button>
-                <div class="error" role="alert">Value provided for foreground is not a valid hexadecimal color</div>
-              </div>
-            </td>
-            <td class="input number">
-              <label for="background">Background color</label>
-              <div class="input">
-                <input id="background" type="text" />
-                <button aria-label="use a color input instead of text" class="input-switch" type="button"></button>
-                <div class="error" role="alert">Value provided for background is not a valid hexadecimal color</div>
-              </div>
-            </td>
-            <td class="sample">
-              <span style="display: block;">This is normal text.</span>
-              <span style="display: block;">This is large text.</span>
-            </td>
-            <td class="contrast"></td>
-          </tr>
-          <tr class="foreground-only" data-type="normal" id="fons">
-            <th scope="row">Foreground adjusted</td>
-            <td class="number"></td>
-            <td class="number"></td>
-            <td class="sample">This is sample text.</td>
-            <td class="contrast"></td>
-          </tr>
-          <tr class="foreground-only" data-type="large" id="fols">
-            <th scope="row">Foreground adjusted for large text</td>
-            <td class="number"></td>
-            <td class="number"></td>
-            <td class="sample large">This is sample text.</td>
-            <td class="contrast"></td>
-          </tr>
-          <tr class="background-only" data-type="normal" id="bons">
-            <th scope="row">Background adjusted for normal text</td>
-            <td class="number"></td>
-            <td class="number"></td>
-            <td class="sample">This is sample text.</td>
-            <td class="contrast"></td>
-          </tr>
-          <tr class="background-only" data-type="large" id="bols">
-            <th scope="row">Background adjusted for large text</td>
-            <td class="number"></td>
-            <td class="number"></td>
-            <td class="sample large">This is sample text.</td>
-            <td class="contrast"></td>
-          </tr>
-          <tr class="both-adjusted" data-type="normal" id="bans">
-            <th scope="row">Foreground and background adjusted for normal text</td>
-            <td class="number"></td>
-            <td class="number"></td>
-            <td class="sample">This is sample text.</td>
-            <td class="contrast"></td>
-          </tr>
-          <tr class="both-adjusted" data-type="large" id="bals">
-            <th scope="row">Foreground and background adjusted for large text</td>
-            <td class="number"></td>
-            <td class="number"></td>
-            <td class="sample large">This is sample text.</td>
-            <td class="contrast"></td>
-          </tr>
-        </tbody>
-      </table>
-      <div role="group">
-        <button id="btnCalculate" disabled>Calculate</button>
-      </div>
-    </main>
+			@media screen and (min-width: 960px) {
+				.small-viewport {
+					display: none;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<main>
+			<h1>Color selector with luminance contrast testing.</h1>
+			<noscript class="warning">
+				This utility relies on JavaScript to perform the calculations for luminance and contrast. The page will not
+				function without it.
+			</noscript>
+			<p class="small-viewport warning">
+				The device you are using does not have enough horizontal landscape to prevent scrolling. It is recommended
+				that you switch to a device that is at least 960 pixels wide.
+			</p>
+			<p>
+				This tool allows you to select an accessible foreground and background color by performing luminance contrast
+				calculations in real time and adjusting the foreground and background color to meet the specified guideline.
+				To tune your colors, simply enter the foreground and background colors in the input boxes below and
+				<strong><em>Calculate</em></strong>. The tuner will calculate the luminance contrast and, if it does
+				not meet the selected guideline level, will adjust the foreground, the background, and both values
+				to give you the closest possible matches that are compliant.
+			</p>
+			<p>
+				If you wish to use a color picker instead of entering the hexadecimal color values, click the
+				<strong><em>Input Color Values</em></strong> button below.
+			</p>
+			<p>
+				The default setting uses the WCAG luminance contrast threshold for normal text at the <em>AA</em>
+				compliance level. Test results are also shown for <em>large</em> text, which is defined as
+				<span id="large-def">either (a) 120 percent the normal size <em>and</em> bold weight or (b) 150 percent
+				the normal size</span>. If you wish to use the higher, <em>AAA</em>, threshold, check the
+				<strong><em>Use stricter AAA compliance level</em></strong> box. <strong>If you wish to check the
+				luminance value for <em>non-text items</em>, such as a color map, check the <em>Use non-text compliance
+				level</em>.</strong> 
+			</p>
+			<p>
+				Although sufficient contrast is calculated for both normal and large size fonts separately, it is
+				recommended that the values for <em>normal size</em> be used as the contrast ratio will be sufficient
+				for <em>large size</em> automatically; however, sufficient contrast at <em>large size</em> may not be
+				sufficient at <em>normal size</em>.
+			</p>
+			<table>
+				<thead>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td>
+							<div role="group">
+								<div class="checkbox">
+									<input id="aa" name="compliance" type="radio" checked />
+									<label for="aa">Use AA compliance level for text</label>
+								</div>
+								<div class="checkbox">
+									<input id="aaa" name="compliance" type="radio" />
+									<label for="aaa">Use stricter AAA compliance level for text</label>
+								</div>
+								<div class="checkbox">
+									<input id="nontext" name="compliance" type="radio" />
+									<label for="nontext">Use non-text compliance level</label>
+								</div>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<th scope="col">Action</th>
+						<th scope="col" class="number">Foreground</th>
+						<th scope="col" class="number">Background</th>
+						<th scope="col">Sample</th>
+						<th scope="col">Contrast (<span aria-label="n to 1">n:1</span>)</th>
+					</tr>
+				</thead>
+				<tbody aria-atomic="true" aria-live="polite">
+					<tr id="as-is">
+						<th scope="row">As is</td>
+						<td class="input number">
+							<label for="foreground">Foreground color</label>
+							<div class="input">
+								<input id="foreground" type="text" />
+								<button aria-label="use a color input instead of text" class="input-switch" type="button"></button>
+								<div class="error" role="alert">Value provided for foreground is not a valid hexadecimal color</div>
+							</div>
+						</td>
+						<td class="input number">
+							<label for="background">Background color</label>
+							<div class="input">
+								<input id="background" type="text" />
+								<button aria-label="use a color input instead of text" class="input-switch" type="button"></button>
+								<div class="error" role="alert">Value provided for background is not a valid hexadecimal color</div>
+							</div>
+						</td>
+						<td class="sample">
+							<span style="display: block;">This is normal text.</span>
+							<span style="display: block;">This is large text.</span>
+						</td>
+						<td class="contrast"></td>
+					</tr>
+					<tr class="foreground-only" data-type="normal" id="fons">
+						<th scope="row">Foreground adjusted</td>
+						<td class="number"></td>
+						<td class="number"></td>
+						<td class="sample">This is sample text.</td>
+						<td class="contrast"></td>
+					</tr>
+					<tr class="foreground-only" data-type="large" id="fols">
+						<th scope="row">Foreground adjusted for large text</td>
+						<td class="number"></td>
+						<td class="number"></td>
+						<td class="sample large">This is sample text.</td>
+						<td class="contrast"></td>
+					</tr>
+					<tr class="background-only" data-type="normal" id="bons">
+						<th scope="row">Background adjusted for normal text</td>
+						<td class="number"></td>
+						<td class="number"></td>
+						<td class="sample">This is sample text.</td>
+						<td class="contrast"></td>
+					</tr>
+					<tr class="background-only" data-type="large" id="bols">
+						<th scope="row">Background adjusted for large text</td>
+						<td class="number"></td>
+						<td class="number"></td>
+						<td class="sample large">This is sample text.</td>
+						<td class="contrast"></td>
+					</tr>
+					<tr class="both-adjusted" data-type="normal" id="bans">
+						<th scope="row">Foreground and background adjusted for normal text</td>
+						<td class="number"></td>
+						<td class="number"></td>
+						<td class="sample">This is sample text.</td>
+						<td class="contrast"></td>
+					</tr>
+					<tr class="both-adjusted" data-type="large" id="bals">
+						<th scope="row">Foreground and background adjusted for large text</td>
+						<td class="number"></td>
+						<td class="number"></td>
+						<td class="sample large">This is sample text.</td>
+						<td class="contrast"></td>
+					</tr>
+				</tbody>
+			</table>
+			<div role="group">
+				<button id="btnCalculate" disabled>Calculate</button>
+			</div>
+		</main>
 
-    <script>
-      function usecolor() {
-        var type = (inputFg.type || inputBg.type) === 'color' ? 'text' : 'color',
-          btns = [].slice.call(document.getElementsByClassName('input-switch'));
+		<script>
+			function usecolor() {
+				var type = (inputFg.type || inputBg.type) === 'color' ? 'text' : 'color',
+					btns = [].slice.call(document.getElementsByClassName('input-switch'));
 
-        function labelString(str) {
-          return str.replace(/color|text/g, function repl(match) {
-            switch (match) {
-              case 'color': return 'text';
-              case 'text': return 'color';
-              default: return '';
-            }
-          });
-        }
+				function labelString(str) {
+					return str.replace(/color|text/g, function repl(match) {
+						switch (match) {
+							case 'color': return 'text';
+							case 'text': return 'color';
+							default: return '';
+						}
+					});
+				}
 
-        inputBg.type = type;
-        inputFg.type = type;
-        btns.forEach(function labelBtn(btn) {
-          btn.setAttribute('aria-label', labelString(btn.getAttribute('aria-label')));
-        });
-      }
-    </script>
-    <script>
-      var RATIOS = {
-          AA: {
-            normal: 4.5,
-            large: 3,
-          },
-          AAA: {
-            normal: 7.1,
-            large: 4.5,
-          }
-        };
+				inputBg.type = type;
+				inputFg.type = type;
+				btns.forEach(function labelBtn(btn) {
+					btn.setAttribute('aria-label', labelString(btn.getAttribute('aria-label')));
+				});
+			}
+		</script>
+		<script>
+			var RATIOS = {
+					AA: {
+						normal: 4.5,
+						large: 3,
+					},
+					AAA: {
+						normal: 7.1,
+						large: 4.5,
+					}
+				};
 
-      /**
-       * @func calculate
-       * @description Performs the calculations and displays results.
-       * @returns {undefined}
-       */
-      function calculate() {
-        var fg = colorize(inputFg.value),
-          bg = colorize(inputBg.value),
-          CONTRAST = document.getElementById('aaa').checked ? RATIOS.AAA : RATIOS.AA;
+			/**
+			 * @func calculate
+			 * @description Performs the calculations and displays results.
+			 * @returns {undefined}
+			 */
+			function calculate() {
+				var fg = colorize(inputFg.value),
+					bg = colorize(inputBg.value),
+					CONTRAST = document.getElementById('aaa').checked ? RATIOS.AAA : RATIOS.AA;
 
-        /* jump out if we don't have values to calculate */
-        if (!fg || !bg) {
-          return;
-        }
+				/* jump out if we don't have values to calculate */
+				if (!fg || !bg) {
+					return;
+				}
 
-        if (document.getElementById('nontext').checked) {
-          CONTRAST = { normal: 3, large: 3 };
-        }
+				if (document.getElementById('nontext').checked) {
+					CONTRAST = { normal: 3, large: 3 };
+				}
 
-        function show(row, config) {
-          var size = row.sample.className.replace(/\s*sample\s*/, '') || 'normal';
-          row.fg.innerHTML = config.fg;
-          row.bg.innerHTML = config.bg;
-          row.sample.setAttribute('style', `background-color: ${config.bg}; color: ${config.fg};`);
-          row.contrast.innerHTML = `<div class="${config.contrast >= CONTRAST[size] ? 'pass' : 'fail'}">${config.contrast.toFixed(2)}</div>`;
-        }
+				function show(row, config) {
+					var size = row.sample.className.replace(/\s*sample\s*/, '') || 'normal';
+					row.fg.innerHTML = config.fg;
+					row.bg.innerHTML = config.bg;
+					row.sample.setAttribute('style', `background-color: ${config.bg}; color: ${config.fg};`);
+					row.contrast.innerHTML = `<div class="${config.contrast >= CONTRAST[size] ? 'pass' : 'fail'}">${config.contrast.toFixed(2)}</div>`;
+				}
 
-        var asIsRatio = ratio({bg, fg}),
-          asIsNormal = asIsRatio >= CONTRAST.normal ? 'pass' : 'fail',
-          asIsLarge = asIsRatio >= CONTRAST.large ? 'pass' : 'fail';
-        results['as-is'].sample.setAttribute('style', `background-color: ${bg}; color: ${fg};`);
-        results['as-is'].contrast.innerHTML = `<div class="${asIsNormal}">Normal text will ${asIsNormal} at ${asIsRatio.toFixed(2)}</div><div class="${asIsLarge}">Large text will ${asIsLarge} at ${asIsRatio.toFixed(2)}</div>`;
+				var asIsRatio = ratio({bg, fg}),
+					asIsNormal = asIsRatio >= CONTRAST.normal ? 'pass' : 'fail',
+					asIsLarge = asIsRatio >= CONTRAST.large ? 'pass' : 'fail';
+				results['as-is'].sample.setAttribute('style', `background-color: ${bg}; color: ${fg};`);
+				results['as-is'].contrast.innerHTML = `<div class="${asIsNormal}">Normal text will ${asIsNormal} at ${asIsRatio.toFixed(2)}</div><div class="${asIsLarge}">Large text will ${asIsLarge} at ${asIsRatio.toFixed(2)}</div>`;
 
-        if (document.getElementById('nontext').checked) {
-          results['as-is'].contrast.innerHTML = `<div class="${asIsNormal}"><div>Non-text contrast will ${asIsNormal} at ${asIsRatio.toFixed(2)}</div>`;
-        }
+				if (document.getElementById('nontext').checked) {
+					results['as-is'].contrast.innerHTML = `<div class="${asIsNormal}"><div>Non-text contrast will ${asIsNormal} at ${asIsRatio.toFixed(2)}</div>`;
+				}
 
-        // calulate the results with foreground only adjusted
-        show(results.fons, contrast(bg, fg, 1, CONTRAST.normal));
-        show(results.fols, contrast(bg, fg, 1, CONTRAST.large));
-        show(results.bons, contrast(bg, fg, 0, CONTRAST.normal));
-        show(results.bols, contrast(bg, fg, 0, CONTRAST.large));
-        show(results.bans, contrast(bg, fg, null, CONTRAST.normal));
-        show(results.bals, contrast(bg, fg, null, CONTRAST.large));
-      }
+				// calulate the results with foreground only adjusted
+				show(results.fons, contrast(bg, fg, 1, CONTRAST.normal));
+				show(results.fols, contrast(bg, fg, 1, CONTRAST.large));
+				show(results.bons, contrast(bg, fg, 0, CONTRAST.normal));
+				show(results.bols, contrast(bg, fg, 0, CONTRAST.large));
+				show(results.bans, contrast(bg, fg, null, CONTRAST.normal));
+				show(results.bals, contrast(bg, fg, null, CONTRAST.large));
+			}
 
-      /**
-       * @func colorize
-       * @description Turns a number to a color.
-       * @returns {string}
-       * @param {string} color
-       */
-      function colorize(color) {
-        if (color) {
-          var rgb = color.length < 6 ?
-            /^#?([0-9a-f]{1})([0-9a-f]{1})([0-9a-f]{1})$/i.exec(color) :
-            /^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(color),
-            r = rgb ? (rgb[1] + rgb[1]).substr(-2) : '',
-            g = rgb ? (rgb[2] + rgb[2]).substr(-2) : '',
-            b = rgb ? (rgb[3] + rgb[3]).substr(-2) : '';
+			/**
+			 * @func colorize
+			 * @description Turns a number to a color.
+			 * @returns {string}
+			 * @param {string} color
+			 */
+			function colorize(color) {
+				if (color) {
+					var rgb = color.length < 6 ?
+						/^#?([0-9a-f]{1})([0-9a-f]{1})([0-9a-f]{1})$/i.exec(color) :
+						/^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(color),
+						r = rgb ? (rgb[1] + rgb[1]).substr(-2) : '',
+						g = rgb ? (rgb[2] + rgb[2]).substr(-2) : '',
+						b = rgb ? (rgb[3] + rgb[3]).substr(-2) : '';
 
-          return `#${r}${g}${b}`;
-        }
-      }
+					return `#${r}${g}${b}`;
+				}
+			}
 
-      /**
-       * @func contrast
-       * @description Calculates new values for the background and foreground colors, adjusting either foreground or background or both.
-       * @returns {object}
-       * @param {string} bg - background color
-       * @param {string} fg - foregrond color
-       * @param {number} - adjust
-       * @param {number} - minimum
-       */
-      function contrast(bg, fg, adjust, minimum) {
-        var colors = {
-            bg,
-            fg,
-          },
-          darkBg = luminance(bg) < 50,
-          darkFg = luminance(fg) < 50;
+			/**
+			 * @func contrast
+			 * @description Calculates new values for the background and foreground colors, adjusting either foreground or background or both.
+			 * @returns {object}
+			 * @param {string} bg - background color
+			 * @param {string} fg - foregrond color
+			 * @param {number} - adjust
+			 * @param {number} - minimum
+			 */
+			function contrast(bg, fg, adjust, minimum) {
+				var colors = {
+						bg,
+						fg,
+					},
+					darkBg = luminance(bg) < 50,
+					darkFg = luminance(fg) < 50;
 
-        function done(adjusted) {
-          var maxed = adjusted ?
-            luminance(adjusted) === 0 || luminance(adjusted) === 100 :
-            false;
+				function done(adjusted) {
+					var maxed = adjusted ?
+						luminance(adjusted) === 0 || luminance(adjusted) === 100 :
+						false;
 
-          return ratio(colors) >= minimum || maxed;
-        }
+					return ratio(colors) >= minimum || maxed;
+				}
 
-        if (ratio(colors) < minimum) {
-          switch (adjust) {
-            case 0:
-              var r = ratio(colors),
-                mod = r > ratio({ fg: colors.fg, bg: darken(colors.bg, 1) }) ? lighten : darken;
+				if (ratio(colors) < minimum) {
+					switch (adjust) {
+						case 0:
+							var r = ratio(colors),
+								mod = r > ratio({ fg: colors.fg, bg: darken(colors.bg, 1) }) ? lighten : darken;
 
-              do {
-                // adjust background only
-                var lfg = luminance(colors.fg), lbg = luminance(colors.bg);
+							do {
+								// adjust background only
+								var lfg = luminance(colors.fg), lbg = luminance(colors.bg);
 
-                if (lfg === lbg) {
-                  colors.bg = mod(colors.bg, 1);
-                } else if (lfg > lbg) {
-                  colors.bg = darken(colors.bg, 1);
-                } else {
-                  colors.bg = lighten(colors.bg, 1);
-                }
-              } while (!done(colors.bg));
-              break;
-            case 1:
-              var r = ratio(colors),
-                mod = r > ratio({ bg: colors.bg, fg: darken(colors.fg, 1) }) ? lighten : darken;
+								if (lfg === lbg) {
+									colors.bg = mod(colors.bg, 1);
+								} else if (lfg > lbg) {
+									colors.bg = darken(colors.bg, 1);
+								} else {
+									colors.bg = lighten(colors.bg, 1);
+								}
+							} while (!done(colors.bg));
+							break;
+						case 1:
+							var r = ratio(colors),
+								mod = r > ratio({ bg: colors.bg, fg: darken(colors.fg, 1) }) ? lighten : darken;
 
-              do {
-                // adjust foreground only
-                var lfg = luminance(colors.fg), lbg = luminance(colors.bg);
+							do {
+								// adjust foreground only
+								var lfg = luminance(colors.fg), lbg = luminance(colors.bg);
 
-                if (lfg === lbg) {
-                  colors.fg = mod(colors.fg, 1);
-                } else if (lfg > lbg) {
-                  colors.fg = lighten(colors.fg, 1);
-                } else {
-                  colors.fg = darken(colors.fg, 1);
-                }
-              } while (!done(colors.fg));
-              break;
-            default:
-              do {
-                // adjust both
-                colors.fg = luminance(colors.bg) >= luminance(colors.fg) ?
-                  darken(colors.fg, 1) :
-                  lighten(colors.fg, 1);
-                colors.bg = luminance(colors.fg) > luminance(colors.bg) ?
-                  darken(colors.bg, 1) :
-                  lighten(colors.bg, 1);
-              } while (!done());
-              break;
-          }
-        }
+								if (lfg === lbg) {
+									colors.fg = mod(colors.fg, 1);
+								} else if (lfg > lbg) {
+									colors.fg = lighten(colors.fg, 1);
+								} else {
+									colors.fg = darken(colors.fg, 1);
+								}
+							} while (!done(colors.fg));
+							break;
+						default:
+							do {
+								// adjust both
+								colors.fg = luminance(colors.bg) >= luminance(colors.fg) ?
+									darken(colors.fg, 1) :
+									lighten(colors.fg, 1);
+								colors.bg = luminance(colors.fg) > luminance(colors.bg) ?
+									darken(colors.bg, 1) :
+									lighten(colors.bg, 1);
+							} while (!done());
+							break;
+					}
+				}
 
-        colors.contrast = ratio(colors);
+				colors.contrast = ratio(colors);
 
-        return colors;
-      }
+				return colors;
+			}
 
-      /**
-       * @func darken
-       * @description Return the hexadecimal value of a darker color.
-       * @returns {string}
-       * @param {string} color - original hexadecimal value
-       * @param {number} degree - how much darker the new value should be
-       */
-      function darken(color, degree) {
-        var n = color ? parseInt(color.replace(/^#/, ''), 16) : 0,
-          r = Math.max(0, Math.min((n >> 16) - degree, 255)),
-          g = Math.max(0, Math.min((n & 0x0000FF) - degree, 255)),
-          b = Math.max(0, Math.min(((n >> 8) & 0x00FF) - degree, 255)),
-          h = `000000${(g | (b << 8) | (r << 16)).toString(16)}`.substr(-6);
+			/**
+			 * @func darken
+			 * @description Return the hexadecimal value of a darker color.
+			 * @returns {string}
+			 * @param {string} color - original hexadecimal value
+			 * @param {number} degree - how much darker the new value should be
+			 */
+			function darken(color, degree) {
+				var n = color ? parseInt(color.replace(/^#/, ''), 16) : 0,
+					r = Math.max(0, Math.min((n >> 16) - degree, 255)),
+					g = Math.max(0, Math.min((n & 0x0000FF) - degree, 255)),
+					b = Math.max(0, Math.min(((n >> 8) & 0x00FF) - degree, 255)),
+					h = `000000${(g | (b << 8) | (r << 16)).toString(16)}`.substr(-6);
 
-        return `#${h}`;
-      }
+				return `#${h}`;
+			}
 
-      /**
-       * @func lighten
-       * @description Return the hexadecimal value of a lighter color.
-       * @returns {string}
-       * @param {string} color - original hexadecimal value
-       * @param {number} degree - how much lighter the new value should be
-       */
-      function lighten(color, degree) {
-        var n = color ? parseInt(color.replace(/^#/, ''), 16) : 0,
-          r = Math.max(0, Math.min((n >> 16) + degree, 255)),
-          g = Math.max(0, Math.min((n & 0x0000FF) + degree, 255)),
-          b = Math.max(0, Math.min(((n >> 8) & 0x00FF) + degree, 255)),
-          h = `000000${(g | (b << 8) | (r << 16)).toString(16)}`.substr(-6);
+			/**
+			 * @func lighten
+			 * @description Return the hexadecimal value of a lighter color.
+			 * @returns {string}
+			 * @param {string} color - original hexadecimal value
+			 * @param {number} degree - how much lighter the new value should be
+			 */
+			function lighten(color, degree) {
+				var n = color ? parseInt(color.replace(/^#/, ''), 16) : 0,
+					r = Math.max(0, Math.min((n >> 16) + degree, 255)),
+					g = Math.max(0, Math.min((n & 0x0000FF) + degree, 255)),
+					b = Math.max(0, Math.min(((n >> 8) & 0x00FF) + degree, 255)),
+					h = `000000${(g | (b << 8) | (r << 16)).toString(16)}`.substr(-6);
 
-        return `#${h}`;
-      }
+				return `#${h}`;
+			}
 
-      /**
-       * @func luminance
-       * @description Returns a number between 0 and 100 (inclusive) representing the luminance of a color.
-       * @returns {number}
-       * @param {string} color - 3-digit or 6-digit hex value
-       * @see {@link https://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef}
-       * @see {@link https://www.w3.org/TR/WCAG20-TECHS/G17.html#G17-tests}
-       */
-      function luminance(color) {
-        var rgb = color.length < 6 ?
-          /^#?([0-9a-f]{1})([0-9a-f]{1})([0-9a-f]{1})$/i.exec(color) :
-          /^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(color);
+			/**
+			 * @func luminance
+			 * @description Returns a number between 0 and 100 (inclusive) representing the luminance of a color.
+			 * @returns {number}
+			 * @param {string} color - 3-digit or 6-digit hex value
+			 * @see {@link https://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef}
+			 * @see {@link https://www.w3.org/TR/WCAG20-TECHS/G17.html#G17-tests}
+			 */
+			function luminance(color) {
+				var rgb = color.length < 6 ?
+					/^#?([0-9a-f]{1})([0-9a-f]{1})([0-9a-f]{1})$/i.exec(color) :
+					/^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(color);
 
-        function normalize(val) {
-          var n = parseInt((val+val).substr(-2), 16);
-          n = Number.isNaN(n) ? 0 : n;
+				function normalize(val) {
+					var n = parseInt((val+val).substr(-2), 16);
+					n = Number.isNaN(n) ? 0 : n;
 
-          n /= 255;
+					n /= 255;
 
-          return n < 0.03928 ? n / 12.92 : Math.pow((n + 0.055) / 1.055, 2.4);
-        }
+					return n < 0.03928 ? n / 12.92 : Math.pow((n + 0.055) / 1.055, 2.4);
+				}
 
-        if (rgb) {
-          return (0.2126 * normalize(rgb[1]) +
-            0.7152 * normalize(rgb[2]) +
-            0.0722 * normalize(rgb[3])) * 100;
-        }
-      }
+				if (rgb) {
+					return (0.2126 * normalize(rgb[1]) +
+						0.7152 * normalize(rgb[2]) +
+						0.0722 * normalize(rgb[3])) * 100;
+				}
+			}
 
-      /**
-       * @func luminance
-       * @description Returns the luminance contrast
-       * @returns {number}
-       * @param {object} colors
-       * @see {@link http://www.w3.org/TR/2008/REC-WCAG20-20081211/#contrast-ratiodef}
-       */
-      function ratio(colors) {
-        var vals = [(luminance(colors.fg) + 5), (luminance(colors.bg) + 5)];
+			/**
+			 * @func luminance
+			 * @description Returns the luminance contrast
+			 * @returns {number}
+			 * @param {object} colors
+			 * @see {@link http://www.w3.org/TR/2008/REC-WCAG20-20081211/#contrast-ratiodef}
+			 */
+			function ratio(colors) {
+				var vals = [(luminance(colors.fg) + 5), (luminance(colors.bg) + 5)];
 
-        return vals[0] < vals[1] ? 1 / (vals[0]/vals[1]) : vals[0]/vals[1];
-      }
+				return vals[0] < vals[1] ? 1 / (vals[0]/vals[1]) : vals[0]/vals[1];
+			}
 
-      /**
-       * @func resultsRow
-       * @description Returns a results row object for the table row.
-       * @returns {object}
-       * @param {HTMLElement} tr
-       */
-      function resultsRow(tr) {
-        return {
-          action: tr.cells[0],
-          fg: tr.cells[1],
-          bg: tr.cells[2],
-          sample: tr.cells[3],
-          contrast: tr.cells[4],
-        };
-      }
+			/**
+			 * @func resultsRow
+			 * @description Returns a results row object for the table row.
+			 * @returns {object}
+			 * @param {HTMLElement} tr
+			 */
+			function resultsRow(tr) {
+				return {
+					action: tr.cells[0],
+					fg: tr.cells[1],
+					bg: tr.cells[2],
+					sample: tr.cells[3],
+					contrast: tr.cells[4],
+				};
+			}
 
-      /**
-       * @func validate
-       * @description Validates the input.
-       * @returns {undefined}
-       * @param {HTMLElement|Event} input
-       */
-      function validate(input) {
-        if (!input.nodeName && input.target) {
-          input = input.target;
-        }
-        
-        var ok = /^#?([\w\W]{0}|[0-9a-f]{3}|[0-9a-f]{6})$/i.test(input.value);
-        input.setAttribute('aria-invalid', !ok);
-        if (!ok) {
-          input.focus();
-        }
-      }
+			/**
+			 * @func validate
+			 * @description Validates the input.
+			 * @returns {undefined}
+			 * @param {HTMLElement|Event} input
+			 */
+			function validate(input) {
+				if (!input.nodeName && input.target) {
+					input = input.target;
+				}
+				
+				var ok = /^#?([\w\W]{0}|[0-9a-f]{3}|[0-9a-f]{6})$/i.test(input.value);
+				input.setAttribute('aria-invalid', !ok);
+				if (!ok) {
+					input.focus();
+				}
+			}
 
-      /**
-       * @func onKeyDown
-       * @description An event handler for inputs.
-       * @returns {undefined}
-       * @param {event} e
-       */
-      function onKeyDown(e) {
-        if (e.key === 'Enter' && e.target.type === 'text') {
-          e.preventDefault();
-          calculate();
-        }
-      }
+			/**
+			 * @func onKeyDown
+			 * @description An event handler for inputs.
+			 * @returns {undefined}
+			 * @param {event} e
+			 */
+			function onKeyDown(e) {
+				if (e.key === 'Enter' && e.target.type === 'text') {
+					e.preventDefault();
+					calculate();
+				}
+			}
 
-      // initialize the buttons and results
-      var btnToggleInput = [].slice.call(document.getElementsByClassName('input-switch')),
-        btnCalculate = document.getElementById('btnCalculate'),
-        inputBg = document.getElementById('background'),
-        inputFg = document.getElementById('foreground'),
-        ndx,
-        results = {
-          'as-is': resultsRow(document.getElementById('as-is')),
-          'fons': resultsRow(document.getElementById('fons')),
-          'fols': resultsRow(document.getElementById('fols')),
-          'bons': resultsRow(document.getElementById('bons')),
-          'bols': resultsRow(document.getElementById('bols')),
-          'bans': resultsRow(document.getElementById('bans')),
-          'bals': resultsRow(document.getElementById('bals')),
-        };
+			// initialize the buttons and results
+			var btnToggleInput = [].slice.call(document.getElementsByClassName('input-switch')),
+				btnCalculate = document.getElementById('btnCalculate'),
+				inputBg = document.getElementById('background'),
+				inputFg = document.getElementById('foreground'),
+				ndx,
+				results = {
+					'as-is': resultsRow(document.getElementById('as-is')),
+					'fons': resultsRow(document.getElementById('fons')),
+					'fols': resultsRow(document.getElementById('fols')),
+					'bons': resultsRow(document.getElementById('bons')),
+					'bols': resultsRow(document.getElementById('bols')),
+					'bans': resultsRow(document.getElementById('bans')),
+					'bals': resultsRow(document.getElementById('bals')),
+				};
 
-      btnToggleInput.forEach(function initToggle(btn) {
-        btn.disabled = false;
-        btn.addEventListener('click', usecolor);
-      });
-      btnCalculate.disabled = false;
-      btnCalculate.addEventListener('click', calculate);
-      inputBg.addEventListener('blur', validate);
-      inputBg.addEventListener('keydown', onKeyDown);
-      inputFg.addEventListener('blur', validate);
-      inputFg.addEventListener('keydown', onKeyDown);
-    </script>
-  </body>
+			btnToggleInput.forEach(function initToggle(btn) {
+				btn.disabled = false;
+				btn.addEventListener('click', usecolor);
+			});
+			btnCalculate.disabled = false;
+			btnCalculate.addEventListener('click', calculate);
+			inputBg.addEventListener('blur', validate);
+			inputBg.addEventListener('keydown', onKeyDown);
+			inputFg.addEventListener('blur', validate);
+			inputFg.addEventListener('keydown', onKeyDown);
+		</script>
+	</body>
 </html>
 
