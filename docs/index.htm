@@ -94,43 +94,85 @@
 			</p>
 
 			<h2>Roking-A11y Readability Tool</h2>
-			<p>
-				The <i>Readability</i> utility calculates the <i>Läsbarhetsindex</i> for content. The
-				<i>Läsbarhetsindex</i>, or <i>LIX</i>, was developed by Carl-Hugo Björnsson in the late 1960s,
-				nearly a decade prior to the readability tests primarily used in the US that were developed by
-				<span aria-label="doctors">Drs.</span> Flesch and Kincaid. Unlike the Flesch-Kincaid readability tests,
-				i.e., the <i>Flesch Reading Ease</i> and the <i>Flesch-Kincaid Grade Level</i>, the <i>LIX</i> is not
-				tied to a single language by using a syllable count to determine word complexity - the <i>LIX</i> uses
-				word <em>length</em> to determine word complexity.
-			</p>
-			<p>
-				The reason this is important can be demonstrated by examining two short sentences - one in English
-				and the other in Spanish - "drink this medicine" and "tomar este medicina" and passing them through
-				the <i>Flesch Reading Ease</i> test and the <i>LIX</i> to see if the readability scores are significantly
-				different or close.
-			</p>
-			<p>
-				Both phrases, "drink this medicine" and "tomar este medicina", are three words in one sentence and,
-				using the <i>LIX</i> measure, each contains one <em>complex</em> word. Where they differ significantly,
-				however, is in the syllable count - the English phrase contains five syllables and the Spanish phrase
-				contains eight. When we compute the <i>Flesch Reading Ease</i> for these phrases, we get a score of
-				<strong><em>62.9</em></strong> for the English phrase and a score of <span aria-label="negative">-</span>21.8
-				for the Spanish phrase. Their <i>LIX</i> scores, however, are both 36.3.
-			</p>
-			<p>
-				The higher the <i>Flesch Reading Ease</i> score, and the lower a <i>LIX</i> score, the easier text is to
-				read. A <i>Flesch Reading Ease</i> score that falls between 60 and 70, as the score for the English phrase
-				does, <em>should</em> correspond to a eigth or ninth grade reading level. A <i>Flesch Reading Ease</i> score
-				that falls between 0 and 30, which is still <em>much</em> higher than the score for the Spanish phrase,
-				<em>should</em> correspond to a college graduate reading level and is considered very difficult to read. A
-				<i>LIX</i> score of 50, on the other hand, <em>should</em> correspond to a first or second grade reading
-				level.
-			</p>
+      <section>
+  			<p>
+          The <i>Readability Tool</i> calculates the <i>Läsbarhetsindex</i>, or LIX, and <i>Ordvariationsindex</i>,
+          or OVIX, for content. The <i>Läsbarhetsindex</i> was developed by Carl-Hugo Björnsson in the late 1960s,
+			  	nearly a decade prior to the readability tests primarily used in the US that were developed by
+				  <span aria-label="doctors">Drs.</span> Flesch and Kincaid. Unlike the Flesch-Kincaid readability tests,
+  				i.e., the <i>Flesch Reading Ease</i> and the <i>Flesch-Kincaid Grade Level</i>, the <i>LIX</i> is not
+	  			tied to a single language by using a syllable count to determine word complexity - the <i>LIX</i> uses
+          word <em>length</em> to determine word complexity. The <i>Ordvariationsindex</i> measures the number of
+          <em>unique</em> words in a passage.
+			  </p>
+  			<p>
+	  			The reason this is important can be demonstrated by examining two short sentences - one in English
+		  		and the other in Spanish - "drink this medicine" and "tomar este medicina" and passing them through
+			  	the <i>Flesch Reading Ease</i> test and the <i>LIX</i> to see if the readability scores are significantly
+				  different or close.
+  			</p>
+	  		<p>
+		  		Both phrases, "drink this medicine" and "tomar este medicina", are three words in one sentence and,
+			  	using the <i>LIX</i> measure, each contains one <em>complex</em> word. Where they differ significantly,
+				  however, is in the syllable count - the English phrase contains five syllables and the Spanish phrase
+  				contains eight. When we compute the <i>Flesch Reading Ease</i> for these phrases, we get a score of
+	  			<strong><em>62.9</em></strong> for the English phrase and a score of <span aria-label="negative">-</span>21.8
+		  		for the Spanish phrase. Their <i>LIX</i> scores, however, are both 36.3.
+			  </p>
+  			<p>
+	  			The higher the <i>Flesch Reading Ease</i> score, and the lower a <i>LIX</i> score, the easier text is to
+		  		read. A <i>Flesch Reading Ease</i> score that falls between 60 and 70, as the score for the English phrase
+			  	does, <em>should</em> correspond to a eigth or ninth grade reading level. A <i>Flesch Reading Ease</i> score
+				  that falls between 0 and 30, which is still <em>much</em> higher than the score for the Spanish phrase,
+  				<em>should</em> correspond to a college graduate reading level and is considered very difficult to read. A
+	  			<i>LIX</i> score of 50 for US English, on the other hand, <em>should</em> correspond to a first or second
+          grade reading level.
+			  </p>
+      </section>
+			<section>
+				<h2>Reliability of the Läsbarhetsindex and Ordvariationsindex</h2>
+				<p>
+					There are several methods by which the readability of a text can be assessed. <em>Most</em> assessment
+					methods require data beyond the text itself - either the number of syllables a word contains or the
+					part of speech a word is, or even its place in a dependency tree. The amount of data necessary for these
+					assessments can be significant and does not lend itself to a quick estimation of the readability of 
+					a text.
+				</p>
+				<p>
+					Of the various assessment methods, the <em>most reliable</em> analysis, aside from a human assessment,
+					is an assessment based on ratios between parts of speech, such as nouns, pronouns, adverbs, and verbs, 
+					which matches human assessments 96 to 97 percent of the time. A dependency distance assessment 
+					<a href="#liu-2008">(Liu, 2008)</a> is the next best analysis with approximately 89 percent accuracy.
+					Unfortunately, both - a parts-of-speech analysis and a dependency distance analysis - require a dictionary
+					and/or dependency map for each language or text analyzed, and the analysis takes more than the few seconds 
+					the simpler, shallow feature assessments, Läsbarhetsindex and Ordvariationsindex, which achieved 
+					approximately 85 and 86 percent accuracy, respectively.
+				</p>
+
+				<h3>References (Links open in a new window)</h3>
+				<ol>
+					<li id="falkenjack-2014">
+						<a href="https://aclweb.org/anthology/W14-1213" target="_blank">
+							Johan Falkenjack and Arne Jönsson.
+							2014.
+							Classifying easy-to-read texts without parsing.
+							Proceedings of the 3rd Workshop on Predicting and Improving Text Readability for Target Reader
+								Populations (PITR) at EACL 2014:114-122.
+						</a>
+					</li>
+					<li id="liu-2008">
+						Haitao Liu.
+						2008.
+						Dependency distance as a metric of language comprehension difficulty.
+						Journal of Cognitive Science, 9(2):169–191.
+					</li>
+				</ol>
+			</section>
 
 			<h3>Caveats</h3>
 			<blockquote>
 				<p>
-					<strong>There are jurisdictions in which a maximum <em>reading grade level</em> is established for
+					<strong>There are US jurisdictions in which a maximum <em>reading grade level</em> is established for
 					content.</strong> The <i>LIX</i> <em>cannot</em> be used in those situations, you
 					<strong><em>must</em></strong> use the <i>Flesch-Kincaid Grade Level</i>. There have not been an
 					adequate number of samples used to determine if there is a relationship between the <i>LIX</i> and
@@ -142,14 +184,21 @@
 
 			<blockquote>
 				<p>
-					The current version of the <i>Readability</i> object does not account well for phrases that are not
-					complete sentences, so some measure of caution should be used. For example, the phrase "Last Name"
-					would have a <i>Läsbarhetsindex</i> score of 2, but the the phrase "Surname" would have a
-					<i>Läsbarhetsindex</i> score of 101, even though its complexity would not <em>ordinarily</em> be
-					considered that much greater. I am currently working to determine how best to accommodate this to improve
-					the tool's handling for forms where this is a significant issue.
+					Some samples are too short to accurately measure. For this reason, the Roking-A11y Readability Tool
+          will only score samples containing more than five words.
 				</p>
 			</blockquote>
+
+      <blockquote>
+        <p>
+          Simple <em>readability</em> tests such as the <i>Flesch-Kincaid Grade Level</i>, <i>LIX</i>, or
+          <i>OVIX</i>, provide a <em>quick</em> analysis; however, a quick analysis, by its nature, lacks
+          depth. A readability analysis should always be considered alongside the text and the context in
+          which the text is presented, and with the understanding that not all readers are alike. For
+          example, a document containing highly-specialized language or jargon may not be comprehensible
+          even though its score indicates otherwise.
+        </p>
+      </blockquote>
 
 			<p>
         <a href="readability.htm">The <i>Roking-A11y Readability Tool</i></a>
