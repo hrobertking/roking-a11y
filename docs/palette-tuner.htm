@@ -64,6 +64,19 @@
 				font-weight: bold;
 				vertical-align: center;
 			}
+			td.low-contrast {
+				background-color: #ffebe5;
+			}
+			td.aa-large-text, td.adjacent-non-text {
+				background-color: #fffae5;
+			}
+			td.aa-normal-text {
+				background-color: #e3fcef
+			}
+			td.aaa {
+				background-color: #e3fcef;
+				font-weight: bold;
+			}
 			thead th {
 				vertical-align: bottom;
 			}
@@ -176,8 +189,19 @@
 					rh.innerHTML = [hex ? pic.outerHTML : '', hex || '--------'].join(' ');
 
 					Object.keys(contrasts).forEach(function (contrast) {
-						var td = tr.insertCell();
+						var td = tr.insertCell(),
+						  n = Number(contrasts[contrast]),
+						  lvl = 'low-contrast';
 
+						if (n > 3 && n < 4.51) {
+						  lvl = 'aa-large-text adjacent-non-text';
+						} else if (n > 4.5 && n < 7) {
+						  lvl = 'aa-normal-text';
+						} else if (n >= 7) {
+						  lvl = 'aaa';
+						}
+						
+						td.setAttribute('class', lvl);
 						td.innerHTML = contrasts[contrast];
 					});
 				});
@@ -195,4 +219,3 @@
 		</script>
 	</body>
 </html>
-
