@@ -59,7 +59,7 @@ module.exports = function LuminanceMatrix() {
 			.map(function toColor(hex) {
 				// convert each element in the combined array to a Color
 				var isColor = hex instanceof Color,
-					color = isColor ? hex : new Color(hex);
+					color = isColor ? hex : new Color(hex.trim());
 
 				return color;
 			})
