@@ -366,10 +366,11 @@ module.exports = function Color(value) {
 	 * @param {hcolor} color
 	 */
 	function convertHColorToRgb(color) {
-		var h3 = HEX3.exec(color),
-			h4 = HEX4.exec(color),
-			h6 = HEX6.exec(color),
-			h8 = HEX8.exec(color),
+		var colorString = ('' + color).trim(),
+			h3 = HEX3.exec(colorString),
+			h4 = HEX4.exec(colorString),
+			h6 = HEX6.exec(colorString),
+			h8 = HEX8.exec(colorString),
 			matchS = (h6 || h3),
 			matchL = (h8 || h4),
 			R,
@@ -545,7 +546,9 @@ module.exports = function Color(value) {
 	 * @param {rgb|hcolor} data
 	 */
 	function normalize(data) {
-		return isRGB(data) ? data : convertHColorToRgb(data);
+		return isRGB(data) ? data :
+			isHSL(data) ? convertHslToRgb(data) :
+			convertHColorToRgb(data);
 	}
 
 	/**
