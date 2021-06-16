@@ -26,6 +26,10 @@
 			div.input > * {
 				height: 100%;
 			}
+			h1 {
+				background: url(https://hrobertking.github.io/roking-a11y/palette-lg.png) center right no-repeat;
+				background-size: contain;
+			}
 			label,
 			textarea {
 				display: block;
@@ -117,9 +121,22 @@
 	<body>
 		<main>
 			<h1>Roking-A11y Palette Tuner</h1>
-			<p>The <em>Roking-A11y Palette Tuner</em> performance luminance contrast testing for multiple colors in a palette, creating
+			<p>The <em>Roking-A11y Palette Tuner</em> performs luminance contrast testing for multiple colors in a palette, creating
 				a matrix that allows easy reference to multiple contrast ratios simultaneously.
 				Other <em>Roking-A11y</em> tools can be found in <a href="https://hrobertking.github.io/roking-a11y/">the central respository.</a>
+			</p>
+			<p><em>Luminance contrast</em> is not about color, per se, but about <em>brightness</em>. In the
+				<a href="https://www.w3.org/TR/WCAG21/">Web Content Accessibility Guidelines (WCAG)</a>, there are
+				two methods for calculating brightness, one is a general brightness level that's used to determine
+				whether or not a change in brightness is a <em>flash</em> and the other is brightness relative
+				to an element's surroundings, or in other words, the brightness of the foreground compared to the
+				brightness of the background.
+			</p>
+			<p>The WCAG identifies three thresholds that can be use to determine whether or not an element is easily perceived.
+				The thresholds for text on a background are higher than for non-text, and are relative to the <em>size</em>
+				or <em>weight</em> of the font. The <em>Palette Tuner</em> calculates the contrast and provides the raw
+				number, allowing the user to determine whether the foreground/background values are appropriate for non-text,
+				normal text, or large or bold text.
 			</p>
 			<noscript class="warning">
 				This utility relies on JavaScript to perform the calculations for luminance and contrast. The page will not
@@ -130,12 +147,23 @@
 				that you switch to a device that is at least 960 pixels wide.
 			</p>
 			<p>
-				This tool allows you to provide a list of colors comprising a color pallete and will calculate the
-				contrast between each of the colors in the palette. The contrast is displayed but is not evaluated
-				according to the WCAG contrast guidelines.
+				This tool allows you to provide a list of colors comprising a color pallete in the input labelled
+				<em><strong>Palette</strong></em>, as a comma-separated list of hexadecimal values and will calculate the contrast
+				between each of the colors in the palette when the <em><strong>Calculate</strong></em> button is activated.
+				As an example, a palette of white (#ffffff), yellow (#ffff00), magenta (#ff00ff), red (#ff0000), light blue (#00ffff),
+				green (#00ff00), blue (#0000ff), and black (#000000) is provided. Clicking or tapping the <em><strong>Calculate</strong></em>
+				button will generate the example matrix. Replace the palette list with your own colors, and activate the
+				<em><strong>Calculate</strong></em> button to get <em>your</em> matrix. Visually, <em>luminance contrast</em> values of 3
+				and more, suitable for <em>non-text</em> purposes, are in italics on a light yellow background and values of 4.5 and more,
+				suitable for <em>text</em> or <em>non-text</em> purposes, are in italic and bold on a light green background. Values less
+				than 3, which are unsuitable for anything other than decorative purposes, are shown in normal text on a light red
+				background.
 			</p>
 
-			<label for="list">Enter color strings as a comma-separated list</label>
+			<label for="list">
+				<em><strong>Palette</strong></em><br />
+				Enter color strings as a comma-separated list
+			</label>
 			<div class="input">
 				<textarea id="list">#ffffff,#ffff00,#ff00ff,#ff0000,#00ffff,#00ff00,#0000ff,#000000</textarea>
 				<button id="calculate">Calculate</button>
@@ -214,14 +242,6 @@
 			}
 
 			document.getElementById('calculate').addEventListener('click', calculate);
-			/*
-			document.getElementById('list').addEventListener('keypress', function (e) {
-				if (e.key === 'Enter' || e.keyCode === 13) {
-					e.preventDefault();
-					calculate();
-				}
-			});
-			*/
 		</script>
 	</body>
 </html>
