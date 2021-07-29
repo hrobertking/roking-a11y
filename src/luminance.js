@@ -194,20 +194,20 @@ module.exports = function Luminance(foreground, background) {
 	 * <table>
 	 * 	<thead>
 	 * 		<tr>
-	 * 			<th></th>
-	 * 			<th><span class="pic" style="background-color: #ffffff;"></span> #ffffff</th>
-	 * 			<th><span class="pic" style="background-color: #ff0000;"></span> #ff0000</th>
-	 * 			<th><span class="pic" style="background-color: #ffff00;"></span> #ffff00</th>
-	 * 			<th><span class="pic" style="background-color: #00ff00;"></span> #00ff00</th>
-	 * 			<th><span class="pic" style="background-color: #00ffff;"></span> #00ffff</th>
-	 * 			<th><span class="pic" style="background-color: #0000ff;"></span> #0000ff</th>
-	 * 			<th><span class="pic" style="background-color: #ff00ff;"></span> #ff00ff</th>
-	 * 			<th><span class="pic" style="background-color: #000000;"></span> #000000</th>
+	 * 			<td></td>
+	 * 			<th scope="col" role="columnheader"><span class="pic" style="background-color: #ffffff;"></span> #ffffff</th>
+	 * 			<th scope="col" role="columnheader"><span class="pic" style="background-color: #ff0000;"></span> #ff0000</th>
+	 * 			<th scope="col" role="columnheader"><span class="pic" style="background-color: #ffff00;"></span> #ffff00</th>
+	 * 			<th scope="col" role="columnheader"><span class="pic" style="background-color: #00ff00;"></span> #00ff00</th>
+	 * 			<th scope="col" role="columnheader"><span class="pic" style="background-color: #00ffff;"></span> #00ffff</th>
+	 * 			<th scope="col" role="columnheader"><span class="pic" style="background-color: #0000ff;"></span> #0000ff</th>
+	 * 			<th scope="col" role="columnheader"><span class="pic" style="background-color: #ff00ff;"></span> #ff00ff</th>
+	 * 			<th scope="col" role="columnheader"><span class="pic" style="background-color: #000000;"></span> #000000</th>
 	 * 		</tr>
 	 * 	</thead>
 	 * 	<tbody>
 	 * 		<tr>
-	 * 			<th><span class="pic" style="background-color: #ffffff;"></span> #ffffff</th>
+	 * 			<th scope="row" role="rowheader"><span class="pic" style="background-color: #ffffff;"></span> #ffffff</th>
 	 * 			<td>1.00</td>
 	 * 			<td>4.00</td>
 	 * 			<td>1.07</td>
@@ -218,7 +218,7 @@ module.exports = function Luminance(foreground, background) {
 	 * 			<td>21.00</td>
 	 * 		</tr>
 	 * 		<tr>
-	 * 			<th><span class="pic" style="background-color: #ff0000;"></span> #ff0000</th>
+	 * 			<th scope="row" role="rowheader"><span class="pic" style="background-color: #ff0000;"></span> #ff0000</th>
 	 * 			<td>4.00</td>
 	 * 			<td>1.00</td>
 	 * 			<td>3.72</td>
@@ -229,7 +229,7 @@ module.exports = function Luminance(foreground, background) {
 	 * 			<td>5.25</td>
 	 * 		</tr>
 	 * 		<tr>
-	 * 			<th><span class="pic" style="background-color: #ffff00;"></span> #ffff00</th>
+	 * 			<th scope="row" role="rowheader"><span class="pic" style="background-color: #ffff00;"></span> #ffff00</th>
 	 * 			<td>1.07</td>
 	 * 			<td>3.72</td>
 	 * 			<td>1.00</td>
@@ -240,7 +240,7 @@ module.exports = function Luminance(foreground, background) {
 	 * 			<td>19.56</td>
 	 * 		</tr>
 	 * 		<tr>
-	 * 			<th><span class="pic" style="background-color: #00ff00;"></span> #00ff00</th>
+	 * 			<th scope="row" role="rowheader"><span class="pic" style="background-color: #00ff00;"></span> #00ff00</th>
 	 * 			<td>1.37</td>
 	 * 			<td>2.91</td>
 	 * 			<td>1.28</td>
@@ -251,7 +251,7 @@ module.exports = function Luminance(foreground, background) {
 	 * 			<td>15.30</td>
 	 * 		</tr>
 	 * 		<tr>
-	 * 			<th><span class="pic" style="background-color: #00ffff;"></span> #00ffff</th>
+	 * 			<th scope="row" role="rowheader"><span class="pic" style="background-color: #00ffff;"></span> #00ffff</th>
 	 * 			<td>1.25</td>
 	 * 			<td>3.19</td>
 	 * 			<td>1.17</td>
@@ -262,7 +262,7 @@ module.exports = function Luminance(foreground, background) {
 	 * 			<td>16.75</td>
 	 * 		</tr>
 	 * 		<tr>
-	 * 			<th><span class="pic" style="background-color: #0000ff;"></span> #0000ff</th>
+	 * 			<th scope="row" role="rowheader"><span class="pic" style="background-color: #0000ff;"></span> #0000ff</th>
 	 * 			<td>8.59</td>
 	 * 			<td>2.15</td>
 	 * 			<td>8.00</td>
@@ -273,7 +273,7 @@ module.exports = function Luminance(foreground, background) {
 	 * 			<td>2.44</td>
 	 * 		</tr>
 	 * 		<tr>
-	 * 			<th><span class="pic" style="background-color: #ff00ff;"></span> #ff00ff</th>
+	 * 			<th scope="row" role="rowheader"><span class="pic" style="background-color: #ff00ff;"></span> #ff00ff</th>
 	 * 			<td>3.14</td>
 	 * 			<td>1.27</td>
 	 * 			<td>2.92</td>
@@ -284,7 +284,7 @@ module.exports = function Luminance(foreground, background) {
 	 * 			<td>6.70</td>
 	 * 		</tr>
 	 * 		<tr>
-	 * 			<th><span class="pic" style="background-color: #000000;"></span> #000000</th>
+	 * 			<th scope="row" role="rowheader"><span class="pic" style="background-color: #000000;"></span> #000000</th>
 	 * 			<td>21.00</td>
 	 * 			<td>5.25</td>
 	 * 			<td>19.56</td>
@@ -307,7 +307,7 @@ module.exports = function Luminance(foreground, background) {
 
 		tbh.push([]);
 		thr = tbh[tbh.length - 1];
-		thr.push('<th></th>');
+		thr.push('<td></td>');
 
 		Object.keys(lum).forEach(function (key) {
 			var contrasts = lum[key],
@@ -323,7 +323,7 @@ module.exports = function Luminance(foreground, background) {
 				pic = '<span class="pic" style="background-color: ' + hex + ';"></span>';
 			}
 
-			th = '<th>' + pic + ' ' + hex + '</th>';
+			th = '<th scope="col" role="columnheader">' + pic + ' ' + hex + '</th>';
 
 			// add the color to the head
 			thr.push(th);
@@ -331,7 +331,7 @@ module.exports = function Luminance(foreground, background) {
 			// add a row to the body
 			tbb.push([]);
 			tr = tbb[tbb.length - 1];
-			tr.push(th);
+			tr.push(th.replace(/columnheader/, 'rowheader').replace(/col/, 'row'));
 
 			Object.keys(contrasts).forEach(function (contrast) {
 				var cell = '<td>' + contrasts[contrast] + '</td>';
@@ -345,13 +345,13 @@ module.exports = function Luminance(foreground, background) {
 		tbl += '\t<thead>\n' + tbh.map(function headerRow(row) {
 			var html = '\t\t\t' + row.join('\n\t\t\t');
 
-			return '\t\t<tr>\n' + html + '\n\t\t</tr>\n';
+			return '\t\t<tr scope="row">\n' + html + '\n\t\t</tr>\n';
 		}).join('') + '\t</thead>\n';
 
 		tbl += '\t<tbody>\n' + tbb.map(function bodyRow(row) {
 			var html = '\t\t\t' + row.join('\n\t\t\t');
 
-			return '\t\t<tr>\n' + html + '\n\t\t</tr>\n';
+			return '\t\t<tr scope="row">\n' + html + '\n\t\t</tr>\n';
 		}).join('') + '\t</tbody>\n';
 
 		tbl += '</table>\n';
