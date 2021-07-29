@@ -211,12 +211,13 @@
 				Object.keys(lum).forEach(function (key) {
 					var contrasts = lum[key],
 						tr = tbody.insertRow(),
-						rh = tr.insertCell(),
+						rh = document.createElement('th'),
 						hrc = document.createElement('th'),
 						pic = document.createElement('span'),
 						hex = key && key !== 'undefined' ? '#' + key : '';
 
 					thr.appendChild(hrc);
+					tr.appendChild(rh);
 
 					pic.className = 'pic';
 					pic.style.backgroundColor = hex;
