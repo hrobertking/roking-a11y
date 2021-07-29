@@ -212,9 +212,11 @@
 					var contrasts = lum[key],
 						tr = tbody.insertRow(),
 						rh = tr.insertCell(),
-						hrc = thr.insertCell(),
+						hrc = document.createElement('th'),
 						pic = document.createElement('span'),
 						hex = key && key !== 'undefined' ? '#' + key : '';
+
+					thr.appendChild(hrc);
 
 					pic.className = 'pic';
 					pic.style.backgroundColor = hex;
@@ -227,17 +229,23 @@
 					rh.setAttribute('role', 'rowheader');
 					rh.innerHTML = [hex ? pic.outerHTML : '', hex || '--------'].join(' ');
 
-					Object.keys(contrasts).forEach(function (contrast) {
-						var td = tr.insertCell(),
-						  n = Number(contrasts[contrast]),
-						  lvl = 'low-contrast';
+					Object.keys(contrasts).forEach(function (contrast, index) {
+						var td = index > 0 ? document.createElement('td') : document.createElement('th'),
+							n = Number(contrasts[contrast]),
+							lvl = 'low-contrast';
 
+						if (index === 0) {
+							td.setAttribute('scope', 'row');
+							td.setAttribute('role', 'rowheader');
+						}
+						tr.appendChild(td);
+						
 						if (n > 3 && n < 4.51) {
-						  lvl = 'aa-large-text adjacent-non-text';
+							lvl = 'aa-large-text adjacent-non-text';
 						} else if (n > 4.5 && n < 7) {
-						  lvl = 'aa-normal-text';
+							lvl = 'aa-normal-text';
 						} else if (n >= 7) {
-						  lvl = 'aaa';
+							lvl = 'aaa';
 						}
 						
 						td.setAttribute('class', lvl);
