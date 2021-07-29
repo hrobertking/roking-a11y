@@ -219,7 +219,12 @@
 					pic.className = 'pic';
 					pic.style.backgroundColor = hex;
 
+					hrc.setAttribute('scope', 'col');
+					hrc.setAttribute('role', 'columnheader');
 					hrc.innerHTML = [hex ? pic.outerHTML : '', hex || '--------'].join(' ');
+					
+					rh.setAttribute('scope', 'row');
+					rh.setAttribute('role', 'rowheader');
 					rh.innerHTML = [hex ? pic.outerHTML : '', hex || '--------'].join(' ');
 
 					Object.keys(contrasts).forEach(function (contrast) {
