@@ -230,16 +230,10 @@
 					rh.innerHTML = [hex ? pic.outerHTML : '', hex || '--------'].join(' ');
 
 					Object.keys(contrasts).forEach(function (contrast, index) {
-						var td = index > 0 ? document.createElement('td') : document.createElement('th'),
+						var tr.insertCell(),
 							n = Number(contrasts[contrast]),
 							lvl = 'low-contrast';
 
-						if (index === 0) {
-							td.setAttribute('scope', 'row');
-							td.setAttribute('role', 'rowheader');
-						}
-						tr.appendChild(td);
-						
 						if (n > 3 && n < 4.51) {
 							lvl = 'aa-large-text adjacent-non-text';
 						} else if (n > 4.5 && n < 7) {
