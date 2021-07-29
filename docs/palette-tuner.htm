@@ -230,7 +230,7 @@
 					rh.innerHTML = [hex ? pic.outerHTML : '', hex || '--------'].join(' ');
 
 					Object.keys(contrasts).forEach(function (contrast, index) {
-						var tr.insertCell(),
+						var td = tr.insertCell(),
 							n = Number(contrasts[contrast]),
 							lvl = 'low-contrast';
 
