@@ -154,6 +154,33 @@ module.exports = function Color(value) {
 	});
 
 	/**
+	 * @property saturatedBlue
+	 * @type {boolean}
+	 */
+	Object.defineProperty(this, 'saturatedBlue', {
+		enumerable: true,
+		get: getSaturatedBlue
+	});
+
+	/**
+	 * @property saturatedGreen
+	 * @type {boolean}
+	 */
+	Object.defineProperty(this, 'saturatedGreen', {
+		enumerable: true,
+		get: getSaturatedGreen
+	});
+
+	/**
+	 * @property saturatedRed
+	 * @type {boolean}
+	 */
+	Object.defineProperty(this, 'saturatedRed', {
+		enumerable: true,
+		get: getSaturatedRed
+	});
+
+	/**
 	 * @property saturation
 	 * @type {tinyint}
 	 */
@@ -357,6 +384,15 @@ module.exports = function Color(value) {
 			s = Number(n);
 		}
 		convertHslToRgb();
+	}
+	function getSaturatedBlue() {
+		return b/(r + g + b) >= .8;
+	}
+	function getSaturatedGreen() {
+		return g/(r + g + b) >= .8;
+	}
+	function getSaturatedRed() {
+		return r/(r + g + b) >= .8;
 	}
 
 	/**
