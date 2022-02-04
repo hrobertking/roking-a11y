@@ -366,30 +366,19 @@ module.exports = function Color(value) {
 	 * @param {hcolor} color
 	 */
 	function convertHColorToRgb(color) {
-		var colorString = ('' + color).trim(),
-			h3 = HEX3.exec(colorString),
-			h4 = HEX4.exec(colorString),
-			h6 = HEX6.exec(colorString),
-			h8 = HEX8.exec(colorString),
-			matchS = (h6 || h3),
-			matchL = (h8 || h4),
-			R,
-			G,
-			B,
-			A;
+		return REGEX.hex.map(function (r) {
+			var match = r.exec('' + color.trim());
 
-		if (matchS) {
-			R = parseInt((matchS[1] + matchS[1]).substr(-2), 16);
-			G = parseInt((matchS[2] + matchS[2]).substr(-2), 16);
-			B = parseInt((matchS[3] + matchS[3]).substr(-2), 16);
-			A = 1;
-		} else if (matchL) {
-			R = parseInt((matchL[1] + matchL[1]).substr(-2), 16);
-			G = parseInt((matchL[2] + matchL[2]).substr(-2), 16);
-			B = parseInt((matchL[3] + matchL[3]).substr(-2), 16);
-			A = parseInt((matchL[4] + matchL[4]).substr(-2), 16) / 255;
-		}
-		return { blue: B, green: G, red: R, opacity: A };
+			if (match) {
+				var r = Math.min(255, Math.max(0, hexToDec((match[1] + match[1]).substr(-2)))),
+				    g = Math.min(255, Math.max(0, hexToDec((match[2] + match[2]).substr(-2)))),
+				    b = Math.min(255, Math.max(0, hexToDec((match[3] + match[3]).substr(-2)))),
+				    a = match[4] ? Math.min(1, Math.max(0, hexToDec((match[4] + match[4]).substr(-2)) / 255)) : 1;
+
+				return { red: r, green: g, blue: b, opacity: a };
+			}
+		})
+		.reduce(function (o, v) { return o || v; });
 	}
 
 	/**
@@ -481,9 +470,14 @@ module.exports = function Color(value) {
 	 * @param {*} v
 	 */
 	function isHexadecimal(v) {
-		var isHex = HEX3.test(v) || HEX4.test(v) || HEX6.test(v) || HEX8.test(v);
-
-		return typeof v === 'string' && isHex;
+		return typeof v === 'string' &&
+			REGEX.hex.map(function (r) {
+				return r.test(v);
+			})
+			.filter(function (test) {
+				return test;
+			})
+			.length > 0;
 	}
 	/**
 	 * @private
@@ -581,17 +575,16 @@ module.exports = function Color(value) {
 		}
 	}
 
-	var HEX3 = /^#?([0-9a-f]{1})([0-9a-f]{1})([0-9a-f]{1})$/i, // eslint-disable-line vars-on-top
-		HEX6 = /^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i,
-		HEX4 = /^#?([0-9a-f]{1})([0-9a-f]{1})([0-9a-f]{1})([0-9a-f]{1})$/i,
-		HEX8 = /^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i,
-		r,
-		g,
-		b,
-		h,
-		s,
-		l,
-		a;
+	var REGEX = {
+		hex: [
+			/^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})?$/i,
+			/^#([0-9a-f]{1})([0-9a-f]{1})([0-9a-f]{1})([0-9a-f]{1})?$/i,
+		],
+	};
+
+	var r, g, b,
+	    h, s, l,
+	    a;
 
 	init(value);
 };
