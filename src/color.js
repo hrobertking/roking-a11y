@@ -1,6 +1,6 @@
 /**
  * @class Color
- * @author H Robert King <hrobertking@cathmhaol.com>
+ * @author H Robert King <hrobertking@gmail.com>
  * @description The `Color` object automatically converts between the three different color
  * specifications: a hexadecimal number, an object with `red`, `green`, and `blue` values, and an
  * object with `hue`, `saturation`, and `lightness` values and simplifies modification of the
@@ -38,8 +38,25 @@
 /* eslint-disable no-bitwise, no-mixed-operators */
 module.exports = function Color(value) {
 	/**
+	 * @typedef RGB
+	 * @property {Number} red - Tinyint value for red
+	 * @property {Number} green - Tinyint value for green
+	 * @property {Number} blue - Tinyint value for blue
+	 * @property {Number} opacity - Percentage opaque
+	 *
+	 * @typedef HSL
+	 * @property {Number} hue - Color wheel degree representation of hue
+	 * @property {Number} saturation - Percentage of saturation
+	 * @property {Number} lightness - Percentage of lightness
+	 * @property {Number} opacity - Percentage opaque
+	 *
+	 * @typedef HCOLOR
+	 * @type {String} 3, 4, 6, or 8 byte hexadecimal string representing 3 or 4 segments for red, green, blue, and opacity
+	 */
+	
+	/**
 	 * @property blue
-	 * @type {tinyint}
+	 * @type {Number} tinyint
 	 */
 	Object.defineProperty(this, 'blue', {
 		enumerable: true,
@@ -50,7 +67,7 @@ module.exports = function Color(value) {
 
 	/**
 	 * @property canDarken
-	 * @type {boolean}
+	 * @type {Boolean}
 	 * @description A boolean representing a luminance greater than zero.
 	 */
 	Object.defineProperty(this, 'canDarken', {
@@ -62,7 +79,7 @@ module.exports = function Color(value) {
 
 	/**
 	 * @property canLighten
-	 * @type {boolean}
+	 * @type {Boolean}
 	 * @description A boolean representing a luminance less than one hundred
 	 */
 	Object.defineProperty(this, 'canLighten', {
@@ -74,7 +91,7 @@ module.exports = function Color(value) {
 
 	/**
 	 * @property green
-	 * @type {tinyint}
+	 * @type {Number} tinyint
 	 */
 	Object.defineProperty(this, 'green', {
 		enumerable: true,
@@ -85,7 +102,7 @@ module.exports = function Color(value) {
 
 	/**
 	 * @property hcolor
-	 * @type {hcolor}
+	 * @type {HCOLOR}
 	 * @description The hexadecimal color values as a 6-digit or 8-digit string
 	 */
 	Object.defineProperty(this, 'hcolor', {
@@ -97,7 +114,7 @@ module.exports = function Color(value) {
 
 	/**
 	 * @property hue
-	 * @type {tinyint}
+	 * @type {Number} tinyint
 	 */
 	Object.defineProperty(this, 'hue', {
 		enumerable: true,
@@ -108,7 +125,7 @@ module.exports = function Color(value) {
 
 	/**
 	 * @property lightness
-	 * @type {tinyint}
+	 * @type {Number} tinyint
 	 */
 	Object.defineProperty(this, 'lightness', {
 		enumerable: true,
@@ -119,7 +136,7 @@ module.exports = function Color(value) {
 
 	/**
 	 * @property luminance
-	 * @type {number}
+	 * @type {Number}
 	 * @description A number 0..100 (inclusive) representing the luminance of a color.
 	 * @see {@link https://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef}
 	 * @see {@link https://www.w3.org/TR/WCAG20-TECHS/G17.html#G17-tests}
@@ -131,7 +148,7 @@ module.exports = function Color(value) {
 
 	/**
 	 * @property opacity
-	 * @type {number}
+	 * @type {Number}
 	 * @description A floating-point value representing the percentage of the background color blocked
 	 * @default 1
 	 */
@@ -144,7 +161,7 @@ module.exports = function Color(value) {
 
 	/**
 	 * @property red
-	 * @type {tinyint}
+	 * @type {Number} tinyint
 	 */
 	Object.defineProperty(this, 'red', {
 		enumerable: true,
@@ -155,7 +172,7 @@ module.exports = function Color(value) {
 
 	/**
 	 * @property saturation
-	 * @type {tinyint}
+	 * @type {Number} tinyint
 	 */
 	Object.defineProperty(this, 'saturation', {
 		enumerable: true,
@@ -177,12 +194,19 @@ module.exports = function Color(value) {
 			G = Math.max(0, (n & 0x0000FF) - (degree || 1)),
 			B = Math.max(0, ((n >> 8) & 0x00FF) - (degree || 1)),
 			h = (G | (B << 8) | (R << 16)).toString(16),
-			o = convertHColorToRgb(`000000${h}`.substr(-6));
+			rgb = convertHColorToRgb(`000000${h}`.substr(-6)),
+		    	hsl = convertRgbTohsl(rgb);
 
-		r = o.red;
-		g = o.green;
-		b = o.blue;
-		convertRgbToHsl();
+		if (rgb) {
+			r = rgb.red;
+			g = rgb.green;
+			b = rgb.blue;
+		}
+		if (hsl) {
+			h = hsl.hue;
+			s = hsl.saturation;
+			l = hsl.lightness;
+		}
 
 		return this;
 	};
@@ -200,12 +224,19 @@ module.exports = function Color(value) {
 			G = Math.min((n & 0x0000FF) + (degree || 1), 255),
 			B = Math.min(((n >> 8) & 0x00FF) + (degree || 1), 255),
 			h = (G | (B << 8) | (R << 16)).toString(16),
-			o = convertHColorToRgb(`000000${h}`.substr(-6));
+			rgb = convertHColorToRgb(`000000${h}`.substr(-6)),
+		    	hsl = convertRgbToHsl(rgb);
 
-		r = o.red;
-		g = o.green;
-		b = o.blue;
-		convertRgbToHsl();
+		if (rgb) {
+			r = rgb.red;
+			g = rgb.green;
+			b = rgb.blue;
+		}
+		if (hsl) {
+			h = hsl.hue;
+			s = hsl.saturation;
+			l = hsl.lightness;
+		}
 
 		return this;
 	};
@@ -213,8 +244,8 @@ module.exports = function Color(value) {
 	/**
 	 * @method isColorType
 	 * @description Returns true if the provided data is one of `hcolor`, `rgb`, or `hsl`
-	 * @returns {boolean}
-	 * @param {*} data
+	 * @returns {Boolean}
+	 * @param {RGB|HSL|HCOLOR} data
 	 */
 	this.isColorType = function isColorType(data) {
 		if (data) {
@@ -226,13 +257,13 @@ module.exports = function Color(value) {
 	/**
 	 * @method toString
 	 * @description Returns a hexadecimal color string as used in CSS
-	 * @returns {string}
+	 * @returns {String}
 	 */
 	this.toString = function toString() {
 		return this.hcolor;
 	};
 
-	/* getters and setters */
+	// getters and setters
 	function getAlpha() {
 		return typeof a !== 'number' ? 1 : round(a);
 	}
@@ -261,7 +292,13 @@ module.exports = function Color(value) {
 		} else {
 			b = Number(n);
 		}
-		convertRgbToHsl();
+		
+		var hsl = convertRgbToHsl({ red: r, green: g, blue: b });
+		if (hsl) {
+			h = hsl.hue;
+			s = hsl.saturation;
+			l = hsl.lightness;
+		}
 	}
 	function getG() {
 		return g;
@@ -272,7 +309,13 @@ module.exports = function Color(value) {
 		} else {
 			g = Number(n);
 		}
-		convertRgbToHsl();
+		
+		var hsl = convertRgbToHsl({ red: r, green: g, blue: b });
+		if (hsl) {
+			h = hsl.hue;
+			s = hsl.saturation;
+			l = hsl.lightness;
+		}
 	}
 	function getH() {
 		return h;
@@ -281,7 +324,13 @@ module.exports = function Color(value) {
 		h = Number(n);
 		h += (h < 360) ? 360 : 0;
 		h %= 360;
-		convertHslToRgb();
+		
+		var rgb = convertHslToRgb({ hue: h, saturation: s, lightness: l, opacity: a });
+		if (rgb) {
+			r = rgb.red;
+			g = rgb.green;
+			b = rgb.blue;
+		}
 	}
 	function getHColor() {
 		function hex(n) {
@@ -294,18 +343,21 @@ module.exports = function Color(value) {
 			}
 			return `#${hex(this.red)}${hex(this.green)}${hex(this.blue)}`;
 		}
-		let udef;
-		return udef;
 	}
 	function setHColor(n) {
-		var rgb = convertHColorToRgb(n);
+		var rgb = convertHColorToRgb(n),
+		    hsl = convertRgbToHsl(rgb);
 
 		if (isSet(rgb.red) && isSet(rgb.green) && isSet(rgb.blue)) {
 			r = rgb.red;
 			g = rgb.green;
 			b = rgb.blue;
 			a = rgb.opacity;
-			convertRgbToHsl();
+		}
+		if (isSet(hsl.hue) && isSet(hsl.saturation) && isSet(hsl.lightness)) {
+			h = hsl.hue;
+			s = hsl.saturation;
+			l = hsl.lightness;
 		}
 	}
 	function getL() {
@@ -319,7 +371,13 @@ module.exports = function Color(value) {
 		} else {
 			l = Number(n);
 		}
-		convertHslToRgb();
+		
+		var rgb = convertHslToRgb({ hue: h, saturation: s, lightness: l, opacity: a });
+		if (rgb) {
+			r = rgb.red;
+			g = rgb.green;
+			b = rgb.blue;
+		}
 	}
 	function getLuminance() {
 		function range(dec) {
@@ -343,7 +401,13 @@ module.exports = function Color(value) {
 		} else {
 			r = Number(n);
 		}
-		convertRgbToHsl();
+		
+		var hsl = convertRgbToHsl({ red: r, green: g, blue: b });
+		if (hsl) {
+			h = hsl.hue;
+			s = hsl.saturation;
+			l = hsl.lightness;
+		}
 	}
 	function getS() {
 		if (typeof s === 'number') {
@@ -356,38 +420,44 @@ module.exports = function Color(value) {
 		} else {
 			s = Number(n);
 		}
-		convertHslToRgb();
+		
+		var rgb = convertHslToRgb({ hue: h, saturation: s, lightness: l, opacity: a });
+		if (rgb) {
+			r = rgb.red;
+			g = rgb.green;
+			b = rgb.blue;
+		}
 	}
 
+	// color format conversions
 	/**
 	 * @private
 	 * @description Converts a hcolor string to an rgb object
-	 * @returns {rgb}
-	 * @param {hcolor} color
+	 * @returns {RGB}
+	 * @param {HCOLOR} color
 	 */
 	function convertHColorToRgb(color) {
 		return REGEX.hex.map(function (r) {
-			var match = r.exec('' + color.trim());
+			var m = r.exec('' + color.trim());
 
-			if (match) {
-				var r = Math.min(255, Math.max(0, hexToDec((match[1] + match[1]).substr(-2)))),
-				    g = Math.min(255, Math.max(0, hexToDec((match[2] + match[2]).substr(-2)))),
-				    b = Math.min(255, Math.max(0, hexToDec((match[3] + match[3]).substr(-2)))),
-				    a = match[4] ? Math.min(1, Math.max(0, hexToDec((match[4] + match[4]).substr(-2)) / 255)) : 1;
+			if (m) {
+				var red = Math.min(255, Math.max(0, hexToDec((m[1] + m[1]).substr(-2)))),
+				    green = Math.min(255, Math.max(0, hexToDec((m[2] + m[2]).substr(-2)))),
+				    blue = Math.min(255, Math.max(0, hexToDec((m[3] + m[3]).substr(-2)))),
+				    opacity = m[4] ? Math.min(1, Math.max(0, hexToDec((m[4] + m[4]).substr(-2)) / 255)) : 1;
 
-				return { red: r, green: g, blue: b, opacity: a };
+				return { red, green, blue, opacity };
 			}
 		})
 		.reduce(function (o, v) { return o || v; });
 	}
-
 	/**
 	 * @private
-	 * @description Converts hue, saturation, and lightness to red, green, and blue values, setting
-	 * internal variables r, g, and b.
-	 * @returns {undefined}
+	 * @description Converts hue, saturation, and lightness to red, green, and blue values.
+	 * @returns {RGB}
+	 * @param {HSL} hsl
 	 */
-	function convertHslToRgb() {
+	function convertHslToRgb(hsl) {
 		var C,
 			hPrime,
 			X,
@@ -395,15 +465,18 @@ module.exports = function Color(value) {
 			rgbPrime;
 
 		/* if there is no saturation, the hue is gray with the specified lightness */
-		if (s === 0) {
-			r = l * 255;
-			g = l * 255;
-			b = l * 255;
-		} else if (typeof h === 'number' && typeof s === 'number' && typeof l === 'number') {
-			C = (1 - Math.abs(l * 2 - 1)) * s;
-			hPrime = h / 60;
+		if (hsl.saturation === 0) {
+			return {
+				red: hsl.lightness * 255,
+				green: hsl.lightness * 255,
+				blue: hsl.lightness * 255,
+				opacity: hsl.opacity
+			};
+		} else if (typeof hsl.hue === 'number' && typeof hsl.saturation === 'number' && typeof hsl.lightness === 'number') {
+			C = (1 - Math.abs(hsl.lightness * 2 - 1)) * s;
+			hPrime = hsl.hue / 60;
 			X = C * (1 - Math.abs((hPrime % 2) - 1));
-			m = l - C / 2;
+			m = hsl.lightness - C / 2;
 			rgbPrime = [
 				[C, X, 0],
 				[X, C, 0],
@@ -413,19 +486,21 @@ module.exports = function Color(value) {
 				[C, 0, X]
 			][Math.floor(hPrime) % 6];
 
-			r = Math.round((rgbPrime[0] + m) * 255);
-			g = Math.round((rgbPrime[1] + m) * 255);
-			b = Math.round((rgbPrime[2] + m) * 255);
+			return {
+				red: Math.round((rgbPrime[0] + m) * 255),
+				green: Math.round((rgbPrime[1] + m) * 255),
+				blue: Math.round((rgbPrime[2] + m) * 255),
+				opacity: hsl.opacity
+			};
 		}
 	}
-
 	/**
 	 * @private
 	 * @description Converts red, green, and blue values to hue, saturation, and lightness
-	 * setting internal values.
-	 * @returns {undefined}
+	 * @returns {HSL}
+	 * @param {RGB} rgb
 	 */
-	function convertRgbToHsl() {
+	function convertRgbToHsl(rgb) {
 		var R,
 			G,
 			B,
@@ -435,10 +510,10 @@ module.exports = function Color(value) {
 			S,
 			H = 60;
 
-		if (isSet(r) && isSet(g) && isSet(b)) {
-			R = round(r / 255);
-			G = round(g / 255);
-			B = round(b / 255);
+		if (isSet(rgb.red) && isSet(rgb.green) && isSet(rgb.blue)) {
+			R = round(rgb.red / 255);
+			G = round(rgb.green / 255);
+			B = round(rgb.blue / 255);
 			MAX = Math.max(R, G, B);
 			MIN = Math.min(R, G, B);
 			L = (MAX + MIN) / 2;
@@ -457,16 +532,20 @@ module.exports = function Color(value) {
 
 			H += H < 0 ? 360 : 0;
 
-			h = Math.round(H);
-			s = Math.round(S * 100) / 100;
-			l = Math.round(L * 100) / 100;
+			return {
+				hue: Math.round(H),
+				saturation: Math.round(S * 100) / 100,
+				lightness: Math.round(L * 100) / 100,
+				opacity: rgb.opacity
+			};
 		}
 	}
-
+	
+	// type checks
 	/**
 	 * @private
 	 * @description Tests if something is a valid hexadecimal
-	 * @returns {boolean}
+	 * @returns {Boolean}
 	 * @param {*} v
 	 */
 	function isHexadecimal(v) {
@@ -482,7 +561,7 @@ module.exports = function Color(value) {
 	/**
 	 * @private
 	 * @description Tests if something is a valid HSL object
-	 * @returns {boolean}
+	 * @returns {Boolean}
 	 * @param {*} v
 	 */
 	function isHSL(v) {
@@ -491,7 +570,7 @@ module.exports = function Color(value) {
 	/**
 	 * @private
 	 * @description Tests if something is a valid RGB object
-	 * @returns {boolean}
+	 * @returns {Boolean}
 	 * @param {*} v
 	 */
 	function isRGB(v) {
@@ -500,33 +579,43 @@ module.exports = function Color(value) {
 	/**
 	 * @private
 	 * @description Tests if something is a number
-	 * @returns {boolean}
+	 * @returns {Boolean}
 	 * @param {*} v
 	 */
 	function isSet(v) {
 		return !Number.isNaN(v) && typeof v !== 'undefined';
 	}
 
+	// maths functions
 	/**
 	 * @private
+	 * @description Converts a hexadecimal string to a decimal number
+	 * @return {Number}
+	 * @param {String} hex
+	 */
+	function hexToDec(hex) {
+		return parseInt(hex, 16);
+	}
+  	/**
+	 * @private
 	 * @description Rounds to two decimal places
-	 * @return {number|undefined}
-	 * @param {number} n
+	 * @return {Number|undefined}
+	 * @param {Number} n
 	 */
 	function round(n) {
 		return Number(n.toFixed(2));
 	}
-
 	/**
 	 * @private
 	 * @description Convert a percent string, a hexadecimal string, or a numeric string to a number.
-	 * @returns {number|undefined}
+	 * @returns {Number|undefined}
+	 * @param {String|Number} n
 	 */
 	function strToNum(n) {
 		if (typeof n === 'string' || typeof n === 'number') {
 			if (/%$/.test(n)) {
 				return parseFloat(n.replace(/%$/, '')) / 100;
-			} else if (/^[0-9a-f]+$/i.test(n)) {
+			} else if (/^[0a-f]+$/i.test(n)) {
 				return parseInt(n, 16);
 			}
 			return parseFloat(n);
@@ -536,8 +625,8 @@ module.exports = function Color(value) {
 	/**
 	 * @private
 	 * @description Normalizes an rgb value
-	 * @returns {rgb}
-	 * @param {rgb|hcolor} data
+	 * @returns {RGB}
+	 * @param {RGB|HCOLOR} data
 	 */
 	function normalize(data) {
 		return isRGB(data) ? data :
@@ -549,30 +638,24 @@ module.exports = function Color(value) {
 	 * @private
 	 * @description Initializes the values and sets corresponding variables.
 	 * @returns {undefined}
-	 * @param {hcolor|rgb|hsl} color
+	 * @param {HCOLOR|RGB|HSL} color
 	 */
 	function init(color) {
-		var rgb = normalize(color);
+		var rgb = normalize(color),
+		    hsl = convertRgbToHsl(rgb);
 
-		if (color) {
+		if (rgb) {
 			r = rgb.red;
 			g = rgb.green;
 			b = rgb.blue;
-
-			h = parseInt(color.hue, 10);
-			s = strToNum(color.saturation);
-			l = strToNum(color.lightness);
-
-			a = rgb.opacity || strToNum(color.opacity);
-
-			h += h < 0 ? 360 : 0;
-
-			if (isSet(r) && isSet(g) && isSet(b)) {
-				convertRgbToHsl();
-			} else if (isSet(h) && isSet(s) && isSet(l)) {
-				convertHslToRgb();
-			}
 		}
+		if (hsl) {
+			h = parseInt(hsl.hue, 10);
+			h += h < 0 ? 360 : 0;
+			s = strToNum(hsl.saturation);
+			l = strToNum(hsl.lightness);
+		}
+		a = rgb.opacity || strToNum(color.opacity);
 	}
 
 	var REGEX = {
