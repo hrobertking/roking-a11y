@@ -17,57 +17,140 @@
  */
 var Color = require('./color.js');  // eslint-disable-line global-require
 
-module.exports = function APCA(foreground, background) {
+module.exports = /**
+ * @class APCA
+ * @author H Robert King <hrobertking@gmail.com>
+ * @requires roking-a11y:Color
+ * @description The `APCA` object allows for easy generation of a contrast ratio,
+ * enabling comparison of two color definitions - `background` and `foreground`.
+ * @param {Color|config} foreground
+ * @param {Color} background
+ *
+ * @example
+ * const l = new Luminance('#000', '#fff');
+ * const pass = l.test(wcag.CONTRAST.AA.normal);
+ *
+ * @typedef config
+ * @property {Color} background
+ * @property {Color} foreground
+ */
+function APCA(f, b) {
+	var bg, fg;
+
+	// getters and setters
+	function getBg() {
+		return bg;
+	}
+	function setBg(value) {
+		var v = new Color(value);
+		
+		bg = v.isColorType(value) ? v : bg;
+	}
+	function getFg() {
+		return fg;
+	}
+	function setFg(value) {
+		var v = new Color(value);
+
+		fg = v.isColorType(value) ? v : fg;
+	}
+
 	/**
 	 * @typedef Darkness
 	 * @property {Number} threshold
 	 * @property {Number} exponent
 	 */
+	var Darkness = {
+		threshold: 0.01,
+		exponent: 1.5,
+	};
 
 	/**
-	 * @property Darkness
-	 * @type {Darkness}
+	 * @typedef Font
+	 * @type {Object}
+	 * @description Enumerated _ContrastMinimums_ and reporting methods.
+	 * @property {ContrastMinimums} _Size_ Font size, e.g., 12px or 96px 
+	 * @method {String[]} list Returns a list of all supported font sizes.
+	 * @method {Node} toHtml Generates an HTMLNODE that is the minimum contrast score for various fonts with strong matches.
+	 *
+	 * @typedef ContrastMinimums
+	 * @type {Number[]}
+	 * @description Minimum APCA contrast score required for font weights 100..900 in 100 increments
 	 */
-	Object.defineProperty(this, 'Darkness', {
-		enumerable: true,
-		get: function () {
-			return Darkness;
+	var Fonts = {
+		'12px': [null,null,null,100,94,87,80,80,80],
+	 	'14px': [null,null,null,90,84,77,70,70,70],
+		'16px': [null,null,110,80,77,72,60,60,60],
+ 		'18px':[null,null,100,78,74,70,59,59,59],
+		'20px':[null,120,94,76,72,67,58,58,58],
+		'22px':[null,110,87,75,70,65,57,57,57],
+ 		'24px':[null,100,80,74,66,60,56,56,56],
+		'26px':[null,96,78,72,65,59,55,55,55],
+		'28px':[null,92,76,70,64,58,54,54,52],
+		'30px':[null,88,74,68,62,57,53,52,50],
+		'32px':[null,84,72,66,60,56,52,50,48],
+		'36px':[120,80,70,64,58,54,50,48,46],
+		'40px':[114,77,68,62,57,52,48,46,44],
+		'44px':[108,74,66,60,55,50,46,44,42],
+		'48px':[100,70,65,58,53,48,44,42,40],
+		'56px':[95,67,64,56,51,46,42,40,40],
+		'64px':[90,65,62,54,49,44,40,40,40],
+		'72px':[85,63,60,52,47,42,40,40,40],
+ 		'96px':[80,60,55,50,45,40,40,40,40],
+	};
+	// methods are added using defineProperty so they are not enumerable
+	Object.defineProperty(Fonts, 'list', {
+		enumerable: false,
+		value: function () {
+			return Object.keys(this);
 		},
 	});
-	
-	/**
-	 * @property background
-	 * @type {Color}
-	 */
-	Object.defineProperty(this, 'background', {
-		enumerable: true,
-		get: getBg,
-		set: setBg,
-		writeable: true
+	Object.defineProperty(Fonts, 'toHtml', {
+		enumerable: false,
+		value: function () {
+			var table = document.createElement('table'),
+			    thead = document.createElement('thead'),
+			    tbody = document.createElement('tbody'),
+			    cols = Object.keys(this).reduce((count, key) => {
+				    return Math.max(count, this[key].length);
+			    }, 0),
+			    h1 = thead.insertRow(),
+			    cell = h1.appendChild(document.createElement('th')),
+			    heading = 100,
+			    apca = score();
+
+			table.appendChild(thead);
+			table.appendChild(tbody);
+
+			cell.innerHTML = 'Font Size';
+			for (var n = 0; n < cols; n += 1) {
+				cell = h1.appendChild(document.createElement('th')),
+				cell.innerHTML = heading;
+				heading += 100;
+			}
+
+			Object.keys(this).forEach((key) => {
+				var row = tbody.insertRow(),
+				    vals = this[key];
+
+				cell = row.insertCell();
+				cell.innerHTML = key;
+
+				for (var c = 0; c < vals.length; c += 1) {
+					var v = Number(this[key][c]),
+					    h = v <= Math.abs(apca) ? 'strong' : 'span',
+					    n;
+
+					cell = row.insertCell();
+					n = cell.appendChild(document.createElement(h));
+					n.innerHTML = this[key][c] || '⊘';
+				}
+			});
+
+			return table;
+		},
 	});
 
-	/**
-	 * @property contrast
-	 * @type {number}
-	 * @description Returns the luminance contrast ratio using the APCA method
-	 * @see {@link https://w3c.github.io/silver/guidelines/methods/Method-font-characteristic-contrast.html}
-	 */
-	Object.defineProperty(this, 'contrast', {
-		enumerable: true,
-		get: getContrast
-	});
-
-	/**
-	 * @property foreground
-	 * @type {Color}
-	 */
-	Object.defineProperty(this, 'foreground', {
-		enumerable: true,
-		get: getFg,
-		set: setFg,
-		writeable: true
-	});
-	
 	/**
 	 * @typedef PowerCurveDetail
 	 * @property {Number} PowerCurve
@@ -81,93 +164,7 @@ module.exports = function APCA(foreground, background) {
 	 * @property {PowerCurveDetail} normal
 	 * @property {PowerCurveDetail} reverse
 	 */
-	
-	/**
-	 * @property PowerCurve
-	 * @type {PowerCurve}
-	 */
-	Object.defineProperty(this, 'PowerCurve', {
-		enumerable: true,
-		get: function () {
-			return PowerCurve;
-		},
-	});
-	
-	/**
-	 * @property precision
-	 * @type {integer}
-	 */
-	Object.defineProperty(this, 'precision', {
-		enumerable: true,
-		value: 3,
-		writeable: true,
-	});
-
-	/* getters and setters */
-	function getBg() {
-		return bg;
-	}
-	function setBg(color) {
-		bg = color instanceof Color ? color : new Color(color);
-		initBg = initBg || new Color(color);
-	}
-	function getContrast() {
-		var back = this.background.luminance,
-			fore = this.foreground.luminance,
-			reverse = !(bg > fg);
-
-		fore = reverse ? fore : lightness(fore);
-		back = reverse ? lightness(back) : back;
- 
-		var curve = reverse ? this.PowerCurve.reverse : this.PowerCurve.normal,
-			apca = (Math.pow(back, curve.background) - Math.pow(fore, curve.foreground)) * 1.14;
-
-		return ((
-			reverse
-				? apca > -0.001
-					? 0.0
-					: apca > -curve.lowThreshold
-						? apca - apca * curve.lowFactor * curve.lowOffset
-						: apca + curve.lowOffset
-				: apca < 0.001
-					? 0.0
-					: apca < curve.lowThreshold
-						? apca - apca * curve.lowFactor * curve.lowOoffset
-						: apca - curve.lowOffset
-		) * 100).toFixed(this.precision);
-	}
-	function getFg() {
-		return fg;
-	}
-	function setFg(color) {
-		fg = color instanceof Color ? color : new Color(color);
-		initFg = initFg || new Color(color);
-	}
-
-	/**
-	 * @private
-	 * @description Checks the datatype to verify it's defined in the Color module
-	 * @returns {boolean}
-	 * @param {*} data
-	 */
-	function isColorType(data) {
-		var c = new Color();
-		return c.isColorType(data);
-	}
-	/**
-	 * @private
-	 * @description Calculate the lightness of a color luminance to determine which is brighter for color polarity
-	 * @returns {Number}
-	 * @param {Number} lum The luminance value for the color
-	 */
-	function lightness(lum) {
-		if (lum > Darkness.threshold) {
-			return lum;
-		}
-		return lum + Math.pow(Darkness.threshold - lum, Darkness.exponent);
-	}
-
-	var PowerCurve = { // eslint-disable-line vars-on-top,
+	 var PowerCurve = {
 		normal: {
 			background: 0.38,
 			foreground: 0.43,
@@ -181,25 +178,142 @@ module.exports = function APCA(foreground, background) {
 			lowThreshold: 0.035991,
 			lowFactor: 27.7847239587675,
 			lowOffset: 0.027,
-		},
-	},
-	Darkness = {
-		threshold: 0.01,
-		exponent: 1.5,
+		}
 	};
+	
+	var precision = 3;
 
-	var bg, // eslint-disable-line vars-on-top,
-		fg;
-
-	if (foreground && foreground.background) {
-		this.background = foreground.background;
-	} else if (isColorType(background)) {
-		this.background = background;
+	/**
+	 * @private
+	 * @description Calculate the lightness of a color luminance to determine which is brighter for color polarity
+	 * @return {Number}
+	 * @param {Number} lum The luminance value for the color
+	 */
+	function lightness(lum) {
+		if (lum > Darkness.threshold) {
+			return lum;
+		}
+		return lum + Math.pow(Darkness.threshold - lum, Darkness.exponent);
 	}
 
-	if (foreground && foreground.foreground) {
-		this.foreground = foreground.foreground;
-	} else if (isColorType(foreground)) {
-		this.foreground = foreground;
+	/**
+	 * @private
+	 * @description Returns the luminance contrast ratio using the APCA method
+	 * @see {@link https://w3c.github.io/silver/guidelines/methods/Method-font-characteristic-contrast.html}
+	 * @return {Number}
+	 */
+	function score() {
+		var back = bg.luminance / 100,
+		    fore = fg.luminance / 100,
+		    reverse = !(back > fore),
+		    curve = PowerCurve.normal,
+		    apca;
+
+		fore = reverse ? fore : lightness(fore);
+		back = reverse ? lightness(back) : back;
+ 
+		curve = reverse
+			? PowerCurve.reverse
+			: PowerCurve.normal;
+		apca = (
+			Math.pow(back, curve.background) - 
+			Math.pow(fore, curve.foreground)
+		) * 1.14;
+
+		return ((
+			reverse
+				? apca > -0.001
+					? 0.0
+					: apca > -curve.lowThreshold
+						? apca - apca * curve.lowFactor * curve.lowOffset
+						: apca + curve.lowOffset
+				: apca < 0.001
+					? 0.0
+					: apca < curve.lowThreshold
+						? apca - apca * curve.lowFactor * curve.lowOffset
+						: apca - curve.lowOffset
+		) * 100).toFixed(precision);
+	};
+  
+	/**
+	 * @property Darkness
+	 * @type {Darkness}
+	 */
+	Object.defineProperty(this, 'Darkness', {
+		enumerable: true,
+		value: Darkness,
+	});
+  
+	/**
+	 * @property background
+	 * @type {Color}
+	 */
+	Object.defineProperty(this, 'background', {
+		enumerable: true,
+		get: getBg,
+		set: setBg,
+	});
+	
+	/**
+	 * @property Fonts
+	 * @type {Font}
+	 */
+	Object.defineProperty(this, 'Fonts', {
+		enumerable: true,
+		value: Fonts,
+	});
+  
+	/**
+	 * @property foreground
+	 * @type {Color}
+	 */
+	Object.defineProperty(this, 'foreground', {
+		enumerable: true,
+		get: getFg,
+		set: setFg,
+	});
+  
+	/**
+	 * @property precision
+	 * @type {Number}
+	 * @default 3
+	 */
+	Object.defineProperty(this, 'precision', {
+		enumerable: true,
+		value: precision,
+	});
+  
+	/**
+	 * @property PowerCurve
+	 * @type {PowerCurve}
+	 */
+	Object.defineProperty(this, 'PowerCurve', {
+		enumerable: true,
+		value: PowerCurve,
+	});
+  
+	/**
+	 * @method score
+	 * @description Returns the luminance contrast ratio using the APCA method for the specified foreground and background.
+	 * @return {Number}
+	 */
+	Object.defineProperty(this, 'score', {
+		enumerable: false,
+		value: score,
+	});
+  
+	// initialize
+	if (f && f.background) {
+		setBg(f.background);
+	} else {
+		setBg(b);
 	}
-}
+
+	if (f && f.foreground) {
+		setFg(f.foreground);
+	} else {
+		setFg(f);
+	}
+
+	return this;
+};
