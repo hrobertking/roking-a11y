@@ -17,24 +17,7 @@
  */
 var Color = require('./color.js');  // eslint-disable-line global-require
 
-module.exports = /**
- * @class APCA
- * @author H Robert King <hrobertking@gmail.com>
- * @requires roking-a11y:Color
- * @description The `APCA` object allows for easy generation of a contrast ratio,
- * enabling comparison of two color definitions - `background` and `foreground`.
- * @param {Color|config} foreground
- * @param {Color} background
- *
- * @example
- * const l = new Luminance('#000', '#fff');
- * const pass = l.test(wcag.CONTRAST.AA.normal);
- *
- * @typedef config
- * @property {Color} background
- * @property {Color} foreground
- */
-function APCA(f, b) {
+module.exports = function APCA(f, b) {
 	var bg, fg;
 
 	// getters and setters
