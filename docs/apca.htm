@@ -79,7 +79,6 @@
 				<table style="align-self: flex-start;">
 					<thead>
 						<tr>
-							<th>Type</th>
 							<th id="background-label">Background</th>
 							<th id="foreground-label">Foreground</th>
 							<th>Result</th>
@@ -87,7 +86,6 @@
 					</thead>
 					<tbody>
 						<tr>
-							<th id="r1">Dark text on light background</th>
 							<td>
 								<input aria-labelledBy="r1 background-label" id="background" type="text" value="#fff"/>
 							</td>
@@ -95,16 +93,6 @@
 								<input aria-labelledBy="r1 foreground-label" id="foreground" type="text" value="#000"/>
 							</td>
 							<td id="results"></td>
-						</tr>
-						<tr>
-							<th id="r2">Light text on a dark background</th>
-							<td>
-								<input aria-labelledBy="r2 background-label" id="background-reverse" type="text" value="#000"/>
-							</td>
-							<td>
-								<input aria-labelledBy="r2 foreground-label" id="foreground-reverse" type="text" value="#fff"/>
-							</td>
-							<td id="results-reverse"></td>
 						</tr>
 					</tbody>
 					<tfoot>
@@ -121,19 +109,24 @@
 		<script src="apca.min.js"></script>
 		<script>
 			function onClick() {
-			  const bgn = document.getElementById('background').value;
-			  const txn = document.getElementById('foreground').value;
-			  const bgr = document.getElementById('background-reverse').value;
-			  const txr = document.getElementById('foreground-reverse').value;
+				const bgn = document.getElementById('background').value;
+				const txn = document.getElementById('foreground').value;
 
-			  const apca = new APCA({background: bgn, foreground: txn});
-			  const rapc = new APCA({background: bgr, foreground: txr});
+				const apca = new APCA({background: bgn, foreground: txn});
 
-			  document.getElementById('results').innerHTML = apca.score();
-			  document.getElementById('results-reverse').innerHTML = rapc.score();
-			  document.getElementById('fonts').innerHTML = '';
-			  document.getElementById('fonts').appendChild(apca.Fonts.toHtml());
+				document.getElementById('results').innerHTML = apca.score();
+				document.getElementById('fonts').innerHTML = '';
+				document.getElementById('fonts').appendChild(apca.Fonts.toHtml());
 			}
+			function onKeyPress(evt) {
+				if (evt.key === 'Enter') {
+					onClick();
+				}
+			}
+			
+			document.getElementById('background').addEventListener('keypress', onKeyPress);
+			document.getElementById('foreground').addEventListener('keypress', onKeyPress);
+			
 			onClick();
 		</script>
 	</body>
