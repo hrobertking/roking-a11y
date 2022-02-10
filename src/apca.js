@@ -35,6 +35,7 @@ module.exports = function APCA(f, b) {
 		};
 
 		bg = v.isColorType(value) ? v : bg;
+		correctForOpacity();
 	}
 	function getFg() {
 		return fg;
@@ -50,6 +51,7 @@ module.exports = function APCA(f, b) {
 		};
 
 		fg = v.isColorType(value) ? v : fg;
+		correctForOpacity();
 	}
 
 	/**
@@ -179,6 +181,25 @@ module.exports = function APCA(f, b) {
 	};
 	
 	var precision = 3;
+
+	/**
+	 * @private
+	 * @description Adjust for opacity
+	 */
+	function correctForOpacity() {
+		if (bg && fg && fg.opacity < 1) {
+			var b = bg,
+			    f = fg, 
+			    a = f.opacity,
+			    d = ['red', 'green', 'blue']
+				.reduce(function (o, c) {
+					o[c] = Math.round(a * f[c] + (1 - a) * b[c]);
+					return o;
+				}, { opacity: 1 });
+			
+			setFg(d);
+		}    
+	}
 
 	/**
 	 * @private
