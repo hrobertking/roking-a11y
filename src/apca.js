@@ -26,7 +26,14 @@ module.exports = function APCA(f, b) {
 	}
 	function setBg(value) {
 		var v = new Color(value);
-		
+
+		// use a finer grained modifier
+		v.LINEAR_MODIFIER = {
+			red: 0.2126729, //0.2126,
+			green: 0.7151522, //0.7152,
+			blue: 0.0721750, //0.0722,
+		};
+
 		bg = v.isColorType(value) ? v : bg;
 	}
 	function getFg() {
@@ -34,6 +41,13 @@ module.exports = function APCA(f, b) {
 	}
 	function setFg(value) {
 		var v = new Color(value);
+
+		// use a finer grained modifier
+		v.LINEAR_MODIFIER = {
+			red: 0.2126729, //0.2126,
+			green: 0.7151522, //0.7152,
+			blue: 0.0721750, //0.0722,
+		};
 
 		fg = v.isColorType(value) ? v : fg;
 	}
