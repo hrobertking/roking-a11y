@@ -133,6 +133,20 @@ module.exports = function Color(value) {
 		set: setL,
 		writeable: true
 	});
+	
+	/**
+	 * @property LINEAR_MODIFIER
+	 * @type {Object}
+	 * @property {Float} red
+	 * @property {Float} green
+	 * @property {Float} blue
+	 */
+	Object.defineProperty(this, 'LINEAR_MODIFIER', {
+		enumerable: true,
+		get: getLinearModifier,
+		set: setLinearModifier,
+		writeable: true,
+	});
 
 	/**
 	 * @property luminance
@@ -248,8 +262,24 @@ module.exports = function Color(value) {
 	 * @param {RGB|HSL|HCOLOR} data
 	 */
 	this.isColorType = function isColorType(data) {
-		if (data) {
-			return isHexadecimal(data) || isHSL(data) || isRGB(data);
+		if (typeof data === 'string') {
+			return Object.keys(REGEX)
+				.map(function(key) {
+					return REGEX[key]
+						.map(function (regex) {
+							return regex.test(data);
+						})
+						.filter(function (test) {
+							return test;
+						})
+						.length > 0;
+				})
+				.filter(function (test) {
+					return test;
+				})
+				.length > 0;
+		} else {
+			return isHSL(data) || isRGB(data);
 		}
 		return false;
 	};
@@ -379,17 +409,27 @@ module.exports = function Color(value) {
 			b = rgb.blue;
 		}
 	}
+	function getLinearModifier() {
+		return LINEAR_MODIFIER;
+	}
+	function setLinearModifier(value) {
+		if (isSet(value.red) && isSet(value.green) && isSet(value.blue)) {
+			LINEAR_MODIFIER = value;
+		}
+	}
 	function getLuminance() {
 		function range(dec) {
 			var n = dec / 255;
 
-			return n < 0.03928 ? n / 12.92 : Math.pow((n + 0.055) / 1.055, 2.4);
+			return n < 0.03928
+				? n / 12.92
+				: Math.pow((n + 0.055) / 1.055, 2.4);
 		}
 
 		if (isSet(r) && isSet(g) && isSet(b)) {
-			return (0.2126 * range(r) +
-				0.7152 * range(g) +
-				0.0722 * range(b)) * 100;
+			return (LINEAR_MODIFIER.red * range(r) +
+				LINEAR_MODIFIER.green * range(g) +
+				LINEAR_MODIFIER.blue * range(b)) * 100;
 		}
 	}
 	function getR() {
@@ -453,6 +493,29 @@ module.exports = function Color(value) {
 	}
 	/**
 	 * @private
+	 * @description Converts an rgb string to an hsl object
+	 * @returns {HSL}
+	 * @param {String} hsl
+	 */
+	function convertHslStringToHsl(hsl) {
+		return REGEX.hsl.map(function (regex) {
+			var m = regex.exec(hsl);
+
+			if (m) {
+				return {
+					hue: Number(m[1]),
+					saturation: strToNum(m[2]),
+					lightness: strToNum(m[3]),
+					opacity: m[4] ? Number(m[4]): 1
+				};
+			}
+		})
+		.reduce(function (t, v) {
+			return t || v;
+		});    
+	}
+	/**
+	 * @private
 	 * @description Converts hue, saturation, and lightness to red, green, and blue values.
 	 * @returns {RGB}
 	 * @param {HSL} hsl
@@ -464,6 +527,10 @@ module.exports = function Color(value) {
 			m,
 			rgbPrime;
 
+		if (isHSLString(hsl)) {
+			hsl = convertHslStringToHsl(hsl);
+		}
+    
 		/* if there is no saturation, the hue is gray with the specified lightness */
 		if (hsl.saturation === 0) {
 			return {
@@ -473,7 +540,7 @@ module.exports = function Color(value) {
 				opacity: hsl.opacity
 			};
 		} else if (typeof hsl.hue === 'number' && typeof hsl.saturation === 'number' && typeof hsl.lightness === 'number') {
-			C = (1 - Math.abs(hsl.lightness * 2 - 1)) * s;
+			C = (1 - Math.abs(hsl.lightness * 2 - 1)) * hsl.saturation;
 			hPrime = hsl.hue / 60;
 			X = C * (1 - Math.abs((hPrime % 2) - 1));
 			m = hsl.lightness - C / 2;
@@ -485,7 +552,7 @@ module.exports = function Color(value) {
 				[X, 0, C],
 				[C, 0, X]
 			][Math.floor(hPrime) % 6];
-
+      
 			return {
 				red: Math.round((rgbPrime[0] + m) * 255),
 				green: Math.round((rgbPrime[1] + m) * 255),
@@ -493,6 +560,29 @@ module.exports = function Color(value) {
 				opacity: hsl.opacity
 			};
 		}
+	}
+	/**
+	 * @private
+	 * @description Converts an rgb string to an hsl object
+	 * @returns {HSL}
+	 * @param {String} rgb
+	 */
+	function convertRgbStringToRgb(rgb) {
+		return REGEX.rgb.map(function (regex) {
+			var m = regex.exec(rgb);
+
+			if (m) {
+				return {
+					red: Number(m[1]),
+					green: Number(m[2]),
+					blue: Number(m[3]),
+					opacity: m[4] ? Number(m[4]): 1
+				};
+			}
+		})
+		.reduce(function (t, v) {
+			return t || v;
+		});
 	}
 	/**
 	 * @private
@@ -510,6 +600,10 @@ module.exports = function Color(value) {
 			S,
 			H = 60;
 
+		if (isRGBString(rgb)) {
+			rgb = convertRgbStringToRgb(rgb);
+		}
+    
 		if (isSet(rgb.red) && isSet(rgb.green) && isSet(rgb.blue)) {
 			R = round(rgb.red / 255);
 			G = round(rgb.green / 255);
@@ -517,17 +611,19 @@ module.exports = function Color(value) {
 			MAX = Math.max(R, G, B);
 			MIN = Math.min(R, G, B);
 			L = (MAX + MIN) / 2;
-			S = (MAX === MIN) ? 0 : L < 0.5 ? // eslint-disable-line no-nested-ternary
-				(MAX - MIN) / (MAX + MIN) :
-				(MAX - MIN) / (2.0 - MAX - MIN);
+			S = (MAX === MIN)
+				? 0
+				: L < 0.5
+					? (MAX - MIN) / (MAX + MIN)
+					: (MAX - MIN) / (2.0 - MAX - MIN || 1);
 
 			/* convert hue to degrees on the color circle */
 			if (R === MAX) {
-				H *= ((G - B) / (MAX - MIN));
+				H *= ((G - B) / (MAX - MIN || 1));
 			} else if (G === MAX) {
-				H *= (2.0 + (B - R) / (MAX - MIN));
+				H *= (2.0 + (B - R) / (MAX - MIN || 1));
 			} else {
-				H *= (4.0 + (R - G) / (MAX - MIN));
+				H *= (4.0 + (R - G) / (MAX - MIN || 1));
 			}
 
 			H += H < 0 ? 360 : 0;
@@ -565,7 +661,23 @@ module.exports = function Color(value) {
 	 * @param {*} v
 	 */
 	function isHSL(v) {
-		return v && isSet(v.hue) && isSet(v.saturation) && isSet(v.lightness);
+		return isHSLString(v) || v && isSet(v.hue) && isSet(v.saturation) && isSet(v.lightness);
+	}
+	/**
+	 * @private
+	 * @description Tests if something is a valid HSL string
+	 * @returns {Boolean}
+	 * @param {String} v
+	 */
+	function isHSLString(v) {
+		return REGEX.hsl
+			.map(function (regex) {
+				return regex.test(v);
+			})
+			.filter(function (test) {
+				return test;
+			})
+			.length > 0;
 	}
 	/**
 	 * @private
@@ -575,6 +687,21 @@ module.exports = function Color(value) {
 	 */
 	function isRGB(v) {
 		return v && isSet(v.red) && isSet(v.green) && isSet(v.blue);
+	}
+	/**
+	 * @private
+	 * @description Tests if something is a rgb string
+	 * @returns {Boolean}
+	 * @param {String} v
+	 */
+	function isRGBString(v) {
+		return REGEX.rgb
+			.map(function (regex) {
+				return regex.test(v);
+			})
+			.filter(function (test) {
+				return test;
+			}).length > 0;
 	}
 	/**
 	 * @private
@@ -626,12 +753,16 @@ module.exports = function Color(value) {
 	 * @private
 	 * @description Normalizes an rgb value
 	 * @returns {RGB}
-	 * @param {RGB|HCOLOR} data
+	 * @param {RGB|HCOLOR|String} data
 	 */
 	function normalize(data) {
-		return isRGB(data) ? data :
-			isHSL(data) ? convertHslToRgb(data) :
-			convertHColorToRgb(data);
+		return isRGB(data)
+			? data
+			: isRGBString(data)
+				? convertRgbStringToRgb(data)
+				: isHSL(data)
+					? convertHslToRgb(data)
+					: convertHColorToRgb(data);
 	}
 
 	/**
@@ -658,11 +789,26 @@ module.exports = function Color(value) {
 		a = rgb.opacity || strToNum(color.opacity);
 	}
 
-	var REGEX = {
+	var LINEAR_MODIFIER = {
+		red: 0.2126,
+		green: 0.7152,
+		blue: 0.0722,
+	},
+	REGEX = {
 		hex: [
+			/^#([0-9a-f]{1})([0-9a-f]{1})([0-9a-f]{1})$/i,
 			/^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})?$/i,
 			/^#([0-9a-f]{1})([0-9a-f]{1})([0-9a-f]{1})([0-9a-f]{1})?$/i,
+			/^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})?$/i,
 		],
+		rgb: [
+			/^rgb\((\d+)\W+(\d+)\W+(\d+)\);?$/i,
+			/^rgba\((\d+)\W+(\d+)\W+(\d+)\W*(\d?\.\d+)?\);?$/i,
+		],
+		hsl: [
+			/^hsl\((\d+)\W+(\d+%)\W+(\d+%)\);?$/i,
+			/^hsla?\((\d+)\W+(\d+%)\W+(\d+%)\W*(\d?\.\d+)?\);?$/i,
+		]
 	};
 
 	var r, g, b,
