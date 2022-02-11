@@ -66,6 +66,16 @@ module.exports = function Color(value) {
 	});
 
 	/**
+	 * @property brightness
+	 * @type {Number}
+	 * @description Pure luminance, not used by WCAG 2.x
+	 */
+	Object.defineProperty(this, 'brightness', {
+		enumerable: true,
+		get: getBrightness,
+	});
+	
+	/**
 	 * @property canDarken
 	 * @type {Boolean}
 	 * @description A boolean representing a luminance greater than zero.
@@ -157,7 +167,7 @@ module.exports = function Color(value) {
 	 */
 	Object.defineProperty(this, 'luminance', {
 		enumerable: true,
-		get: getLuminance
+		get: getLuminance,
 	});
 
 	/**
@@ -328,6 +338,22 @@ module.exports = function Color(value) {
 			h = hsl.hue;
 			s = hsl.saturation;
 			l = hsl.lightness;
+		}
+	}
+	function getBrightness() {
+		if (isSet(r) && isSet(g) && isSet(b)) {
+			var mod = [
+					LINEAR_MODIFIER.red,
+					LINEAR_MODIFIER.green,
+					LINEAR_MODIFIER.blue,
+				];
+
+			return [r, g, b].map(function(v, i) {
+					return mod[i] * Math.pow(v/255.0, 2.4);
+				})
+				.reduce(function(t, v) {
+					return t += v;
+				}, 0);
 		}
 	}
 	function getG() {
