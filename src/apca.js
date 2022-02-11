@@ -60,8 +60,8 @@ module.exports = function APCA(f, b) {
 	 * @property {Number} exponent
 	 */
 	var Darkness = {
-		threshold: 0.01,
-		exponent: 1.5,
+		threshold: 0.022,
+		exponent: 1.414,
 	};
 
 	/**
@@ -165,15 +165,15 @@ module.exports = function APCA(f, b) {
 	 */
 	 var PowerCurve = {
 		normal: {
-			background: 0.38,
-			foreground: 0.43,
+			background: 0.56,
+			foreground: 0.57,
 			lowThreshold: 0.035991,
 			lowFactor: 27.7847239587675,
 			lowOffset: 0.027,
 		},
 		reverse: {
-			background: 0.5,
-			foreground: 0.43,
+			background: 0.62,
+			foreground: 0.65,
 			lowThreshold: 0.035991,
 			lowFactor: 27.7847239587675,
 			lowOffset: 0.027,
@@ -221,8 +221,8 @@ module.exports = function APCA(f, b) {
 	 * @return {Number}
 	 */
 	function score() {
-		var back = bg.luminance / 100,
-		    fore = fg.luminance / 100,
+		var back = bg.brightness,
+		    fore = fg.brightness,
 		    reverse = !(back > fore),
 		    curve = PowerCurve.normal,
 		    apca;
