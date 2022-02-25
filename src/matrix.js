@@ -2,6 +2,7 @@
  * @class LuminanceMatrix
  * @author H Robert King <hrobertking@cathmhaol.com>
  * @requires roking-a11y:Color
+ * @requires roking-a11y:Luminance
  * @description Creates a luminance matrix allowing the comparison of multiple colors
  * @param {Color[]|String} colors
  *
@@ -12,82 +13,104 @@
  * const m = new LuminanceMatrix('#000, #fff, #f00');
  */
 var Color = require('./color.js');
+var Luminance = require('./luminance.js');
 
 module.exports = function LuminanceMatrix() {
-	/**
-	 * @private
-	 * @description Calculates the contrast between foreground and background
-	 * @returns {Number}
-	 * @param {Color} fColor
-	 * @param {Color} bColor
-	 */
-	function contrast(fColor, bColor) {
-		var f, b, n; // eslint-disable-line one-var, one-var-declaration-per-line
-
-		// compensate for any bleedthru from opacity
-		f = new Color({
-			red: ((1 - fColor.opacity) * bColor.red) +
-				(fColor.opacity * fColor.red),
-			green: ((1 - fColor.opacity) * bColor.green) +
-				(fColor.opacity * fColor.green),
-			blue: ((1 - fColor.opacity) * bColor.blue) +
-				(fColor.opacity * fColor.blue)
-		}).luminance + 5;
-		b = bColor.luminance + 5;
-		n = f / b;
-
-		// normalize for inverted background and foreground luminance
-		n = f < b ? 1 / n : n;
-
-		return n.toFixed(2);
-	}
-
-	var table = {}, // eslint-disable-line vars-on-top
-		colors = {},
-		palette = [].slice.call(arguments)
-			.map(function splitter(arg) {
+	var palette = [].slice.call(arguments)
+		.map(function splitter(arg) {
+			if (/[{}]/.test(arg)) {
+				// this is an object definition
+				return JSON.parse('['+arg.replace(/#/g, '')+']');
+			} else if (typeof arg === 'string' && arg.indexOf(',')) {
 				// split any csv in the arguments into a string array
-				if (typeof arg === 'string' && arg.indexOf(',')) {
-					return arg.split(',');
-				}
-				return arg instanceof Array ? arg : [arg];
-			})
-			.reduce(function combine(value, total) {
-				// concatenate all arrays in the arguments into a single array
-				return total.concat(value);
-			}, [])
-			.map(function toColor(hex) {
-				// convert each element in the combined array to a Color
-				var isColor = hex instanceof Color,
-					color = isColor ? hex : new Color(hex.trim());
+				return arg.split(',').map(function(c) {
+					return { name: c, value: c };
+				});
+			}
+			return arg instanceof Array ? arg : [arg];
+		})
+		.reduce(function combine(value, total) {
+			// concatenate all arrays in the arguments into a single array
+			return total.concat(value);
+		}, [])
+		.map(function toColor(def) {
+			// convert each element in the combined array to a Color
+			return def.value && def.value instanceof Color
+				? def
+				: new Color(def);
+		})
+		.filter(function filterNotColor(pc) {
+			// filter out any elements that cannot be converted to a Color
+			return typeof pc.hue === 'number';
+		})
+		.reduce(function (col, item) {
+			var update = {};
 
-				return color;
-			})
-			.filter(function filterNotColor(el) {
-				// filter out any elements that cannot be converted to a Color
-				return typeof el.hue === 'number';
-			})
-			.sort(function byHue(a, b) {
-				// sort the colors by hue
-				return a.hue - b.hue;
-			})
-			.map(function toHex(el) {
-				// add the Color to the library using the hexadecimal value as the key
-				// and return the hexadecimal value to the array
-				var hcolor = el.hcolor.replace(/\W/g, '');
+			update[item.name] = item;
+			return { ...col, ...update };
+		}, {});
 
-				colors[hcolor] = el;
-				return hcolor;
-			});
+	Object.keys(palette).forEach(function (key) {
+		palette[key].contrasts = Object.keys(palette)
+			.filter(function (name) {
+				return name !== key;
+			})
+			.reduce(function (col, colorKey) {
+				var update = {};
 
-	palette.forEach(function buildTable(h) {
-		var values = {};
-
-		palette.forEach(function addContrast(p) {
-			values[p] = contrast(colors[h], colors[p]);
-		});
-		table[h] = values;
+				update[colorKey] = new Luminance(
+					palette[key],
+					palette[colorKey],
+				);
+				return { ...col, ...update };
+			}, {});
 	});
 
-	return table;
+	Object.defineProperty(this, 'toHtmlTable', {
+		value: function() {
+			var table = document.createElement('table'),
+				th = table.appendChild(document.createElement('thead')),
+				thead = th.insertRow(),
+				tbody = table.appendChild(document.createElement('tbody')),
+				colors = Object.keys(palette),
+
+				thc = thead.appendChild(document.createElement('td')),
+				tbc;
+
+			colors.forEach(function (color) {
+				var tbr = tbody.appendChild(document.createElement('tr')),
+					hcolor = palette[color].hcolor,
+					name = palette[color].name;
+
+				thc = thead.appendChild(document.createElement('th'));
+				thc.setAttribute('role', 'columnheader');
+				thc.setAttribute('scope', 'col');
+				thc.innerHTML = `<div style="align-items:center;display:flex"><span style="background-color:${hcolor};border: 1px solid black;border-radius:50%;display:inline-block;height:0.75em;margin-right:0.25em;width:0.75em;"></span><span title="${hcolor}">${name}</span></div>`;
+
+				tbc = tbr.appendChild(document.createElement('th'));
+				tbc.setAttribute('role', 'rowheader');
+				tbc.setAttribute('scope', 'row');
+				tbc.innerHTML = name;
+
+				colors.forEach(function (lcr) {
+					var contrast = palette[color].contrasts[lcr] || { contrast: '-' },
+						threshold = '';
+
+					if (contrast.contrast < 3) {
+						threshold = 'fail';
+					} else if (contrast.contrast < 4.5) {
+						threshold = 'some';
+					} else if (contrast.contrast !== '-') {
+						threshold = 'pass';
+					}
+					tbc = tbr.appendChild(document.createElement('td'));
+					tbc.innerHTML = contrast.contrast;
+					tbc.className = threshold;
+				});
+			});
+			return table;
+		}
+	});
+
+	return this;
 };
