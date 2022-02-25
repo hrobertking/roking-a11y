@@ -6,12 +6,13 @@
  * object with `hue`, `saturation`, and `lightness` values and simplifies modification of the
  * values.
  * @param {hcolor|rgb|hsl} color
+ * @param {string} [cname] Name of the color, defaults to the hexadecimal value
  *
  * @example
- * const color = new Color({ hue: 193, saturation: '67%', lightness: '28%' });
+ * const color = new Color({ hue: 204, saturation: '70%', lightness: '60%', name: 'roking-a11y blue' });
  * const color = new Color({ red: 24, green: 98, blue: 118 });
  * const color = new Color('#186276');
- * const color = new Color('#f0d');
+ * const color = new Color('#f0d', 'pink');
  *
  * @typedef {tinyint} A number between 0 and 255
  *
@@ -36,19 +37,21 @@
  * @property {number} opacity
  */
 /* eslint-disable no-bitwise, no-mixed-operators */
-module.exports = function Color(value) {
+module.exports = function Color(value, cname) {
 	/**
 	 * @typedef RGB
 	 * @property {Number} red - Tinyint value for red
 	 * @property {Number} green - Tinyint value for green
 	 * @property {Number} blue - Tinyint value for blue
 	 * @property {Number} opacity - Percentage opaque
+	 * @property {String} name - Name of the color, defaults to HCOLOR equivalent
 	 *
 	 * @typedef HSL
 	 * @property {Number} hue - Color wheel degree representation of hue
 	 * @property {Number} saturation - Percentage of saturation
 	 * @property {Number} lightness - Percentage of lightness
 	 * @property {Number} opacity - Percentage opaque
+	 * @property {String} name - Name of the color, defaults to HCOLOR equivalent
 	 *
 	 * @typedef HCOLOR
 	 * @type {String} 3, 4, 6, or 8 byte hexadecimal string representing 3 or 4 segments for red, green, blue, and opacity
@@ -168,6 +171,18 @@ module.exports = function Color(value) {
 	Object.defineProperty(this, 'luminance', {
 		enumerable: true,
 		get: getLuminance,
+	});
+	
+	/**
+	 * @property name
+	 * @type {String}
+	 * @description The name given to the color by the author. Defaults to the HCOLOR equivalent.
+	 */
+	Object.defineProperty(this, 'name', {
+		enumerable: true,
+		get: getName,
+		set: setName,
+		writeable: true,
 	});
 
 	/**
@@ -456,6 +471,14 @@ module.exports = function Color(value) {
 			return (LINEAR_MODIFIER.red * range(r) +
 				LINEAR_MODIFIER.green * range(g) +
 				LINEAR_MODIFIER.blue * range(b)) * 100;
+		}
+	}
+	function getName() {
+		return colorName || getHColor().replace(/#/, '');
+	}
+	function setName(s) {
+		if (s) {
+			colorName = s;
 		}
 	}
 	function getR() {
@@ -815,6 +838,7 @@ module.exports = function Color(value) {
 			s = strToNum(hsl.saturation);
 			l = strToNum(hsl.lightness);
 		}
+		colorName = color.name || colorName;
 	}
 
 	var LINEAR_MODIFIER = {
@@ -841,7 +865,8 @@ module.exports = function Color(value) {
 
 	var r, g, b,
 	    h, s, l,
-	    a;
+	    a,
+	    colorName = cname;
 
 	init(value);
 };
