@@ -840,7 +840,9 @@ module.exports = function Color(value, cname) {
 			s = strToNum(hsl.saturation);
 			l = strToNum(hsl.lightness);
 		}
-		colorName = color.name || colorName;
+		colorName = typeof color === 'object'
+			? color.name || color.label || colorName
+			: colorName;
 	}
 
 	var LINEAR_MODIFIER = {
