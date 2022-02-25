@@ -526,8 +526,10 @@ module.exports = function Color(value, cname) {
 	 * @param {HCOLOR} color
 	 */
 	function convertHColorToRgb(color) {
+		var hd = color.value || color.hcolor || color;
+		
 		return REGEX.hex.map(function (r) {
-			var m = r.exec('' + color.trim());
+			var m = r.exec('' + hd.trim());
 
 			if (m) {
 				var red = Math.min(255, Math.max(0, hexToDec((m[1] + m[1]).substr(-2)))),
