@@ -630,7 +630,7 @@ module.exports = function Color(value) {
 			rgb = convertRgbStringToRgb(rgb);
 		}
     
-		if (isSet(rgb.red) && isSet(rgb.green) && isSet(rgb.blue)) {
+		if (rgb && isSet(rgb.red) && isSet(rgb.green) && isSet(rgb.blue)) {
 			R = round(rgb.red / 255);
 			G = round(rgb.green / 255);
 			B = round(rgb.blue / 255);
@@ -782,6 +782,8 @@ module.exports = function Color(value) {
 	 * @param {RGB|HCOLOR|String} data
 	 */
 	function normalize(data) {
+		if (!data) return;
+		
 		return isRGB(data)
 			? data
 			: isRGBString(data)
@@ -805,6 +807,7 @@ module.exports = function Color(value) {
 			r = rgb.red;
 			g = rgb.green;
 			b = rgb.blue;
+			a = rgb.opacity || strToNum(color.opacity);
 		}
 		if (hsl) {
 			h = parseInt(hsl.hue, 10);
@@ -812,7 +815,6 @@ module.exports = function Color(value) {
 			s = strToNum(hsl.saturation);
 			l = strToNum(hsl.lightness);
 		}
-		a = rgb.opacity || strToNum(color.opacity);
 	}
 
 	var LINEAR_MODIFIER = {
