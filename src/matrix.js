@@ -75,7 +75,29 @@ module.exports = function LuminanceMatrix() {
 				colors = Object.keys(palette),
 
 				thc = thead.appendChild(document.createElement('td')),
-				tbc;
+				tbc,
+
+				pic = function (hcolor, name) {
+					var div = document.createElement('div'),
+						icon = div.appendChild(document.createElement('span')),
+						head = div.appendChild(document.createElement('span'));
+
+					div.style.alignItems = 'center';
+					div.style.display = 'flex';
+
+					icon.style.backgroundColor = hcolor;
+					icon.style.border = '1px solid #000';
+					icon.style.borderRadius = '50%';
+					icon.style.display = 'inline-block';
+					icon.style.height = '0.75em';
+					icon.style.marginRight = '0.25em';
+					icon.style.width = '0.75em';
+
+					head.setAttribute('title', hcolor);
+					head.innerHTML = name;
+
+					return div;
+				};
 
 			colors.forEach(function (color) {
 				var tbr = tbody.appendChild(document.createElement('tr')),
@@ -85,7 +107,7 @@ module.exports = function LuminanceMatrix() {
 				thc = thead.appendChild(document.createElement('th'));
 				thc.setAttribute('role', 'columnheader');
 				thc.setAttribute('scope', 'col');
-				thc.innerHTML = `<div style="align-items:center;display:flex"><span style="background-color:${hcolor};border: 1px solid black;border-radius:50%;display:inline-block;height:0.75em;margin-right:0.25em;width:0.75em;"></span><span title="${hcolor}">${name}</span></div>`;
+				thc.appendChild(pic(hcolor, name));
 
 				tbc = tbr.appendChild(document.createElement('th'));
 				tbc.setAttribute('role', 'rowheader');
