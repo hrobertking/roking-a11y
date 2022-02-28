@@ -67,22 +67,6 @@
 				border-bottom: 1px solid hsl(204, 100%, 30%);
 				font-weight: bold;
 			}
-			td.low-contrast {
-				background-color: #ffebe5;
-			}
-			td.aa-large-text, td.adjacent-non-text {
-				background-color: #fffae5;
-				font-style: italic;
-			}
-			td.aa-normal-text {
-				background-color: #e3fcef;
-				font-style: italic;
-			}
-			td.aaa {
-				background-color: #e3fcef;
-				font-style: italic;
-				font-weight: bold;
-			}
 			thead th {
 				vertical-align: bottom;
 			}
@@ -105,6 +89,37 @@
 				height: 1em;
 				margin-right: 0.5em;
 				width: 1em;
+			}
+
+			input[type="checkbox"] + label {
+				display: inline-flex;
+			}
+			input[type="checkbox"].toggle {
+				clip-path: polygon(0 0, 0 0, 0 0, 0 0);
+				clip: rect(0, 0, 0, 0);
+				position: absolute;
+			}
+			.toggle + label .channel {
+				border: 1px solid #000;
+				border-radius: 1em;
+				display: block;
+				height: 1em;
+				margin-left: 0.5em;
+				position: relative;
+				width: 2em;
+			}
+			.toggle + label .channel::before {
+				background: radial-gradient(#fff, #333);
+				border: 1px solid #333;
+				border-radius: 50%;
+				content: '';
+				display: inline-block;
+				height: .9em;
+				position: absolute;
+				width: .9em;
+			}
+			.toggle:checked + label .channel:before {
+				right: 0;
 			}
 
 			@media screen and (min-width: 960px) {
@@ -156,6 +171,18 @@
 				background.
 			</p>
 
+			<p>
+				The palette input has been enhanced to take two different specifications. The default example is a comma-separated
+				list of hexadecimal color values. A JSON object is also acceptable, where a color is defined using a <em>name</em>
+				and <em>value</em>. The example value can be switched using this <em>Show object example</em> toggle.
+
+				<input id="asObject" class="toggle" type="checkbox" onchange="showObject()" />
+				<label for="asObject"><span>Show object example</span><span class="channel"></span></label>
+			</p>
+			<p class="warning">
+				Clicking <em>Show object example</em> will reset the text in the palette definition input.
+			</p>
+			
 			<label for="list">
 				<em><strong>Palette</strong></em><br />
 				Enter color strings as a comma-separated list
@@ -165,84 +192,42 @@
 				<button id="calculate">Calculate</button>
 			</div>
 
-			<table id="results">
-				<caption>Luminance Contrast</caption>
-				<thead>
-					<tr>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td></td>
-					</tr>
-				</tbody>
-			</table>
+			<div id="table-results">
+				<table id="results">
+					<caption>Luminance Contrast</caption>
+					<thead>
+						<tr>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
 		</main>
 
-		<script src="luminance.min.js"></script>
+		<script src="matrix.min.js"></script>
 		<script>
 			function calculate() {
 				var list = document.getElementById('list').value,
 					norm = (list || '').replace(/\n/g, '').replace(/^,|,$/g, '');
-					lum = new Luminance().matrix(norm);
+					lum = new Matrix(norm);
 
 				reset();
-				show(lum);
+				document.getElementById('table-results').appendChild(lum.toHtmlTable())
 			}
 			function reset() {
-				var results = document.getElementById('results');
-					
-				results.innerHTML = '<thead></thead>';
-				results.innerHTML += '<tbody></tbody>';
+				document.getElementById('table-results').innerHTML = '';
 			}
-			function show(lum) {
-				var results = document.getElementById('results'),
-					thead = results.getElementsByTagName('thead').item(0),
-					tbody = results.getElementsByTagName('tbody').item(0),
-					thr = thead.insertRow();
+			function showObject() {
+				var checked = document.getElementById('asObject').checked;
 
-				thr.insertCell();
-
-				Object.keys(lum).forEach(function (key) {
-					var contrasts = lum[key],
-						tr = tbody.insertRow(),
-						rh = document.createElement('th'),
-						hrc = document.createElement('th'),
-						pic = document.createElement('span'),
-						hex = key && key !== 'undefined' ? '#' + key : '';
-
-					thr.appendChild(hrc);
-					tr.appendChild(rh);
-
-					pic.className = 'pic';
-					pic.style.backgroundColor = hex;
-
-					hrc.setAttribute('scope', 'col');
-					hrc.setAttribute('role', 'columnheader');
-					hrc.innerHTML = [hex ? pic.outerHTML : '', hex || '--------'].join(' ');
-					
-					rh.setAttribute('scope', 'row');
-					rh.setAttribute('role', 'rowheader');
-					rh.innerHTML = [hex ? pic.outerHTML : '', hex || '--------'].join(' ');
-
-					Object.keys(contrasts).forEach(function (contrast, index) {
-						var td = tr.insertCell(),
-							n = Number(contrasts[contrast]),
-							lvl = 'low-contrast';
-
-						if (n > 3 && n < 4.51) {
-							lvl = 'aa-large-text adjacent-non-text';
-						} else if (n > 4.5 && n < 7) {
-							lvl = 'aa-normal-text';
-						} else if (n >= 7) {
-							lvl = 'aaa';
-						}
-						
-						td.setAttribute('class', lvl);
-						td.innerHTML = contrasts[contrast];
-					});
-				});
+				document.getElementById('list').innerHTML = checked
+					? '{"name":"white", "value":"#ffffff"},{"name":"yellow", "value":"#ffff00"},{"name":"magenta","value":"#ff00ff"},{"name":"red","value":"#ff0000"},{"name":"cyan","value":"#00ffff"},{"name":"green","value":"#00ff00"},{"name":"blue","value":"#0000ff"},{"name":"black","value":"#000000"}'
+					: '#ffffff,#ffff00,#ff00ff,#ff0000,#00ffff,#00ff00,#0000ff,#000000';
 			}
 
 			document.getElementById('calculate').addEventListener('click', calculate);
