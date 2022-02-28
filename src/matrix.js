@@ -48,7 +48,14 @@ module.exports = function LuminanceMatrix() {
 
 			update[item.name] = item;
 			return { ...col, ...update };
-		}, {});
+		}, {}),
+	uidSnip = function (len) {
+		var n = Number(String(new Date().getTime() * Math.random()).replace(/\./g, '')).toString(16).substr(-1 * len),
+			o = Math.floor(Math.random() * (n.length - len));
+
+		return n.substr(o, len);
+	},
+	uuid = [uidSnip(8), uidSnip(4), uidSnip(4), uidSnip(4), uidSnip(12)].join('-');
 
 	Object.keys(palette).forEach(function (key) {
 		palette[key].contrasts = Object.keys(palette)
@@ -68,7 +75,16 @@ module.exports = function LuminanceMatrix() {
 
 	Object.defineProperty(this, 'toHtmlTable', {
 		value: function() {
-			var table = document.createElement('table'),
+			var node = document.createElement('div'),
+			    style = node.appendChild(document.createElement('style'));
+
+			style.setAttribute('type', 'text/css');
+			style.innerHTML = '';
+			style.innerHTML += '#' + uuid + ' .some { background-color: rgb(255, 255, 157); color: #000; }';
+			style.innerHTML += '#' + uuid + ' .fail { background-color: rgb(255, 148, 141); color: #000; }';
+			style.innerHTML += '#' + uuid + ' .pass { background-color: rgb(148, 255, 141); color: #000; }';
+      
+			var table = node.appendChild(document.createElement('table')),
 				th = table.appendChild(document.createElement('thead')),
 				thead = th.insertRow(),
 				tbody = table.appendChild(document.createElement('tbody')),
@@ -99,6 +115,7 @@ module.exports = function LuminanceMatrix() {
 					return div;
 				};
 
+			table.setAttribute('id', uuid);
 			colors.forEach(function (color) {
 				var tbr = tbody.appendChild(document.createElement('tr')),
 					hcolor = palette[color].hcolor,
@@ -130,7 +147,7 @@ module.exports = function LuminanceMatrix() {
 					tbc.className = threshold;
 				});
 			});
-			return table;
+			return node;
 		}
 	});
 
