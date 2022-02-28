@@ -80,10 +80,11 @@ module.exports = function LuminanceMatrix() {
 
 			style.setAttribute('type', 'text/css');
 			style.innerHTML = '';
-			style.innerHTML += '#' + uuid + ' .some { background-color: rgb(255, 255, 157); color: #000; }';
-			style.innerHTML += '#' + uuid + ' .fail { background-color: rgb(255, 148, 141); color: #000; }';
-			style.innerHTML += '#' + uuid + ' .pass { background-color: rgb(148, 255, 141); color: #000; }';
-      
+			style.innerHTML += '#' + uuid + ' .some {background-color:rgb(255, 255, 157);color: #000;}\n';
+			style.innerHTML += '#' + uuid + ' .fail {background-color:rgb(255, 148, 141);color: #000;}\n';
+			style.innerHTML += '#' + uuid + ' .pass {background-color:rgb(148, 255, 141);color: #000;}\n';
+			style.innerHTML += 'th[scope="col"] > div > span:first-of-type {border:1px solid #000;border-radius:50%;display:inline-block;flex-grow:0;flex-shrink:0;height:0.75em;margin-right:0.25em;width:0.75em;}\n';
+ 
 			var table = node.appendChild(document.createElement('table')),
 				th = table.appendChild(document.createElement('thead')),
 				thead = th.insertRow(),
@@ -102,12 +103,6 @@ module.exports = function LuminanceMatrix() {
 					div.style.display = 'flex';
 
 					icon.style.backgroundColor = hcolor;
-					icon.style.border = '1px solid #000';
-					icon.style.borderRadius = '50%';
-					icon.style.display = 'inline-block';
-					icon.style.height = '0.75em';
-					icon.style.marginRight = '0.25em';
-					icon.style.width = '0.75em';
 
 					head.setAttribute('title', hcolor);
 					head.innerHTML = name;
