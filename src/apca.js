@@ -25,7 +25,9 @@ module.exports = function APCA(f, b) {
 		return bg;
 	}
 	function setBg(value) {
-		var v = new Color(value);
+		var v = value instanceof Color
+			? value
+			: new Color(value);
 
 		// use a finer grained modifier
 		v.LINEAR_MODIFIER = {
@@ -41,7 +43,9 @@ module.exports = function APCA(f, b) {
 		return fg;
 	}
 	function setFg(value) {
-		var v = new Color(value);
+		var v = value instanceof Color
+			? value
+			: new Color(value);
 
 		// use a finer grained modifier
 		v.LINEAR_MODIFIER = {
