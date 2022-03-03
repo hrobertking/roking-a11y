@@ -255,7 +255,7 @@
 			function showObject() {
 				var checked = document.getElementById('asObject').checked;
 
-				document.getElementById('list').innerHTML = checked
+				document.getElementById('list').value = checked
 					? '{"name":"white", "value":"#ffffff"},{"name":"yellow", "value":"#ffff00"},{"name":"magenta","value":"#ff00ff"},{"name":"red","value":"#ff0000"},{"name":"cyan","value":"#00ffff"},{"name":"green","value":"#00ff00"},{"name":"blue","value":"#0000ff"},{"name":"black","value":"#000000"}'
 					: '#ffffff,#ffff00,#ff00ff,#ff0000,#00ffff,#00ff00,#0000ff,#000000';
 			}
