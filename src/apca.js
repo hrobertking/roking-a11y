@@ -225,36 +225,38 @@ module.exports = function APCA(f, b) {
 	 * @return {Number}
 	 */
 	function score() {
-		var back = bg.brightness,
-		    fore = fg.brightness,
-		    reverse = !(back > fore),
-		    curve = PowerCurve.normal,
-		    apca;
+		if (bg && fg) {
+			var back = bg.brightness,
+			    fore = fg.brightness,
+			    reverse = !(back > fore),
+			    curve = PowerCurve.normal,
+			    apca;
 
-		fore = reverse ? fore : lightness(fore);
-		back = reverse ? lightness(back) : back;
+			fore = reverse ? fore : lightness(fore);
+			back = reverse ? lightness(back) : back;
  
-		curve = reverse
-			? PowerCurve.reverse
-			: PowerCurve.normal;
-		apca = (
-			Math.pow(back, curve.background) - 
-			Math.pow(fore, curve.foreground)
-		) * 1.14;
+			curve = reverse
+				? PowerCurve.reverse
+				: PowerCurve.normal;
+			apca = (
+				Math.pow(back, curve.background) - 
+				Math.pow(fore, curve.foreground)
+			) * 1.14;
 
-		return ((
-			reverse
-				? apca > -0.001
-					? 0.0
-					: apca > -curve.lowThreshold
-						? apca - apca * curve.lowFactor * curve.lowOffset
-						: apca + curve.lowOffset
-				: apca < 0.001
-					? 0.0
-					: apca < curve.lowThreshold
-						? apca - apca * curve.lowFactor * curve.lowOffset
-						: apca - curve.lowOffset
-		) * 100).toFixed(precision);
+			return ((
+				reverse
+					? apca > -0.001
+						? 0.0
+						: apca > -curve.lowThreshold
+							? apca - apca * curve.lowFactor * curve.lowOffset
+							: apca + curve.lowOffset
+					: apca < 0.001
+						? 0.0
+						: apca < curve.lowThreshold
+							? apca - apca * curve.lowFactor * curve.lowOffset
+							: apca - curve.lowOffset
+			) * 100).toFixed(precision);
+		}
 	};
   
 	/**
