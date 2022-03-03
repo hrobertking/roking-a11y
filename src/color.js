@@ -234,7 +234,7 @@ module.exports = function Color(value, cname) {
 			B = Math.max(0, ((n >> 8) & 0x00FF) - (degree || 1)),
 			h = (G | (B << 8) | (R << 16)).toString(16),
 			rgb = convertHColorToRgb(`000000${h}`.substr(-6)),
-		    	hsl = convertRgbTohsl(rgb);
+		    	hsl = convertRgbToHsl(rgb);
 
 		if (rgb) {
 			r = rgb.red;
