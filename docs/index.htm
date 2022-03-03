@@ -45,6 +45,12 @@
 				font-family: sans-serif;
 			}
 			
+			section {
+ 				border: 1px solid hsl(204, 100%, 60%);
+				margin-bottom: 1em;
+				padding: 0 1em 1em;
+			}
+			
 			ul.datatype {
 				display: inline-flex;
 				list-style-type: none;
@@ -84,169 +90,174 @@
 				browser with JavaScript using the links below.
 			</p>
 
-			<h2>ROKING-A11Y APCA Evaluator</h2>
-			<p>
-				The <i>Advanced Perceptual Contrast Algorithm</i> (APCA) was developed to take into consideration how
-				colors are <em>perceived</em>. This approach avoids what has become known as "the orange button problem".
-				To demonstrate the orange button problem, consider the two following buttons. The button labeled
-				<b>LCR 6.44:1</b> has a higher <i>Luminance Contrast Ratio</i> than the button labeled
-				<b>LCR 3.26:1</b>. In fact, the lower contrast of white on orange would not pass the WCAG 2.x
-				test for contrast for text, even though it typically appears to be <em>more</em> readable than the higher
-				contrast black on orange.
-
-				<span style="display: block;">
-					<button style="background-color: #e86826; color: #fff; padding: .25em;">LCR 3.26:1</button>
-					<button style="background-color: #e86826; color: #000; padding: .25em;">LCR 6.44:1</button>
-				</span>
-			</p>
-			<p>
-				As a factor in the legibility of text is the font size and weight in relation to the contrast,
-				the <i>APCA Evaluator</i> compares font size and weight to the required contrast level. The APCA
-				Evaluator is, therefore, a design tool that will allow you to evaluate whether the font size
-				is appropriate for the given lightness contrast between two colors.
-			</p>
-			<p style="color: #f00; display: flex">
-				<strong style="font-size: 1.5em; margin-right: 0.5em;">⚡</strong>
-				<strong>
-					Please note that the Advanced Perceptual Contrast Algorithm (APCA) is an experimental approach,
-					and should not be used to determine conformance to WCAG 2.x. Additionally, the code provided in the
-					Evaluator may not conform to the most recent official version, resulting in different contrast values
-					when compared to other versions of the algorithm.
-				</strong>
-			</p>
-
-			<p>
-				<a href="apca.htm">The <i>ROKING-A11Y APCA Evaluator</i> tool</a>
-			</p>
-
-			<h2>ROKING-A11Y Color Tuner</h2>
-			<p>
-				The <i>Color Tuner</i> is a design tool that allows you to see, and select, accessible foreground
-				and background colors by calculating and displaying the contrast ratio for colors as well
-				as modifying foreground and background colors to meet accessibilityguidelines for luminance
-				contrast (WCAG 2.1, Guideline 1.4, Success Criterion 1.4.3 and Success Criterion 1.4.6).
-			</p>
-
-			<p>
-				<a href="color-tuner.htm">The <i>ROKING-A11Y Color Tuner</i> tool</a>
-			</p>
-
-			<h2>ROKING-A11Y Palette Tuner</h2>
-			<p>
-				Along with the Color Tuner, the Palette Tuner allows you to evaluate the contrast of an entire
-				palette at one time.
-			</p>
-
-			<p>
-				<a href="palette-tuner.htm">The <i>ROKING-A11Y Palette Tuner</i> tool</a>
-			</p>
-
-			<h2>ROKING-A11Y Readability Tool</h2>
-			<p>
-				The <i>Readability Tool</i> calculates the <i>Läsbarhetsindex</i>, or LIX, and <i>Ordvariationsindex</i>,
-				or OVIX, for content. The <i>Läsbarhetsindex</i> was developed by Carl-Hugo Björnsson in the late 1960s,
-				nearly a decade prior to the readability tests primarily used in the US that were developed by
-				<span aria-label="doctors">Drs.</span> Flesch and Kincaid. Unlike the Flesch-Kincaid readability tests,
-				i.e., the <i>Flesch Reading Ease</i> and the <i>Flesch-Kincaid Grade Level</i>, the <i>LIX</i> is not
-				tied to a single language by using a syllable count to determine word complexity - the <i>LIX</i> uses
-				word <em>length</em> to determine word complexity. The <i>Ordvariationsindex</i> measures the number of
-				<em>unique</em> words in a passage.
-			</p>
-			<p>
-				The reason this is important can be demonstrated by examining two short sentences - one in English
-				and the other in Spanish - "drink this medicine" and "tomar este medicina" and passing them through
-				the <i>Flesch Reading Ease</i> test and the <i>LIX</i> to see if the readability scores are significantly
-				different or close.
-			</p>
-			<p>
-				Both phrases, "drink this medicine" and "tomar este medicina", are three words in one sentence and,
-				using the <i>LIX</i> measure, each contains one <em>complex</em> word. Where they differ significantly,
-				however, is in the syllable count - the English phrase contains five syllables and the Spanish phrase
-				contains eight. When we compute the <i>Flesch Reading Ease</i> for these phrases, we get a score of
-				<strong><em>62.9</em></strong> for the English phrase and a score of <span aria-label="negative">-</span>21.8
-				for the Spanish phrase. Their <i>LIX</i> scores, however, are both 36.3.
-			</p>
-			<p>
-				The higher the <i>Flesch Reading Ease</i> score, and the lower a <i>LIX</i> score, the easier text is to
-				read. A <i>Flesch Reading Ease</i> score that falls between 60 and 70, as the score for the English phrase
-				does, <em>should</em> correspond to a eigth or ninth grade reading level. A <i>Flesch Reading Ease</i> score
-				that falls between 0 and 30, which is still <em>much</em> higher than the score for the Spanish phrase,
-				<em>should</em> correspond to a college graduate reading level and is considered very difficult to read. A
-				<i>LIX</i> score of 50 for US English, on the other hand, <em>should</em> correspond to a first or second
-				grade reading level.
-			</p>
-
-			<h3>Reliability of the Läsbarhetsindex and Ordvariationsindex</h3>
-			<p>
-				There are several methods by which the readability of a text can be assessed. <em>Most</em> assessment
-				methods require data beyond the text itself - either the number of syllables a word contains or the
-				part of speech a word is, or even its place in a dependency tree. The amount of data necessary for these
-				assessments can be significant and does not lend itself to a quick estimation of the readability of
-				a text.
-			</p>
-			<p>
-				Of the various assessment methods, the <em>most reliable</em> analysis, aside from a human assessment,
-				is an assessment based on ratios between parts of speech, such as nouns, pronouns, adverbs, and verbs,
-				which matches human assessments 96 to 97 percent of the time. A dependency distance assessment
-				<a href="#liu-2008">(Liu, 2008)</a> is the next best analysis with approximately 89 percent accuracy.
-				Unfortunately, both - a parts-of-speech analysis and a dependency distance analysis - require a dictionary
-				and/or dependency map for each language or text analyzed, and the analysis takes more than the few seconds
-				the simpler, shallow feature assessments, Läsbarhetsindex and Ordvariationsindex, which achieved
-				approximately 85 and 86 percent accuracy, respectively.
-			</p>
-
-			<h4>References (Links open in a new window)</h4>
-			<ol>
-				<li id="falkenjack-2014">
-					<a href="https://aclweb.org/anthology/W14-1213" target="_blank">
-						Johan Falkenjack and Arne Jönsson.
-						2014.
-						Classifying easy-to-read texts without parsing.
-						Proceedings of the 3rd Workshop on Predicting and Improving Text Readability for Target Reader
-							Populations (PITR) at EACL 2014:114-122.
-					</a>
-				</li>
-				<li id="liu-2008">
-					Haitao Liu.
-					2008.
-					Dependency distance as a metric of language comprehension difficulty.
-					Journal of Cognitive Science, 9(2):169–191.
-				</li>
-			</ol>
-
-			<h3>Caveats</h3>
-			<blockquote>
+			<section>
+				<h2>ROKING-A11Y APCA Evaluator</h2>
 				<p>
-					<strong>There are US jurisdictions in which a maximum <em>reading grade level</em> is established for
-					content.</strong> The <i>LIX</i> <em>cannot</em> be used in those situations, you
-					<strong><em>must</em></strong> use the <i>Flesch-Kincaid Grade Level</i>. There have not been an
-					 adequate number of samples used to determine if there is a relationship between the <i>LIX</i> and
-					reading grade level, so if reading grade level is important in your consideration, it is recommended
-					that you use the <i>Flesch-Kincaid Grade Level</i> and note that its results apply <em>only</em> to
-					English text.
-				</p>
-			</blockquote>
+					The <i>Advanced Perceptual Contrast Algorithm</i> (APCA) was developed to take into consideration how
+					colors are <em>perceived</em>. This approach avoids what has become known as "the orange button problem".
+					To demonstrate the orange button problem, consider the two following buttons. The button labeled
+					<b>LCR 6.44:1</b> has a higher <i>Luminance Contrast Ratio</i> than the button labeled
+					<b>LCR 3.26:1</b>. In fact, the lower contrast of white on orange would not pass the WCAG 2.x
+					test for contrast for text, even though it typically appears to be <em>more</em> readable than the higher
+					contrast black on orange.
 
-			<blockquote>
-				<p>
-					Some samples are too short to accurately measure. For this reason, the ROKING-A11Y Readability Tool
-					will only score samples containing more than five words.
+					<span style="display: block;">
+						<button style="background-color: #e86826; color: #fff; padding: .25em;">LCR 3.26:1</button>
+						<button style="background-color: #e86826; color: #000; padding: .25em;">LCR 6.44:1</button>
+					</span>
 				</p>
-			</blockquote>
+				<p>
+					As a factor in the legibility of text is the font size and weight in relation to the contrast,
+					the <i>APCA Evaluator</i> compares font size and weight to the required contrast level. The APCA
+					Evaluator is, therefore, a design tool that will allow you to evaluate whether the font size
+					is appropriate for the given lightness contrast between two colors.
+				</p>
+				<p style="color: #f00; display: flex">
+					<strong style="font-size: 1.5em; margin-right: 0.5em;">⚡</strong>
+					<strong>
+						Please note that the Advanced Perceptual Contrast Algorithm (APCA) is an experimental approach,
+						and should not be used to determine conformance to WCAG 2.x. Additionally, the code provided in the
+						Evaluator may not conform to the most recent official version, resulting in different contrast values
+						when compared to other versions of the algorithm.
+					</strong>
+				</p>
 
-			<blockquote>
 				<p>
-					Simple <em>readability</em> tests such as the <i>Flesch-Kincaid Grade Level</i>, <i>LIX</i>, or
-					<i>OVIX</i>, provide a <em>quick</em> analysis; however, a quick analysis, by its nature, lacks
-					depth. A readability analysis should always be considered alongside the text and the context in
-					which the text is presented, and with the understanding that not all readers are alike. For
-					example, a document containing highly-specialized language or jargon may not be comprehensible
-					even though its score indicates otherwise.
+					<a href="apca.htm">The <i>ROKING-A11Y APCA Evaluator</i> tool</a>
 				</p>
-			</blockquote>
-			<p>
-				<a href="readability.htm">The <i>ROKING-A11Y Readability Tool</i></a>
-			</p>
+			</section>
+			<section>
+				<h2>ROKING-A11Y Color Tuner</h2>
+				<p>
+					The <i>Color Tuner</i> is a design tool that allows you to see, and select, accessible foreground
+					and background colors by calculating and displaying the contrast ratio for colors as well
+					as modifying foreground and background colors to meet accessibilityguidelines for luminance
+					contrast (WCAG 2.1, Guideline 1.4, Success Criterion 1.4.3 and Success Criterion 1.4.6).
+				</p>
+
+				<p>
+					<a href="color-tuner.htm">The <i>ROKING-A11Y Color Tuner</i> tool</a>
+				</p>
+			</section>
+			<section>
+				<h2>ROKING-A11Y Palette Tuner</h2>
+				<p>
+					Along with the Color Tuner, the Palette Tuner allows you to evaluate the contrast of an entire
+					palette at one time.
+				</p>
+
+				<p>
+					<a href="palette-tuner.htm">The <i>ROKING-A11Y Palette Tuner</i> tool</a>
+				</p>
+			</section>
+			<section>
+				<h2>ROKING-A11Y Readability Tool</h2>
+				<p>
+					The <i>Readability Tool</i> calculates the <i>Läsbarhetsindex</i>, or LIX, and <i>Ordvariationsindex</i>,
+					or OVIX, for content. The <i>Läsbarhetsindex</i> was developed by Carl-Hugo Björnsson in the late 1960s,
+					nearly a decade prior to the readability tests primarily used in the US that were developed by
+					<span aria-label="doctors">Drs.</span> Flesch and Kincaid. Unlike the Flesch-Kincaid readability tests,
+					i.e., the <i>Flesch Reading Ease</i> and the <i>Flesch-Kincaid Grade Level</i>, the <i>LIX</i> is not
+					tied to a single language by using a syllable count to determine word complexity - the <i>LIX</i> uses
+					word <em>length</em> to determine word complexity. The <i>Ordvariationsindex</i> measures the number of
+					<em>unique</em> words in a passage.
+				</p>
+				<p>
+					The reason this is important can be demonstrated by examining two short sentences - one in English
+					and the other in Spanish - "drink this medicine" and "tomar este medicina" and passing them through
+					the <i>Flesch Reading Ease</i> test and the <i>LIX</i> to see if the readability scores are significantly
+					different or close.
+				</p>
+				<p>
+					Both phrases, "drink this medicine" and "tomar este medicina", are three words in one sentence and,
+					using the <i>LIX</i> measure, each contains one <em>complex</em> word. Where they differ significantly,
+					however, is in the syllable count - the English phrase contains five syllables and the Spanish phrase
+					contains eight. When we compute the <i>Flesch Reading Ease</i> for these phrases, we get a score of
+					<strong><em>62.9</em></strong> for the English phrase and a score of <span aria-label="negative">-</span>21.8
+					for the Spanish phrase. Their <i>LIX</i> scores, however, are both 36.3.
+				</p>
+				<p>
+					The higher the <i>Flesch Reading Ease</i> score, and the lower a <i>LIX</i> score, the easier text is to
+					read. A <i>Flesch Reading Ease</i> score that falls between 60 and 70, as the score for the English phrase
+					does, <em>should</em> correspond to a eigth or ninth grade reading level. A <i>Flesch Reading Ease</i> score
+					that falls between 0 and 30, which is still <em>much</em> higher than the score for the Spanish phrase,
+					<em>should</em> correspond to a college graduate reading level and is considered very difficult to read. A
+					<i>LIX</i> score of 50 for US English, on the other hand, <em>should</em> correspond to a first or second
+					grade reading level.
+				</p>
+
+				<h3>Reliability of the Läsbarhetsindex and Ordvariationsindex</h3>
+				<p>
+					There are several methods by which the readability of a text can be assessed. <em>Most</em> assessment
+					methods require data beyond the text itself - either the number of syllables a word contains or the
+					part of speech a word is, or even its place in a dependency tree. The amount of data necessary for these
+					assessments can be significant and does not lend itself to a quick estimation of the readability of
+					a text.
+				</p>
+				<p>
+					Of the various assessment methods, the <em>most reliable</em> analysis, aside from a human assessment,
+					is an assessment based on ratios between parts of speech, such as nouns, pronouns, adverbs, and verbs,
+					which matches human assessments 96 to 97 percent of the time. A dependency distance assessment
+					<a href="#liu-2008">(Liu, 2008)</a> is the next best analysis with approximately 89 percent accuracy.
+					Unfortunately, both - a parts-of-speech analysis and a dependency distance analysis - require a dictionary
+					and/or dependency map for each language or text analyzed, and the analysis takes more than the few seconds
+					the simpler, shallow feature assessments, Läsbarhetsindex and Ordvariationsindex, which achieved
+					approximately 85 and 86 percent accuracy, respectively.
+				</p>
+
+				<h4 id="reference-list">References (Links open in a new window)</h4>
+				<ol aria-labelledby="reference-list">
+					<li id="falkenjack-2014">
+						<a href="https://aclweb.org/anthology/W14-1213" target="_blank">
+							Johan Falkenjack and Arne Jönsson.
+							2014.
+							Classifying easy-to-read texts without parsing.
+							Proceedings of the 3rd Workshop on Predicting and Improving Text Readability for Target Reader
+								Populations (PITR) at EACL 2014:114-122.
+						</a>
+					</li>
+					<li id="liu-2008">
+						Haitao Liu.
+						2008.
+						Dependency distance as a metric of language comprehension difficulty.
+						Journal of Cognitive Science, 9(2):169–191.
+					</li>
+				</ol>
+
+				<h3>Caveats</h3>
+				<blockquote>
+					<p>
+						<strong>There are US jurisdictions in which a maximum <em>reading grade level</em> is established for
+						content.</strong> The <i>LIX</i> <em>cannot</em> be used in those situations, you
+						<strong><em>must</em></strong> use the <i>Flesch-Kincaid Grade Level</i>. There have not been an
+						 adequate number of samples used to determine if there is a relationship between the <i>LIX</i> and
+						reading grade level, so if reading grade level is important in your consideration, it is recommended
+						that you use the <i>Flesch-Kincaid Grade Level</i> and note that its results apply <em>only</em> to
+						English text.
+					</p>
+				</blockquote>
+
+				<blockquote>
+					<p>
+						Some samples are too short to accurately measure. For this reason, the ROKING-A11Y Readability Tool
+						will only score samples containing more than five words.
+					</p>
+				</blockquote>
+
+				<blockquote>
+					<p>
+						Simple <em>readability</em> tests such as the <i>Flesch-Kincaid Grade Level</i>, <i>LIX</i>, or
+						<i>OVIX</i>, provide a <em>quick</em> analysis; however, a quick analysis, by its nature, lacks
+						depth. A readability analysis should always be considered alongside the text and the context in
+						which the text is presented, and with the understanding that not all readers are alike. For
+						example, a document containing highly-specialized language or jargon may not be comprehensible
+						even though its score indicates otherwise.
+					</p>
+				</blockquote>
+				<p>
+					<a href="readability.htm">The <i>ROKING-A11Y Readability Tool</i></a>
+				</p>
+			</section>
 		</main>
 	</body>
 </html>
