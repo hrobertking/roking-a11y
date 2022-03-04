@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>ROKING-A11Y Contrast Evaluator</title>
+    <style type="text/css">
+			body {
+				margin: auto;
+				user-select: none;
+				width: 80%;
+			}
+			button {
+				border-radius: 0.25rem;
+				font-size: 1.5rem;
+				margin: 0.2rem
+			}
+			button:not([disabled]) {
+				background-color: hsl(204, 100%, 60%);
+				border: 0.0625em solid hsl(204, 100%, 30%);
+				color: hsl(204, 100%, 5%);
+			}
+      button.icon {
+        padding: 0;
+        margin: 0;
+        height: 1em;
+        line-height: 0;
+        width: 1em;
+      }
+			h1 ~ div {
+				display: flex;
+			}
+			h1 ~ div > :not(:last-child) {
+				margin-right: 2em;
+			}
+			input[type="text"] {
+				background-color: transparent;
+				background-position: center;
+				background-size: contain;
+				border: 1px solid hsl(204, 100%, 40%);
+				border-radius: 0.25em;
+				font-family: monospace;
+				font-size: 1.1rem;
+				text-align: center;
+				width: 8em;
+			}
+			input[aria-invalid="true"] {
+				border-color: #e00;
+			}
+			input, label {
+				display: block;
+				width: 100%;
+			}
+			tbody td {
+				font-family: monospace;
+        text-align: center;
+			}
+      tbody td:nth-of-type(n+5) {
+        min-width: 10em;
+				text-align: right;
+      }
+      tbody th {
+        text-align: right;
+      }
+			tfoot th, tfoot td {
+				text-align: right;
+			}
+			#fonts td:first-of-type {
+				text-align: right;
+			}
+			#fonts td:not(:first-of-type) {
+				text-align: center;
+			}
+      td.wcag.fail,
+      td.apca.fail,
+      td.fail {
+        background-color: #ff948d;
+      }
+      td.wcag.low,
+      td.apca.low {
+        background-color: #feff9d;
+      }
+      td.wcag.med,
+      td.apca.med {
+        background-color: #91c08b;
+        font-style: italic;
+      }
+      td.wcag.high,
+      td.apca.high {
+        background-color: #ffffff;
+        font-style: italic;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+		<h1>ROKING-A11Y Contrast Evaluator</h1>
+    <p>
+      Luminance contrast is the difference in brightness between adjacent colors on a display. In
+      the WCAG 2.x, there are three thresholds, 3:1, which is sufficient for elements that either
+      <em>large</em> text or are not text elements, 4.5:1, which is sufficient for normal text at
+      the AA level, and 7:1, which is sufficient for all text at the AAA level.
+    </p>
+		<p>
+			Because of the way color is <em>perceived</em>, light text on a dark background is
+			perceived differently than dark text on a light background. This means how the <em>Luminance 
+			Contrast</em> is calculated should account for the polarity.
+		</p>
+			
+		<div>
+			<table style="align-self: flex-start;">
+				<thead>
+					<tr>
+            <td></td>
+						<th>
+               <label for="background">Background</label>
+             </th>
+             <td></td>
+						<th>
+                <label for="foreground">Foreground</label>
+              </th>
+              <th>Sample</th>
+              <th>WCAG 2.1</th>
+							<th>WCAG 3 (APCA)</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+              <th>Initial</th>
+							<td>
+								<input type="text" id="background" value="#fff"/>
+							</td>
+              <td>
+                <button class="icon" onclick="switchValues()">↻</button>
+              </td>
+							<td>
+								<input type="text" id="foreground" value="#000"/>
+							</td>
+              <td id="init-sample">Sample</td>
+              <td id="init-wcag"></td>
+							<td id="init-apca"></td>
+						</tr>
+						<tr>
+              <th>Foreground Adjusted</th>
+							<td id="fgmod-bg"></td>
+              <td></td>
+							<td id="fgmod-fg"></td>
+              <td id="fgmod-sample">Sample</td>
+              <td id="fgmod-wcag"></td>
+							<td id="fgmod-apca"></td>
+						</tr>
+						<tr>
+              <th>Background Adjusted</th>
+							<td id="bgmod-bg"></td>
+              <td></td>
+							<td id="bgmod-fg"></td>
+              <td id="bgmod-sample">Sample</td>
+              <td id="bgmod-wcag"></td>
+							<td id="bgmod-apca"></td>
+						</tr>
+						<tr>
+              <th>Both Adjusted</th>
+							<td id="allmod-bg"></td>
+              <td></td>
+							<td id="allmod-fg"></td>
+              <td id="allmod-sample">Sample</td>
+              <td id="allmod-wcag"></td>
+							<td id="allmod-apca"></td>
+						</tr>
+					</tbody>
+					<tfoot>
+						<tr>
+							<td colspan="6">
+								<button type="button" onclick="calculateAPCA()">Calculate</button>
+							</td>
+					</tfoot>
+				</table>
+				<div id="fonts"></div>
+			</div>
+    <script src="contrast.js"></script>
+    <script>
+      const types = {
+        'wcag.low': 3,
+        'wcag.med': 4.5,
+        'wcag.high': 7,
+        'apca.low': 45,
+        'apca.med': 60,
+        'apca.high': 75,
+      };
+      function level(n, type) {
+        const possible = Object.keys(types)
+          .map(function(name) {
+            const value = types[name];
+    
+            return { name, value }
+          })
+          .sort(function (a, b) {
+            return b.value - a.value;
+          })
+          .filter(function (def) {
+            if (type) {
+              return def.name.indexOf(type) > -1 &&
+                def.value <= Math.abs(n);
+            }
+            return def.value <= Math.abs(n);
+          });
+
+        return possible.length
+          ? possible.shift().name.replace(/\./g, ' ')
+          : "fail";
+      }
+      function calculateAPCA() {
+        var bgn = document.getElementById('background').value,
+            txn = document.getElementById('foreground').value,
+            initLum = new Luminance({background: bgn, foreground: txn}),
+            initApca = new APCA(initLum),
+            fgLum = new Luminance({background: bgn, foreground: txn}),
+            bgLum = new Luminance({background: bgn, foreground: txn}),
+            allLum = new Luminance({background: bgn, foreground: txn});
+        
+        fgLum = fgLum.search(4.5, fgLum.foreground);
+        bgLum = bgLum.search(4.5, bgLum.background);
+        allLum = allLum.search(4.5);
+        
+        var fgApca = new APCA(fgLum),
+            bgApca = new APCA(bgLum),
+            allApca = new APCA(allLum);
+
+        document.getElementById('init-apca').innerHTML = initApca.score();
+        document.getElementById('init-wcag').innerHTML = initLum.contrast;
+
+        document.getElementById('fgmod-fg').innerHTML = fgLum.foreground.hcolor;
+        document.getElementById('fgmod-bg').innerHTML = fgLum.background.hcolor;
+        document.getElementById('fgmod-apca').innerHTML = fgApca.score();
+        document.getElementById('fgmod-wcag').innerHTML = fgLum.contrast;
+
+        document.getElementById('bgmod-fg').innerHTML = bgLum.foreground.hcolor;
+        document.getElementById('bgmod-bg').innerHTML = bgLum.background.hcolor;
+        document.getElementById('bgmod-apca').innerHTML = bgApca.score();
+        document.getElementById('bgmod-wcag').innerHTML = bgLum.contrast;
+
+        document.getElementById('allmod-fg').innerHTML = allLum.foreground.hcolor;
+        document.getElementById('allmod-bg').innerHTML = allLum.background.hcolor;
+        document.getElementById('allmod-apca').innerHTML = allApca.score();
+        document.getElementById('allmod-wcag').innerHTML = allLum.contrast;
+
+        document.getElementById('init-apca').className = level(initApca.score(), 'apca');
+        document.getElementById('init-wcag').className = level(initLum.contrast, 'wcag');
+        document.getElementById('fgmod-apca').className = level(fgApca.score(), 'apca');
+        document.getElementById('fgmod-wcag').className = level(fgLum.contrast, 'wcag');
+        document.getElementById('bgmod-apca').className = level(bgApca.score(), 'apca');
+        document.getElementById('bgmod-wcag').className = level(bgLum.contrast, 'wcag');
+        document.getElementById('allmod-apca').className = level(allApca.score(), 'apca');
+        document.getElementById('allmod-wcag').className = level(allLum.contrast, 'wcag');
+
+        document.getElementById('init-sample').style.backgroundColor = initLum.background.hcolor;
+        document.getElementById('init-sample').style.color = initLum.foreground.hcolor;
+        document.getElementById('fgmod-sample').style.backgroundColor = fgLum.background.hcolor;
+        document.getElementById('fgmod-sample').style.color = fgLum.foreground.hcolor;
+        document.getElementById('bgmod-sample').style.backgroundColor = bgLum.background.hcolor;
+        document.getElementById('bgmod-sample').style.color = bgLum.foreground.hcolor;  
+        document.getElementById('allmod-sample').style.backgroundColor = allLum.background.hcolor;
+        document.getElementById('allmod-sample').style.color = allLum.foreground.hcolor;
+			}
+      function switchValues() {
+        var fg = document.getElementById('foreground').value,
+          bg = document.getElementById('background').value;
+
+        document.getElementById('foreground').value = bg;
+        document.getElementById('background').value = fg;
+
+        calculateAPCA();
+      }
+
+      calculateAPCA();
+    </script>
+  </body>
+</html>
