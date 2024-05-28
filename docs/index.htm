@@ -152,16 +152,39 @@
 			</section>
 			<section>
 				<h2>ROKING-A11Y Readability Tool</h2>
-				<p>
-					The <i>Readability Tool</i> calculates the <i>Läsbarhetsindex</i>, or LIX, and <i>Ordvariationsindex</i>,
-					or OVIX, for content. The <i>Läsbarhetsindex</i> was developed by Carl-Hugo Björnsson in the late 1960s,
+ 			<p>
+				There are several methods by which the readability of a text can be assessed. In the US, the <em>Flesch-Kincaid Grade Level</em> is the most common readability score; however, some will use the <em>Flesch Reading Ease</em> to evaluate English language resources.</p>
+
+<p>
+ <em>Most</em> assessment
+					methods require data beyond the text itself - either the number of syllables a word contains or the
+					part of speech a word is, or even its place in a dependency tree. Of the various assessment methods, the <em>most reliable</em> analysis, aside from a human assessment,
+					is an assessment based on ratios between parts of speech, such as nouns, pronouns, adverbs, and verbs,
+					which matches human assessments 96 to 97 percent of the time. A dependency distance assessment
+					<a href="#liu-2008">(Liu, 2008)</a> is the next best analysis with approximately 89 percent accuracy.
+
+
+				Unfortunately, both - a parts-of-speech analysis and a dependency distance analysis - require a dictionary
+					and/or dependency map for each language or text analyzed, and the analysis takes more than the few seconds
+					the simpler, shallow feature assessments.
+
+The reault of this need for extra data is that the methods do not lend themselves to a quick estimation of the readability of
+					a text. Further, and perhaps more significantly, these analysis methods are each tied to a single language. 
+				</p>
+
+			<h3>Reliability of the Läsbarhetsindex and Ordvariationsindex</h3>
+	
+				<p>Two shallow feature assessments, the <em>Läsbarhetsindex</em>, or LIX, and the <em>Ordvariationsindex</em>, or OVIX, have shown approximately the same level of accuracy compared to human assessment as a dependency distance analysis, at 85 and 86 percent accuracy, respectively.</p>
+			
+<p>Neith the <i>Läsbarhetsindex</i>, developed by Carl-Hugo Björnsson in the late 1960s,
 					nearly a decade prior to the readability tests primarily used in the US that were developed by
-					<span aria-label="doctors">Drs.</span> Flesch and Kincaid. Unlike the Flesch-Kincaid readability tests,
-					i.e., the <i>Flesch Reading Ease</i> and the <i>Flesch-Kincaid Grade Level</i>, the <i>LIX</i> is not
+					<span aria-label="doctors">Drs.</span> Flesch and Kincaid,
+					i.e., the <i>Flesch Reading Ease</i> and the <i>Flesch-Kincaid Grade Level</i>, nor the <em>Ordvariationsindex</em>, is
 					tied to a single language by using a syllable count to determine word complexity - the <i>LIX</i> uses
-					word <em>length</em> to determine word complexity. The <i>Ordvariationsindex</i> measures the number of
+					word <em>length</em> to determine word complexity, and the <i>Ordvariationsindex</i> measures the number of
 					<em>unique</em> words in a passage.
 				</p>
+
 				<p>
 					The reason this is important can be demonstrated by examining two short sentences - one in English
 					and the other in Spanish - "drink this medicine" and "tomar este medicina" and passing them through
@@ -184,26 +207,8 @@
 					<em>should</em> correspond to a college graduate reading level and is considered very difficult to read. A
 					<i>LIX</i> score of 50 for US English, on the other hand, <em>should</em> correspond to a first or second
 					grade reading level.
-				</p>
-
-				<h3>Reliability of the Läsbarhetsindex and Ordvariationsindex</h3>
-				<p>
-					There are several methods by which the readability of a text can be assessed. <em>Most</em> assessment
-					methods require data beyond the text itself - either the number of syllables a word contains or the
-					part of speech a word is, or even its place in a dependency tree. The amount of data necessary for these
-					assessments can be significant and does not lend itself to a quick estimation of the readability of
-					a text.
-				</p>
-				<p>
-					Of the various assessment methods, the <em>most reliable</em> analysis, aside from a human assessment,
-					is an assessment based on ratios between parts of speech, such as nouns, pronouns, adverbs, and verbs,
-					which matches human assessments 96 to 97 percent of the time. A dependency distance assessment
-					<a href="#liu-2008">(Liu, 2008)</a> is the next best analysis with approximately 89 percent accuracy.
-					Unfortunately, both - a parts-of-speech analysis and a dependency distance analysis - require a dictionary
-					and/or dependency map for each language or text analyzed, and the analysis takes more than the few seconds
-					the simpler, shallow feature assessments, Läsbarhetsindex and Ordvariationsindex, which achieved
-					approximately 85 and 86 percent accuracy, respectively.
-				</p>
+				</p>		
+	
 
 				<h4 id="reference-list">References (Links open in a new window)</h4>
 				<ol aria-labelledby="reference-list">
